@@ -1,0 +1,217 @@
+game.StarterGui:SetCore("SendNotification", {
+    Title = "veonix";
+    Text = "checking your whitelist.....";
+    Icon = "RBXID OR BLANK";
+    Duration = "DURATION IN SECONDS";
+    callbakc = bindableFunction;
+    Button1 = "Okay";
+})
+
+wait(3)
+
+
+local plr = game.Players.LocalPlayer
+local friendid = 3069665475
+
+if plr:IsFriendsWith(friendid) then
+
+game.StarterGui:SetCore("SendNotification", {
+    Title = "veonix";
+    Text = "premium version";
+    Icon = "RBXID OR BLANK";
+    Duration = "DURATION IN SECONDS";
+    callbakc = bindableFunction;
+    Button1 = "Okay";
+})
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("veonix loader/ auto updater    pls no crack of i get a pig to anal ur mum uwu", "DarkTheme")
+
+
+local Tab = Window:NewTab("veonix")
+local Section = Tab:NewSection("scripts")
+
+Section:NewButton("veonix free", "skidness at yes but its noyes", function()
+pcall(function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/veonixcombatmain"))()
+end)
+Library:ToggleUI()
+end)
+
+
+Section:NewButton("main", "skidness at yes but its noyes", function()
+pcall(function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/veonixredmain"))()
+end)
+Library:ToggleUI()
+end)
+
+
+Section:NewButton("turfy style", "skidness at yes but its noyes", function()
+pcall(function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/turfynew"))()
+end)
+Library:ToggleUI()
+end)
+
+
+
+local Tab = Window:NewTab("scripts other")
+local Section = Tab:NewSection("scripts")
+
+
+
+Section:NewButton("fake rich", "universal", function()
+pcall(function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/d7708a89fc0e999914b31a6901c23fd5/raw/075dc0566de7c23bbd5c857eba56802d9cd2e61a/faaaaa"))()
+end)
+Library:ToggleUI()
+end)
+
+
+Section:NewButton("just esp", "main", function()
+pcall(function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/5d7443e36554e008461d369c494dbbf0/raw/9ca078e20bec75e9a1b1a02562b02f4a3f6b2772/epa"))()
+end)
+Library:ToggleUI()
+end)
+
+Section:NewButton("arsenal", "main", function()
+pcall(function()
+loadstring(game:HttpGet("https://pastebin.com/raw/G5JKF6nM"))()
+end)
+Library:ToggleUI()
+end)
+
+Section:NewButton("universal", "main", function()
+pcall(function()
+loadstring(game:HttpGet("https://pastebin.com/raw/3PN0uBA3"))()
+end)
+Library:ToggleUI()
+end)
+
+local Tab = Window:NewTab("other scripts not mine")
+local Section = Tab:NewSection("scripts")
+
+
+
+Section:NewButton("trade tower simple", "flare", function()
+--FLARE ON TOP
+loadstring(game:HttpGet("https://raw.githubusercontent.com/zNugget/Flare/main/Flare"))();
+Library:ToggleUI()
+end)
+
+Section:NewButton("raycodex", "flare", function()
+loadstring(game:GetObjects("rbxassetid://5812737894")[1].Source)()
+Library:ToggleUI()
+end)
+
+
+Section:NewButton("artic", "flare", function()
+loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Karz1337/Arctic/main/ArcticV2"))()
+Library:ToggleUI()
+end)
+
+
+Section:NewButton("faded", "flare", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/NighterEpic/Faded/main/YesEpic", true))()
+Library:ToggleUI()
+end)
+
+
+--free version
+else
+
+game.StarterGui:SetCore("SendNotification", {
+    Title = "veonix";
+    Text = "free version detected!";
+    Icon = "RBXID OR BLANK";
+    Duration = "DURATION IN SECONDS";
+    callbakc = bindableFunction;
+    Button1 = "Okay";
+})
+wait(1)
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("veonix loader/ auto updater    pls no crack of i get a pig to anal ur mum uwu", "DarkTheme")
+
+
+local Tab = Window:NewTab("veonix")
+local Section = Tab:NewSection("dahood")
+
+Section:NewButton("veonix free", "skidness at yes but its noyes", function()
+pcall(function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/veonixcombatmain"))()
+end)
+Library:ToggleUI()
+end)
+
+
+
+
+local Tab = Window:NewTab("scripts other")
+local Section = Tab:NewSection("scripts")
+
+
+
+Section:NewButton("fake rich", "universal", function()
+pcall(function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/d7708a89fc0e999914b31a6901c23fd5/raw/075dc0566de7c23bbd5c857eba56802d9cd2e61a/faaaaa"))()
+end)
+Library:ToggleUI()
+end)
+
+
+Section:NewButton("just esp", "main", function()
+pcall(function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/5d7443e36554e008461d369c494dbbf0/raw/9ca078e20bec75e9a1b1a02562b02f4a3f6b2772/epa"))()
+end)
+Library:ToggleUI()
+end)
+
+Section:NewButton("arsenal", "main", function()
+pcall(function()
+loadstring(game:HttpGet("https://pastebin.com/raw/G5JKF6nM"))()
+end)
+Library:ToggleUI()
+end)
+
+Section:NewButton("universal", "main", function()
+pcall(function()
+loadstring(game:HttpGet("https://pastebin.com/raw/3PN0uBA3"))()
+end)
+Library:ToggleUI()
+end)
+
+
+
+local Tab = Window:NewTab("other scripts not mine")
+local Section = Tab:NewSection("scripts")
+
+
+
+Section:NewButton("trade tower simple", "flare", function()
+--FLARE ON TOP
+loadstring(game:HttpGet("https://raw.githubusercontent.com/zNugget/Flare/main/Flare"))();
+Library:ToggleUI()
+end)
+
+Section:NewButton("raycodex", "flare", function()
+loadstring(game:GetObjects("rbxassetid://5812737894")[1].Source)()
+Library:ToggleUI()
+end)
+
+
+Section:NewButton("artic", "flare", function()
+loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Karz1337/Arctic/main/ArcticV2"))()
+Library:ToggleUI()
+end)
+
+
+Section:NewButton("faded", "flare", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/NighterEpic/Faded/main/YesEpic", true))()
+Library:ToggleUI()
+end)
+
+
+
+end
