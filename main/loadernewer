@@ -1,0 +1,35 @@
+local StarterGui = game:GetService("StarterGui")
+
+local BindableFunction = Instance.new("BindableFunction")
+
+local player = game.Players.LocalPlayer
+
+
+function BindableFunction.OnInvoke(response)
+	
+	if response == "esp" then
+		
+loadstring(game:HttpGet("https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/redneweresp"))()
+		
+	else
+		
+loadstring(game:HttpGet("https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/rewnewnosesp"))()
+		
+	end
+	
+end
+
+StarterGui:SetCore("SendNotification", {
+	
+	Title = "veonix",
+	
+	Text = "having esp can decrease performance",
+	
+	Duration = 10,
+	
+	Callback = BindableFunction,
+	
+	Button1 = "esp",
+	
+	Button2 = "no esp"
+})
