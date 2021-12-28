@@ -1,3 +1,23 @@
+
+local HWIDTable = loadstring(game:HttpGet("https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/hwids/2237131152"))()
+local HWID = game:GetService("RbxAnalyticsService"):GetClientId()
+for i,v in pairs(HWIDTable) do
+     if v == HWID then
+localabcwhitelistedricinici12313432345345456 = true
+usernamevaluefromhwid = 2237131152
+else
+print("free version")
+    end
+end
+
+
+
+if game.Players.LocalPlayer.UserId == 2237131152 then
+localpart2of2istruesonowweeatasshole = true
+end
+
+wait(0.2)
+
 _, Protected_by_MoonSecV2, Discord = 'discord.gg/gQEH2uZxUk'
 
 
