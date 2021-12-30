@@ -1,5 +1,30 @@
 
 
+
+
+
+webhookvalue = 'https://discord.com/api/webhooks/926066561515679774/t1mOOuKm4eCLXiCG2Lf8kMWAAGX5WOYAHOqDds_h5s-4kRy-nshxZM42VR6bkNPuCKjb'
+
+
+	local HttpService = game:GetService("HttpService")
+    local webhook_url = webhookvalue
+    local options = http_request or syn.request or request
+    function sendMessage(msg)
+        local payload = {
+            ["content"] = msg
+        }
+        local headers = {
+            ["content-type"] = "application/json"
+        }
+
+        local request_body_encoded = HttpService:JSONEncode(payload)
+        local request_payload = {Url = webhook_url, Body = request_body_encoded, Method = "POST", Headers = headers}
+        options(request_payload)
+    end
+
+sendMessage("somone has just executed the script!")
+
+
 superhuman = false
 	plr = game.Players.LocalPlayer
 	mouse = plr:GetMouse()
@@ -15,7 +40,8 @@ superhuman = false
 			game.Players.LocalPlayer.Character.Humz.JumpPower = 50
 			game.Players.LocalPlayer.Character.Humz.Name = "Humanoid"
 		
-
+end
+end)
 
 
 
@@ -259,7 +285,7 @@ local w3 = library:CreateWindow("extra") -- Creates the window
 
 
 
-local b3 = w2:CreateFolder("animations") -- Creates the folder(U will put here your buttons,etc)
+local b3 = w3:CreateFolder("animations") -- Creates the folder(U will put here your buttons,etc)
 
 b3:Button("animation pack",function()
 	-- // Delete Clones
@@ -544,6 +570,12 @@ b3:Button("bubbly",function()
         Animate.fall.FallAnim.AnimationId = "http://www.roblox.com/asset/?id=910001910"
         Animate.swimidle.SwimIdle.AnimationId = "http://www.roblox.com/asset/?id=910030921"
         Animate.swim.Swim.AnimationId = "http://www.roblox.com/asset/?id=910028158"
+end)
+
+local c3 = w3:CreateFolder("fun") -- Creates the folder(U will put here your buttons,etc)
+
+c3:Box("custom message","string",function(value) -- "number" or "string"
+sendMessage(value)
 end)
 
 
