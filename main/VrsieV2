@@ -1,0 +1,607 @@
+
+
+superhuman = false
+	plr = game.Players.LocalPlayer
+	mouse = plr:GetMouse()
+	mouse.KeyDown:connect(function(key)
+		if key == _G.Lol and superhuman == false then
+			superhuman = true
+			game.Players.LocalPlayer.Character.Humanoid.Name = "Humz"
+			game.Players.LocalPlayer.Character.Humz.WalkSpeed = _G.Speeed
+			game.Players.LocalPlayer.Character.Humz.JumpPower = 50
+		elseif key == _G.Lol and superhuman == true then
+			superhuman = false
+			game.Players.LocalPlayer.Character.Humz.WalkSpeed = 16
+			game.Players.LocalPlayer.Character.Humz.JumpPower = 50
+			game.Players.LocalPlayer.Character.Humz.Name = "Humanoid"
+		
+
+
+
+
+
+function announce(title,text,time)
+    game.StarterGui:SetCore("SendNotification", {
+        Title = title;
+        Text = text;
+        Duration = time;
+    })
+end
+
+
+FLYSPEED = 20
+local library = loadstring(game:HttpGet(('https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wall%20v3')))()
+
+local w = library:CreateWindow("VrsieV2 player") -- Creates the window
+
+local b = w:CreateFolder("travel") -- Creates the folder(U will put here your buttons,etc)
+
+
+
+b:Button("flight",function()
+        local plr = game.Players.LocalPlayer
+        local Humanoid = plr.Character:FindFirstChildWhichIsA('Humanoid')
+        local mouse = plr:GetMouse()
+        localplayer = plr
+        if workspace:FindFirstChild("Core") then
+            workspace.Core:Destroy()
+        end
+        local Core = Instance.new("Part")
+        Core.Name = "Core"
+        Core.Size = Vector3.new(0.05, 0.05, 0.05)
+        spawn(function()
+            Core.Parent = workspace
+            local Weld = Instance.new("Weld", Core)
+            Weld.Part0 = Core
+            Weld.Part1 = localplayer.Character.LowerTorso
+            Weld.C0 = CFrame.new(0, 0, 0)
+        end)
+        workspace:WaitForChild("Core")
+        local torso = workspace.Core
+        flying = true
+        local speed=FLYSPEED
+        local keys={a=false,d=false,w=false,s=false}
+        local e1
+        local e2
+        local function start()
+            local pos = Instance.new("BodyPosition",torso)
+            local gyro = Instance.new("BodyGyro",torso)
+            pos.Name="EPIXPOS"
+            pos.maxForce = Vector3.new(math.huge, math.huge, math.huge)
+            pos.position = torso.Position
+            gyro.maxTorque = Vector3.new(15e15, 15e15, 15e15)
+            gyro.cframe = torso.CFrame
+            repeat
+                wait()
+                Humanoid.PlatformStand=true
+                local new=gyro.cframe - gyro.cframe.p + pos.position
+                if not keys.w and not keys.s and not keys.a and not keys.d then
+                    speed=FLYSPEED
+                end
+                if keys.w then
+                    new = new + workspace.CurrentCamera.CoordinateFrame.lookVector * speed
+                    speed=speed
+                end
+                if keys.s then
+                    new = new - workspace.CurrentCamera.CoordinateFrame.lookVector * speed
+                    speed=speed
+                    end
+                if keys.d then
+                    new = new * CFrame.new(speed,0,0)
+                    speed=speed
+                end
+                if keys.a then
+                    new = new * CFrame.new(-speed,0,0)
+                    speed=speed
+                end
+                if speed>FLYSPEED then
+                    speed=FLYSPEED
+                end
+                pos.position=new.p
+                if keys.w then
+                    gyro.cframe = workspace.CurrentCamera.CoordinateFrame*CFrame.Angles(-math.rad(speed),0,0)
+                elseif keys.s then
+                    gyro.cframe = workspace.CurrentCamera.CoordinateFrame*CFrame.Angles(math.rad(speed),0,0)
+                else
+                    gyro.cframe = workspace.CurrentCamera.CoordinateFrame
+                end
+                until flying == false
+                if gyro then gyro:Destroy() end
+                if pos then pos:Destroy() end
+                flying=false
+                    Humanoid.PlatformStand=false
+                    speed=FLYSPEED
+                end
+                e1=mouse.KeyDown:connect(function(key)
+                    if not torso or not torso.Parent then flying=false e1:disconnect() e2:disconnect() return end
+                    if key=="w" then
+                        keys.w=true
+                    elseif key=="s" then
+                        keys.s=true
+                    elseif key=="a" then
+                        keys.a=true
+                    elseif key=="d" then
+                        keys.d=true
+                    elseif key=="x" then
+                        if flying==true then
+                            flying=false
+                        else
+                            flying=true
+                            start()
+                        end
+                    end
+                end)
+            e2=mouse.KeyUp:connect(function(key)
+                if key=="w" then
+                    keys.w=false
+                elseif key=="s" then
+                    keys.s=false
+                elseif key=="a" then
+                    keys.a=false
+                elseif key=="d" then
+                    keys.d=false
+                end
+            end)
+        start()
+end)
+
+
+b:Button("decrease fly speed",function()
+    FLYSPEED = FLYSPEED - 5
+announce('Speed changed', tostring(FLYSPEED), 3)
+end)
+
+b:Button("increase fly speed",function()
+    FLYSPEED = FLYSPEED + 5
+announce('Speed changed', tostring(FLYSPEED), 3)
+end)
+
+b:Button("q to tp",function()
+	plr = game.Players.LocalPlayer;
+	hum = plr.Character.HumanoidRootPart;
+	mouse = plr:GetMouse()
+	mouse.KeyDown:connect(function(aa)
+		if aa == "q" then
+			if mouse.Target then
+				hum.CFrame = CFrame.new(mouse.Hit.x, mouse.Hit.y + 5, mouse.Hit.z)
+			end
+		end
+	end)
+end)
+
+
+if speedmode == 1 then
+b:Box("speed","string",function(speedwalkvalue) -- "number" or "string"
+    _G.Speeed = speedwalkvalue
+end)
+
+b:Box("speed key","string",function(walkspeedvalue) -- "number" or "string"
+   _G.Lol = walkspeedvalue 
+end)
+else
+b:Button("speedmode 2",function()
+	function onButton1Down(mouse)
+	down = true
+	while down do
+	if not down then break end
+	local plr = game:GetService('Players').LocalPlayer
+	local char = plr.Character
+ 
+	char.HumanoidRootPart.Velocity = char.HumanoidRootPart.CFrame.lookVector * 100
+	wait()
+	end
+	end
+ 
+	function onButton1Up(mouse)
+	down = false
+	end
+ 
+	function onSelected(mouse)
+	mouse.KeyDown:connect(function(k) if k:lower()=="v"then onButton1Down(mouse)end end)
+	mouse.KeyUp:connect(function(k) if k:lower()=="v"then onButton1Up(mouse)end end)
+	end
+ 
+	onSelected(game.Players.LocalPlayer:GetMouse())
+end)
+end
+
+
+local c = w:CreateFolder("combat") -- Creates the folder(U will put here your buttons,etc)
+
+
+c:Button("chat logs",function()
+pcall(function()
+loadstring(game:HttpGet("https://pastebin.com/raw/MwmrpsPK"))()
+end)
+end)
+
+c:Button("antistomp",function()
+pcall(function()
+loadstring(game:HttpGet("https://pastebin.com/raw/jtd1X42r"))()
+end)
+end)
+
+c:Button("headless",function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/7b7308cd803d0e465fe37bde5dc1facf/raw/0f72f75972c62811b8dad30a5fe8354647d5e08a/headless%2520fe"))()
+end)
+
+c:Button("unjail $150+",function()
+	if game:GetService("Players").LocalPlayer.DataFolder.Currency.Value >= 125 then
+		game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-270.94, 20.327, -242.38)
+		game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-270.94, 20.327, -242.38)
+		wait()
+		fireclickdetector(game:GetService("Workspace").Ignored.Shop["[Key] - $125"].ClickDetector)
+		wait(.1)
+		fireclickdetector(game:GetService("Workspace").Ignored.Shop["[Key] - $125"].ClickDetector)
+		fireclickdetector(game:GetService("Workspace").Ignored.Shop["[Key] - $125"].ClickDetector)
+		repeat
+			wait()
+		until game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("[Key]")
+		local Hum = game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+		if Hum.Health > 0 then
+			key1 = game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("[Key]")
+			if key1 then
+				Hum:EquipTool(key1)
+				for i, v in pairs(game:GetService"Players".LocalPlayer.Character:GetChildren()) do
+					if v:isA("Tool") then
+						game:GetService("Players").LocalPlayer.Character.Humanoid:EquipTool(key1)
+						game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-485.668, 23.631, -285.169)
+						v:Activate()
+					end
+				end
+			end
+		end
+	end
+end)
+
+
+local w3 = library:CreateWindow("extra") -- Creates the window
+
+
+
+local b3 = w2:CreateFolder("animations") -- Creates the folder(U will put here your buttons,etc)
+
+b3:Button("animation pack",function()
+	-- // Delete Clones
+	for _, v in next, game:GetService("CoreGui"):GetChildren() do
+		if (v.Name:match("FreeAnimationPack")) then
+			v:Destroy()
+		end
+	end
+
+	-- // Instances
+	local FreeAnimationPack = Instance.new("ScreenGui")
+	local AnimationPack = Instance.new("TextButton")
+	local Animations = Instance.new("ScrollingFrame")
+	local UIListLayout = Instance.new("UIListLayout")
+	local Lean = Instance.new("TextButton")
+	local Lay = Instance.new("TextButton")
+	local Dance1 = Instance.new("TextButton")
+	local Dance2 = Instance.new("TextButton")
+	local Greet = Instance.new("TextButton")
+	local ChestPump = Instance.new("TextButton")
+	local Praying = Instance.new("TextButton")
+	local Stop = Instance.new("TextButton")
+	local UniversalAnimation = Instance.new("Animation")
+
+	-- // Utility
+	function stopTracks()
+		for _, v in next, game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):GetPlayingAnimationTracks() do
+			if (v.Animation.AnimationId:match("rbxassetid")) then
+				v:Stop()
+			end
+		end
+	end
+
+	function loadAnimation(id)
+		if UniversalAnimation.AnimationId == id then
+			stopTracks()
+			UniversalAnimation.AnimationId = "1"
+		else
+			UniversalAnimation.AnimationId = id
+			local animationTrack = game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):LoadAnimation(UniversalAnimation)
+			animationTrack:Play()
+		end
+	end
+
+	-- // Properties
+	FreeAnimationPack.Name = "FreeAnimationPack"
+	FreeAnimationPack.Parent = game.CoreGui
+	FreeAnimationPack.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+	AnimationPack.Name = "AnimationPack"
+	AnimationPack.Parent = FreeAnimationPack
+	AnimationPack.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	AnimationPack.BorderSizePixel = 0
+	AnimationPack.Position = UDim2.new(0, 0, 0.388007045, 0)
+	AnimationPack.Size = UDim2.new(0, 100, 0, 20)
+	AnimationPack.Font = Enum.Font.SourceSansBold
+	AnimationPack.Text = "Animations"
+	AnimationPack.TextColor3 = Color3.fromRGB(0, 0, 0)
+	AnimationPack.TextSize = 18.000
+	AnimationPack.MouseButton1Click:Connect(function()
+		if (Animations.Visible == false) then
+			Animations.Visible = true
+		end
+	end)
+
+	Animations.Name = "Animations"
+	Animations.Parent = AnimationPack
+	Animations.Active = true
+	Animations.BackgroundColor3 = Color3.fromRGB(102, 102, 102)
+	Animations.Position = UDim2.new(-0.104712225, 0, -1.54173493, 0)
+	Animations.Size = UDim2.new(0, 120, 0, 195)
+	Animations.Visible = false
+	Animations.CanvasPosition = Vector2.new(0, 60.0000305)
+	Animations.CanvasSize = UDim2.new(0, 0, 1, 235)
+
+	UIListLayout.Parent = Animations
+	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	UIListLayout.Padding = UDim.new(0, 2)
+
+	Lean.Name = "Lean"
+	Lean.Parent = Animations
+	Lean.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Lean.Size = UDim2.new(1, 0, 0, 30)
+	Lean.Font = Enum.Font.SourceSansBold
+	Lean.Text = "Lean"
+	Lean.TextColor3 = Color3.fromRGB(0, 0, 0)
+	Lean.TextSize = 14.000
+	Lean.MouseButton1Click:Connect(function()
+		stopTracks()
+		loadAnimation("rbxassetid://3152375249")
+	end)
+
+	Lay.Name = "Lay"
+	Lay.Parent = Animations
+	Lay.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Lay.Size = UDim2.new(1, 0, 0, 30)
+	Lay.Font = Enum.Font.SourceSansBold
+	Lay.Text = "Lay"
+	Lay.TextColor3 = Color3.fromRGB(0, 0, 0)
+	Lay.TextSize = 14.000
+	Lay.MouseButton1Click:Connect(function()
+		stopTracks()
+		loadAnimation("rbxassetid://3152378852")
+	end)
+
+	Dance1.Name = "Dance1"
+	Dance1.Parent = Animations
+	Dance1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Dance1.Size = UDim2.new(1, 0, 0, 30)
+	Dance1.Font = Enum.Font.SourceSansBold
+	Dance1.Text = "Dance1"
+	Dance1.TextColor3 = Color3.fromRGB(0, 0, 0)
+	Dance1.TextSize = 14.000
+	Dance1.MouseButton1Click:Connect(function()
+		stopTracks()
+		loadAnimation("rbxassetid://3189773368")
+	end)
+
+	Dance2.Name = "Dance2"
+	Dance2.Parent = Animations
+	Dance2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Dance2.Size = UDim2.new(1, 0, 0, 30)
+	Dance2.Font = Enum.Font.SourceSansBold
+	Dance2.Text = "Dance2"
+	Dance2.TextColor3 = Color3.fromRGB(0, 0, 0)
+	Dance2.TextSize = 14.000
+	Dance2.MouseButton1Click:Connect(function()
+		stopTracks()
+		loadAnimation("rbxassetid://3189776546")
+	end)
+
+	Greet.Name = "Greet"
+	Greet.Parent = Animations
+	Greet.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Greet.Size = UDim2.new(1, 0, 0, 30)
+	Greet.Font = Enum.Font.SourceSansBold
+	Greet.Text = "Greet"
+	Greet.TextColor3 = Color3.fromRGB(0, 0, 0)
+	Greet.TextSize = 14.000
+	Greet.MouseButton1Click:Connect(function()
+		stopTracks()
+		loadAnimation("rbxassetid://3189777795")
+	end)
+
+	ChestPump.Name = "ChestPump"
+	ChestPump.Parent = Animations
+	ChestPump.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	ChestPump.Size = UDim2.new(1, 0, 0, 30)
+	ChestPump.Font = Enum.Font.SourceSansBold
+	ChestPump.Text = "Chest Pump"
+	ChestPump.TextColor3 = Color3.fromRGB(0, 0, 0)
+	ChestPump.TextSize = 14.000
+	ChestPump.MouseButton1Click:Connect(function()
+		stopTracks()
+		loadAnimation("rbxassetid://3189779152")
+	end)
+
+	Praying.Name = "Praying"
+	Praying.Parent = Animations
+	Praying.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Praying.Size = UDim2.new(1, 0, 0, 30)
+	Praying.Font = Enum.Font.SourceSansBold
+	Praying.Text = "Praying"
+	Praying.TextColor3 = Color3.fromRGB(0, 0, 0)
+	Praying.TextSize = 14.000
+	Praying.MouseButton1Click:Connect(function()
+		stopTracks()
+		loadAnimation("rbxassetid://3487719500")
+	end)
+
+	Stop.Name = "Stop"
+	Stop.Parent = Animations
+	Stop.BackgroundColor3 = Color3.fromRGB(255, 112, 112)
+	Stop.Size = UDim2.new(1, 0, 0, 30)
+	Stop.Font = Enum.Font.SourceSansBold
+	Stop.Text = "CLOSE"
+	Stop.TextColor3 = Color3.fromRGB(0, 0, 0)
+	Stop.TextSize = 16.000
+	Stop.MouseButton1Click:Connect(function()
+Animations.Visible = false
+	end)
+	--scripts
+	local plr = game.Players.LocalPlayer
+
+	plr:GetMouse().KeyDown:Connect(function(K)
+		if K == "p" then
+			Animations.Visible = false
+		end
+	end)
+end)
+
+
+b3:Button("toy zombie",function()
+        local Animate = game.Players.LocalPlayer.Character.Animate
+        Animate.idle.Animation1.AnimationId = "http://www.roblox.com/asset/?id=782841498"
+        Animate.idle.Animation2.AnimationId = "http://www.roblox.com/asset/?id=782845736"
+        Animate.walk.WalkAnim.AnimationId = "http://www.roblox.com/asset/?id=616168032"
+        Animate.run.RunAnim.AnimationId = "http://www.roblox.com/asset/?id=616163682"
+        Animate.jump.JumpAnim.AnimationId = "http://www.roblox.com/asset/?id=1083218792"
+        Animate.climb.ClimbAnim.AnimationId = "http://www.roblox.com/asset/?id=1083182000"
+        Animate.fall.FallAnim.AnimationId = "http://www.roblox.com/asset/?id=1083189019"
+end)
+
+
+b3:Button("zombie",function()
+        local Animate = game.Players.LocalPlayer.Character.Animate
+        Animate.idle.Animation1.AnimationId = "http://www.roblox.com/asset/?id=616158929"
+        Animate.idle.Animation2.AnimationId = "http://www.roblox.com/asset/?id=616160636"
+        Animate.walk.WalkAnim.AnimationId = "http://www.roblox.com/asset/?id=616168032"
+        Animate.run.RunAnim.AnimationId = "http://www.roblox.com/asset/?id=616163682"
+        Animate.jump.JumpAnim.AnimationId = "http://www.roblox.com/asset/?id=616161997"
+        Animate.climb.ClimbAnim.AnimationId = "http://www.roblox.com/asset/?id=616156119"
+        Animate.fall.FallAnim.AnimationId = "http://www.roblox.com/asset/?id=616157476"
+end)
+
+b3:Button("werewolf",function()
+        local Animate = game.Players.LocalPlayer.Character.Animate
+        Animate.idle.Animation1.AnimationId = "http://www.roblox.com/asset/?id=1083195517"
+        Animate.idle.Animation2.AnimationId = "http://www.roblox.com/asset/?id=1083214717"
+        Animate.walk.WalkAnim.AnimationId = "http://www.roblox.com/asset/?id=1083178339"
+        Animate.run.RunAnim.AnimationId = "http://www.roblox.com/asset/?id=1083216690"
+        Animate.jump.JumpAnim.AnimationId = "http://www.roblox.com/asset/?id=1083218792"
+        Animate.climb.ClimbAnim.AnimationId = "http://www.roblox.com/asset/?id=1083182000"
+        Animate.fall.FallAnim.AnimationId = "http://www.roblox.com/asset/?id=1083189019"
+end)
+
+b3:Button("vampire",function()
+        local Animate = game.Players.LocalPlayer.Character.Animate
+        Animate.idle.Animation1.AnimationId = "http://www.roblox.com/asset/?id=1083445855"
+        Animate.idle.Animation2.AnimationId = "http://www.roblox.com/asset/?id=1083450166"
+        Animate.walk.WalkAnim.AnimationId = "http://www.roblox.com/asset/?id=1083473930"
+        Animate.run.RunAnim.AnimationId = "http://www.roblox.com/asset/?id=1083462077"
+        Animate.jump.JumpAnim.AnimationId = "http://www.roblox.com/asset/?id=1083455352"
+        Animate.climb.ClimbAnim.AnimationId = "http://www.roblox.com/asset/?id=1083439238"
+        Animate.fall.FallAnim.AnimationId = "http://www.roblox.com/asset/?id=1083443587"
+end)
+
+b3:Button("toy",function()
+        local Animate = game.Players.LocalPlayer.Character.Animate
+        Animate.idle.Animation1.AnimationId = "http://www.roblox.com/asset/?id=782841498"
+        Animate.idle.Animation2.AnimationId = "http://www.roblox.com/asset/?id=782845736"
+        Animate.walk.WalkAnim.AnimationId = "http://www.roblox.com/asset/?id=782843345"
+        Animate.run.RunAnim.AnimationId = "http://www.roblox.com/asset/?id=782842708"
+        Animate.jump.JumpAnim.AnimationId = "http://www.roblox.com/asset/?id=782847020"
+        Animate.climb.ClimbAnim.AnimationId = "http://www.roblox.com/asset/?id=782843869"
+        Animate.fall.FallAnim.AnimationId = "http://www.roblox.com/asset/?id=782846423"
+end)
+
+b3:Button("toy",function()
+
+end)
+
+b3:Button("mage",function()
+        local Animate = game.Players.LocalPlayer.Character.Animate
+        Animate.idle.Animation1.AnimationId = "http://www.roblox.com/asset/?id=707742142"
+        Animate.idle.Animation2.AnimationId = "http://www.roblox.com/asset/?id=707855907"
+        Animate.walk.WalkAnim.AnimationId = "http://www.roblox.com/asset/?id=707897309"
+        Animate.run.RunAnim.AnimationId = "http://www.roblox.com/asset/?id=707861613"
+        Animate.jump.JumpAnim.AnimationId = "http://www.roblox.com/asset/?id=707853694"
+        Animate.climb.ClimbAnim.AnimationId = "http://www.roblox.com/asset/?id=707826056"
+        Animate.fall.FallAnim.AnimationId = "http://www.roblox.com/asset/?id=707829716"
+end)
+
+b3:Button("knight",function()
+        local Animate = game.Players.LocalPlayer.Character.Animate
+        Animate.idle.Animation1.AnimationId = "http://www.roblox.com/asset/?id=657595757"
+        Animate.idle.Animation2.AnimationId = "http://www.roblox.com/asset/?id=657568135"
+        Animate.walk.WalkAnim.AnimationId = "http://www.roblox.com/asset/?id=657552124"
+        Animate.run.RunAnim.AnimationId = "http://www.roblox.com/asset/?id=657564596"
+        Animate.jump.JumpAnim.AnimationId = "http://www.roblox.com/asset/?id=658409194"
+        Animate.climb.ClimbAnim.AnimationId = "http://www.roblox.com/asset/?id=658360781"
+        Animate.fall.FallAnim.AnimationId = "http://www.roblox.com/asset/?id=657600338"
+end)
+
+b3:Button("bubbly",function()
+        local Animate = game.Players.LocalPlayer.Character.Animate
+        Animate.idle.Animation1.AnimationId = "http://www.roblox.com/asset/?id=910004836"
+        Animate.idle.Animation2.AnimationId = "http://www.roblox.com/asset/?id=910009958"
+        Animate.walk.WalkAnim.AnimationId = "http://www.roblox.com/asset/?id=910034870"
+        Animate.run.RunAnim.AnimationId = "http://www.roblox.com/asset/?id=910025107"
+        Animate.jump.JumpAnim.AnimationId = "http://www.roblox.com/asset/?id=910016857"
+        Animate.fall.FallAnim.AnimationId = "http://www.roblox.com/asset/?id=910001910"
+        Animate.swimidle.SwimIdle.AnimationId = "http://www.roblox.com/asset/?id=910030921"
+        Animate.swim.Swim.AnimationId = "http://www.roblox.com/asset/?id=910028158"
+end)
+
+
+
+
+local w2 = library:CreateWindow("credits") -- Creates the window
+
+
+
+local b2 = w2:CreateFolder("credits") -- Creates the folder(U will put here your buttons,etc)
+
+
+
+b2:Label("Owner/Creator:",{
+    TextSize = 25; -- Self Explaining
+    TextColor = Color3.fromRGB(255,255,255); -- Self Explaining
+    BgColor = Color3.fromRGB(75,75,75); -- Self Explaining
+
+}) 
+
+
+b2:Label("3zkio#6385",{
+    TextSize = 25; -- Self Explaining
+    TextColor = Color3.fromRGB(255,255,255); -- Self Explaining
+    BgColor = Color3.fromRGB(75,75,75); -- Self Explaining
+
+}) 
+
+
+b2:Label("⭐mafia#8909",{
+    TextSize = 25; -- Self Explaining
+    TextColor = Color3.fromRGB(255,255,255); -- Self Explaining
+    BgColor = Color3.fromRGB(75,75,75); -- Self Explaining
+
+}) 
+
+
+b2:Label("Flumpty Bumpty#6530",{
+    TextSize = 25; -- Self Explaining
+    TextColor = Color3.fromRGB(255,255,255); -- Self Explaining
+    BgColor = Color3.fromRGB(75,75,75); -- Self Explaining
+
+}) 
+
+
+
+b2:Label("Wally - ui lib",{
+    TextSize = 25; -- Self Explaining
+    TextColor = Color3.fromRGB(255,255,255); -- Self Explaining
+    BgColor = Color3.fromRGB(75,75,75); -- Self Explaining
+
+}) 
+
+
+
+b2:Label("discord.gg/t6BuebKeWU",{
+    TextSize = 20; -- Self Explaining
+    TextColor = Color3.fromRGB(255,255,255); -- Self Explaining
+    BgColor = Color3.fromRGB(75,75,75); -- Self Explaining
+
+})
