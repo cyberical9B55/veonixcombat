@@ -3140,6 +3140,62 @@ AddCommand("clip", {"unnoclip"}, "disables noclip", {}, function(Caller, Args)
 		return "noclip disabled"
 	end
 end)
+
+
+AddCommand("armor", {"buyarmor"}, "auto buy armor", {}, function(Caller, Args)
+   local plr = game.Players.LocalPlayer
+	local savedarmourpos = plr.Character.HumanoidRootPart.Position
+	plr.Character.HumanoidRootPart.CFrame = CFrame.new(-938.476685, -25.2498264, 570.100159, -0.0353576206, 9.85617206e-08, -0.999374807, -2.69198441e-09, 1, 9.871858e-08, 0.999374807, 6.18077589e-09, -0.0353576206)
+	wait(.4)
+
+	fireclickdetector(game.Workspace.Ignored.Shop['[High-Medium Armor] - $2300'].ClickDetector)
+	wait(0.1)
+	plr.Character.HumanoidRootPart.CFrame = CFrame.new(savedarmourpos)
+end)
+
+
+
+AddCommand("tobank", {"tpbank"}, "tp to bank", {}, function(Caller, Args)
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-318.891174, 80.2145309, -257.177429, 0.0479469746, -5.14644114e-08, 0.998850107, -3.12971538e-09, 1, 5.16738901e-08, -0.998850107, -5.60372015e-09, 0.0479469746)
+end)
+
+AddCommand("totaco", {"tptaco"}, "tp to tacoshop", {}, function(Caller, Args)
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(707.502014, 139, -543.044739, -0.00318608154, -0.00102963799, 0.999993861, 0.000187970581, 0.999999464, 0.00103024102, -0.99999404, 0.00019125198, -0.00318560796)
+end)
+
+AddCommand("toplayground", {"tpplayground"}, "tp to playground", {}, function(Caller, Args)
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-308.851196, 103.049866, -685.874817, 0.0775452703, 4.43633544e-05, -0.996988416, 4.02679916e-06, 1, 4.48105384e-05, 0.996988416, -7.48951334e-06, 0.0775452703)
+end)
+
+AddCommand("bat", {"buybat"}, "auto buy bat", {}, function(Caller, Args)
+   local plr = game.Players.LocalPlayer
+	local savedbatpos = plr.Character.HumanoidRootPart.Position
+	plr.Character.HumanoidRootPart.CFrame = CFrame.new(380, 49, -283)
+	wait(.4)
+
+	fireclickdetector(game.Workspace.Ignored.Shop['[Bat] - $250'].ClickDetector)
+	wait(0.1)
+	plr.Character.HumanoidRootPart.CFrame = CFrame.new(savedbatpos)
+end)
+
+AddCommand("food", {"buyfood"}, "auto buy food", {}, function(Caller, Args)
+   local plr = game.Players.LocalPlayer
+	local savehotdogpos = plr.Character.HumanoidRootPart.Position
+	plr.Character.HumanoidRootPart.CFrame = CFrame.new(107.973412, 25.128006, -976.381104)
+	wait(0.56)
+
+	fireclickdetector(game.Workspace.Ignored.Shop['[HotDog] - $8'].ClickDetector)
+	wait(0.1)
+	plr.Character.HumanoidRootPart.CFrame = CFrame.new(-994.55011, 24.5980186, -155.482489)
+	wait(0.6)
+
+	fireclickdetector(game.Workspace.Ignored.Shop['[Popcorn] - $7'].ClickDetector)
+	wait(0.1)
+	plr.Character.HumanoidRootPart.CFrame = CFrame.new(savehotdogpos)
+
+end)
+
+
 autodrop = false
 AddCommand("autodrop", {"fastdrop"}, "automatically drops cash", {}, function(Caller, Args)
 if autodrop == false then
@@ -6049,7 +6105,7 @@ if (debug.info(2, "f") == nil) then
 end
 
 while true do
-	wait(1)
+	wait(0.1)
 	
 	local Player = game.Players.LocalPlayer
 	local Character = Player.Character
@@ -6066,4 +6122,24 @@ while true do
 			end
 		end
 	end)
+repeat
+	wait(3)
+	
+	local Player = game.Players.LocalPlayer
+	local Character = Player.Character
+	local Humanoid = Character.Humanoid
+
+
+
+	Humanoid.HealthChanged:connect(function()
+		if Humanoid.Health < 10 and test == true then
+			for L_170_forvar0, L_171_forvar1 in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+				if L_171_forvar1:IsA("BasePart") then
+					L_171_forvar1:Destroy()
+				end
+			end
+		end
+	end)
+
+until idkfakethingy == false
 end
