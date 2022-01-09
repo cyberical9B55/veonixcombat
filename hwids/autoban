@@ -3532,8 +3532,8 @@ notool = true
 		end
 		
 		if notool == true then
-		return "please hold a tool"
 		notool = false
+				return "please hold a tool"
 		end
 end)
 
