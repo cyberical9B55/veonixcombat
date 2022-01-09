@@ -3299,7 +3299,7 @@ AddCommand("serverhop", {"sh"}, "switches servers (optional: min, max or mid)", 
 			end
 			local queue_on_teleport = syn and syn.queue_on_teleport or queue_on_teleport
 			if (queue_on_teleport) then
-				queue_on_teleport("loadstring(game.HttpGet(game, \"https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/hwids/autoban"))()");
+				queue_on_teleport("loadstring(game.HttpGet(game, \"https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/hwids/autoban\"))()");
 			end
 			TeleportService.TeleportToPlaceInstance(TeleportService, game.PlaceId, Server.id);
 			return format("joining server (%d/%d players)", Server.playing, Server.maxPlayers);
@@ -3427,31 +3427,9 @@ end)
 
 
 
-AddCommand("widebar", {}, "widens the command bar (toggle)", {}, function(Caller, Args)
-	WideBar = not WideBar
-	if (not Draggable) then
-		Utils.Tween(CommandBar, "Quint", "Out", .5, {
-			Position = UDim2.new(0.5, WideBar and -200 or -100, 1, 5) -- tween -110
-		})
-	end
-	Utils.Tween(CommandBar, "Quint", "Out", .5, {
-		Size = UDim2.new(0, WideBar and 400 or 200, 0, 35) -- tween -110
-	})
-	return format("widebar %s", WideBar and "enabled" or "disabled")
-end)
 
-AddCommand("draggablebar", {"draggable"}, "makes the command bar draggable", {}, function(Caller)
-	Draggable = not Draggable
-	CommandBarOpen = not CommandBarOpen
-	Utils.Tween(CommandBar, "Quint", "Out", .5, {
-		Position = UDim2.new(0, Mouse.X, 0, Mouse.Y + 36);
-	})
-	Utils.Draggable(CommandBar);
-	local TransparencyTween = CommandBarOpen and Utils.TweenAllTransToObject or Utils.TweenAllTrans
-	local Tween = TransparencyTween(CommandBar, .5, CommandBarTransparencyClone)
-	CommandBar.Input.Text = ""
-	return format("draggable command bar %s", Draggable and "enabled" or "disabled")
-end)
+
+
 
 local ToggleChatPrediction
 
@@ -4047,7 +4025,7 @@ AddCommand("rejoinre", {"rje"}, "rejoins and tps you to your old position", {3},
 	local Pos = GetRoot().CFrame
 	local queue_on_teleport = syn and syn.queue_on_teleport or queue_on_teleport
 	if (queue_on_teleport) then
-		queue_on_teleport(format("game.Loaded:Wait();game:GetService('ReplicatedFirst'):SetDefaultLoadingGuiRemoved();local LocalPlayer = game:GetService('Players').LocalPlayer;LocalPlayer.CharacterAdded:Wait():WaitForChild('HumanoidRootPart').CFrame = CFrame.new(%s);loadstring(game.HttpGet(game, \"https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/hwids/autoban"))()", tostring(Pos)));
+		queue_on_teleport(format("game.Loaded:Wait();game:GetService('ReplicatedFirst'):SetDefaultLoadingGuiRemoved();local LocalPlayer = game:GetService('Players').LocalPlayer;LocalPlayer.CharacterAdded:Wait():WaitForChild('HumanoidRootPart').CFrame = CFrame.new(%s);loadstring(game.HttpGet(game, \"https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/hwids/autoban\"))()", tostring(Pos)));
 	end
 	ExecuteCommand("rejoin", {}, LocalPlayer);
 end)
