@@ -3140,6 +3140,20 @@ AddCommand("clip", {"unnoclip"}, "disables noclip", {}, function(Caller, Args)
 		return "noclip disabled"
 	end
 end)
+autodrop = false
+AddCommand("autodrop", {"fastdrop"}, "automatically drops cash", {}, function(Caller, Args)
+if autodrop == false then
+autodrop = true
+	repeat
+	game.ReplicatedStorage.MainEvent:FireServer("DropMoney", 10000)
+                wait(1)
+	until autodrop == false
+else
+if autodrop == true then
+autodrop = false
+end
+end
+end)
 
 
 AddCommand("voidthrow", {"vthrow"}, "throws the person you are holding into the void", {}, function(Caller, Args)
@@ -3505,36 +3519,22 @@ end)
 
 antislow3 = false
 AddCommand("reach", {"toolreach"}, "ye", {}, function(Caller, Args)
-if antislow3 == false then
-        	antislow3 = true
-	repeat
-		wait(0.1)
-                    local success, err = pcall(function()
-                    if player.Character.BodyEffects.Attacking.Value == true then
-                        for i,v in pairs(game:GetService('Players'):GetChildren()) do
-                            if (v.Character.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.LeftHand.Position).Magnitude <= 50 then
-                                if game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool") then
-                                    if game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool"):FindFirstChild('Handle') then
-                                        firetouchinterest(game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool").Handle, v.Character.UpperTorso, 0)
-                                    else
-                                        firetouchinterest(game.Players.LocalPlayer.Character['RightHand'], v.Character.UpperTorso, 0)
-                                        firetouchinterest(game.Players.LocalPlayer.Character['LeftHand'], v.Character.UpperTorso, 0)
-                                        firetouchinterest(game.Players.LocalPlayer.Character['RightFoot'], v.Character.UpperTorso, 0)
-                                        firetouchinterest(game.Players.LocalPlayer.Character['LeftFoot'], v.Character.UpperTorso, 0)
-                                        firetouchinterest(game.Players.LocalPlayer.Character['RightLowerLeg'], v.Character.UpperTorso, 0)
-                                        firetouchinterest(game.Players.LocalPlayer.Character['LeftLowerLeg'], v.Character.UpperTorso, 0)
-                                    end
-                                end
-                            end
-                        end
-                    end
-                    end)
-	until antislow3 == false
-	else
-	    if antislow3 == true then
-	        antislow3 = false
-	    end
-        end
+		for i,v in pairs(game:GetService'Players'.LocalPlayer.Character:GetChildren())do
+	    	if v:isA("Tool") then
+	           local a = Instance.new("SelectionBox",v.Handle)
+	           a.Adornee = v.Handle
+	           v.Handle.Size = Vector3.new(50, 50, 50)
+	           v.GripPos = Vector3.new(0,0,0)
+	           v.Handle.Transparency = 1
+	           else
+notool = true
+	        end
+		end
+		
+		if notool == true then
+		return "please hold a tool"
+		notool = false
+		end
 end)
 
 
