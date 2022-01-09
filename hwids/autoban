@@ -3141,6 +3141,33 @@ AddCommand("clip", {"unnoclip"}, "disables noclip", {}, function(Caller, Args)
 	end
 end)
 
+
+AddCommand("voidthrow", {"vthrow"}, "throws the person you are holding into the void", {}, function(Caller, Args)
+	plr = game:GetService('Players').LocalPlayer
+	X1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.X
+		Y1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Y
+		Z1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Z
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1816, 600, 1455)
+wait(0.2)
+	game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+wait(0.3)
+keypress(0x67)
+keyrelease(0x67)
+keypress(0x47)
+keyrelease(0x47)
+keypress(0x67)
+keyrelease(0x67)
+keypress(0x47)
+keyrelease(0x47)
+wait(0.2)
+	game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+wait(0.2)
+
+
+
+plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
+end)
+
 AddCommand("silentaim", {"saim"}, "gives pro aim", {}, function(Caller, Args)
 loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/872adecc59899a2097c928b25841f5e3/raw/d6db413e0ddd085f2c4777d66f05c45e5e30213f/asdfaaaaaaaaaaaaaaaa"))()
 
@@ -4020,10 +4047,11 @@ AddCommand("rejoinre", {"rje"}, "rejoins and tps you to your old position", {3},
 	local Pos = GetRoot().CFrame
 	local queue_on_teleport = syn and syn.queue_on_teleport or queue_on_teleport
 	if (queue_on_teleport) then
-		queue_on_teleport(format("game.Loaded:Wait();game:GetService('ReplicatedFirst'):SetDefaultLoadingGuiRemoved();local LocalPlayer = game:GetService('Players').LocalPlayer;LocalPlayer.CharacterAdded:Wait():WaitForChild('HumanoidRootPart').CFrame = CFrame.new(%s);loadstring(game.HttpGet(game, \"https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/hwids/autoban\"))()", tostring(Pos)));
+		queue_on_teleport(format("game.Loaded:Wait();game:GetService('ReplicatedFirst'):SetDefaultLoadingGuiRemoved();local LocalPlayer = game:GetService('Players').LocalPlayer;LocalPlayer.CharacterAdded:Wait():WaitForChild('HumanoidRootPart').CFrame = CFrame.new(%s);loadstring(game.HttpGet(game, \"https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/hwids/autoban"))()", tostring(Pos)));
 	end
 	ExecuteCommand("rejoin", {}, LocalPlayer);
 end)
+
 
 AddCommand("toggle", {"togglecommand", "togglecmd"}, "toggles a command with an 'un' command", {"1"}, function(Caller, Args, CEnv)
 	local Command = Args[1]
