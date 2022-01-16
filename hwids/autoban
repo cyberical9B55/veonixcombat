@@ -1,3 +1,7 @@
+--[[
+	fates admin - 11/1/2022
+]]
+
 local game = game
 local GetService = game.GetService
 if (not game.IsLoaded(game)) then
@@ -17,7 +21,7 @@ do
         local UserInputService = GetService(game, "UserInputService");
         local CommandBarPrefix = GetConfig().CommandBarPrefix
         local StringKeyCode = UserInputService.GetStringForKeyCode(UserInputService, Enum.KeyCode[CommandBarPrefix]);
-        return Notify(nil, "Loaded", "mafia admin is already loaded", nil),
+        return Notify(nil, "Loaded", "fates admin is already loaded... use 'killscript' to kill", nil),
         Notify(nil, "Your Prefix is", string.format("%s (%s)", StringKeyCode, CommandBarPrefix));
     end
 end
@@ -178,7 +182,7 @@ do
                 return Ret
             end
             if (Debug) then
-                warn("[CMD Error]: " .. debug.traceback(Ret));
+              print("erroRRR???");
             end
         end
     end
@@ -970,7 +974,7 @@ local WriteConfig = function(Destroy)
     if (isfolder("mafia-admin") and Destroy) then
         delfolder("mafia-admin");
         writefile("mafia-admin/config.json", JSON);
-        writefile("mafia/admin/pluings/plugin-conf.json", PluginJSON);
+        writefile("fates/admin/pluings/plugin-conf.json", PluginJSON);
     else
         makefolder("mafia-admin");
         makefolder("mafia-admin/plugins");
@@ -995,7 +999,7 @@ local GetPluginConfig = function()
         return JSON
     else
         WriteConfig();
-        return JSONDecode(Services.HttpService, readfile("mafia-admin/plugins/plugin-conf.json"));
+        return JSONDecode(Services.HttpService, readfile("fates-admin/plugins/plugin-conf.json"));
     end
 end
 
@@ -1792,7 +1796,7 @@ Utils.Notify = function(Caller, Title, Message, Time)
 
         AddConnection(CConnect(Clone.Close.MouseButton1Click, TweenDestroy));
         if (Title ~= "Warning" and Title ~= "Error") then
-            print("error")
+print("warning")
         end
 
         return Clone
@@ -2393,14 +2397,14 @@ local ExecuteCommand = function(Name, Args, Caller)
         end, function(Err)
             if (Debug) then
                 Utils.Error(format("[FA CMD Error]: Command = '%s' Traceback = '%s'", Name, debug.traceback(Err)), Caller);
-print("a whitelisted user did a errored cmd")
+                Utils.Notify(Caller, "Error", format("error in the '%s' command, more info shown in console", Name));
             end
         end);
         if (Command.IsPlugin and sett and PluginConf.SafePlugins and Context) then
             sett(Context);
         end
     else
-        Utils.Warn("couldn't find the command 1" .. Name, Caller);
+        Utils.Warn("couldn't find the command " .. Name, Caller);
     end
 end
 
@@ -2552,70 +2556,251 @@ do
 end
 
 
-AddCommand("chatlogs", {"clogs"}, "enables chatlogs", {}, function(Caller)
---This script reveals ALL hidden messages in the default chat
-
-enabled = true --chat "/spy" to toggle!
-spyOnMyself = true --if true will check your messages too
-public = false --if true will chat the logs publicly (fun, risky)
-publicItalics = true --if true will use /me to stand out
-privateProperties = { --customize private logs
-	Color = Color3.fromRGB(0,255,255); 
-	Font = Enum.Font.SourceSansBold;
-	TextSize = 18;
-}
-
-
-local StarterGui = game:GetService("StarterGui")
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer or Players:GetPropertyChangedSignal("LocalPlayer"):Wait() or Players.LocalPlayer
-local saymsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest")
-local getmsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
-local instance = (_G.chatSpyInstance or 0) + 1
-_G.chatSpyInstance = instance
-
-local function onChatted(p,msg)
-	if _G.chatSpyInstance == instance then
-		if p==player and msg:lower():sub(1,4)=="/spy" then
-			enabled = not enabled
-			wait(0.3)
-			privateProperties.Text = "{SPY "..(enabled and "EN" or "DIS").."ABLED}"
-			StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
-		elseif enabled and (spyOnMyself==true or p~=player) then
-			msg = msg:gsub("[\n\r]",''):gsub("\t",' '):gsub("[ ]+",' ')
-			local hidden = true
-			local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
-				if packet.SpeakerUserId==p.UserId and packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All" or (channel=="Team" and public==false and Players[packet.FromSpeaker].Team==player.Team)) then
-					hidden = false
-				end
-			end)
-			wait(1)
-			conn:Disconnect()
-			if hidden and enabled then
-				if public then
-					saymsg:FireServer((publicItalics and "/me " or '').."{SPY} [".. p.Name .."]: "..msg,"All")
-				else
-					privateProperties.Text = "{SPY} [".. p.Name .."]: "..msg
-					StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
-				end
-			end
-		end
-	end
-end
-
-for _,p in ipairs(Players:GetPlayers()) do
-	p.Chatted:Connect(function(msg) onChatted(p,msg) end)
-end
-Players.PlayerAdded:Connect(function(p)
-	p.Chatted:Connect(function(msg) onChatted(p,msg) end)
+AddCommand("view", {"v"}, "views a user", {3,"1"}, function(Caller, Args, CEnv)
+    local Target = GetPlayer(Args[1]);
+    if (#Target ~= 1) then
+        return "you can only view 1 person"
+    end
+    Target = Target[1]
+    Camera.CameraSubject = GetCharacter(Target) or GetCharacter();
+    AddConnection(CConnect(Target.CharacterAdded, function()
+        CWait(Heartbeat);
+        Camera.CameraSubject = Target.Character
+    end), CEnv);
+    AddConnection(CConnect(LocalPlayer.CharacterAdded, function()
+        WaitForChild(LocalPlayer.Character, "Humanoid");
+        CWait(Camera.CameraSubject.Changed);
+        CWait(Heartbeat);
+        Camera.CameraSubject = Target.Character
+    end), CEnv);
+    return "viewing " .. Target.Name
 end)
-privateProperties.Text = "{SPY "..(enabled and "EN" or "DIS").."ABLED}"
-StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
-if not player.PlayerGui:FindFirstChild("Chat") then wait(3) end
-local chatFrame = player.PlayerGui.Chat.Frame
-chatFrame.ChatChannelParentFrame.Visible = true
-chatFrame.ChatBarParentFrame.Position = chatFrame.ChatChannelParentFrame.Position+UDim2.new(UDim.new(),chatFrame.ChatChannelParentFrame.Size.Y)
+
+AddCommand("unview", {"unv"}, "unviews a user", {3}, function(Caller, Args)
+    DisableAllCmdConnections("view");
+    Camera.CameraSubject = GetCharacter();
+    return "unviewing"
 end)
+
+AddCommand("invisible", {"invis"}, "makes yourself invisible", {3}, function(Caller, Args, CEnv)
+    local Root = GetRoot();
+    local OldPos = Root.CFrame
+    local Seat = InstanceNew("Seat");
+    local Weld = InstanceNew("Weld");
+    Root.CFrame = CFrameNew(9e9, 9e9, 9e9);
+    wait(.2);
+    Root.Anchored = true
+    ProtectInstance(Seat);
+    Seat.Parent = Services.Workspace
+    Seat.CFrame = Root.CFrame
+    Seat.Anchored = false
+    Weld.Parent = Seat
+    Weld.Part0 = Seat
+    Weld.Part1 = Root
+    Root.Anchored = false
+    Seat.CFrame = OldPos
+    CEnv.Seat = Seat
+    CEnv.Weld = Weld
+    for i, v in next, GetChildren(Root.Parent) do
+        if (IsA(v, "BasePart") or IsA(v, "MeshPart") or IsA(v, "Part")) then
+            CEnv[v] = v.Transparency
+            v.Transparency = v.Transparency <= 0.3 and 0.4 or v.Transparency
+        elseif (IsA(v, "Accessory")) then
+            local Handle = FindFirstChildWhichIsA(v, "MeshPart") or FindFirstChildWhichIsA(v, "Part");
+            if (Handle) then
+                CEnv[Handle] = Handle.Transparency
+                Handle.Transparency = Handle.Transparency <= 0.3 and 0.4 or Handle.Transparency    
+            end
+        end
+    end
+    return "you are now invisible"
+end)
+
+AddCommand("uninvisible", {"uninvis", "noinvis", "visible", "vis"}, "gives you back visiblity", {3}, function(Caller, Args, CEnv)
+    local CmdEnv = LoadCommand("invisible").CmdEnv
+    local Seat = CmdEnv.Seat
+    local Weld = CmdEnv.Weld
+    if (Seat and Weld) then
+        Weld.Part0 = nil
+        Weld.Part1 = nil
+        Destroy(Seat);
+        Destroy(Weld);
+        CmdEnv.Seat = nil
+        CmdEnv.Weld = nil
+        for i, v in next, CmdEnv do
+            if (type(v) == 'number') then
+                i.Transparency = v
+            end
+        end
+        return "you are now visible"
+    end
+    return "you are already visible"
+end)
+
+AddCommand("dupetools", {"dp"}, "dupes your tools", {"1", 1, {"protect"}}, function(Caller, Args, CEnv)
+    local Amount = tonumber(Args[1])
+    local Protected = Args[2] == "protect"
+    if (not Amount) then
+        return "amount must be a number"
+    end
+
+    CEnv[1] = true
+    local AmountDuped = 0
+    local Timer = (Players.RespawnTime * Amount) + (Amount * .4) + 1
+    local Notification = Utils.Notify(Caller, "Duping Tools", format("%d/%d tools duped. %d seconds left", AmountDuped, Amount, Timer), Timer);
+    CThread(function()
+        for i = 1, Timer do
+            if (not LoadCommand("dupetools").CmdEnv[1]) then
+                do break end;
+            end
+            wait(1);
+            Timer = Timer - 1
+            Notification.Message.Text = format("%d/%d tools duped. %d seconds left", AmountDuped, Amount, Timer)
+        end
+    end)()
+
+
+    local ToolAmount = #filter(GetChildren(LocalPlayer.Backpack), function(i, v)
+        return IsA(v, "Tool");
+    end)
+    local Duped = {}
+    local Humanoid = GetHumanoid();
+    UnequipTools(Humanoid);
+    local Connection = AddConnection(CConnect(GetCharacter().ChildAdded, function(Added)
+        wait(.4);
+        if (IsA(Added, "Tool")) then
+            Added.Parent = LocalPlayer.Backpack
+        end
+    end), CEnv);
+    for i = 1, Amount do
+        if (not LoadCommand("dupetools").CmdEnv[1]) then
+            do break end;
+        end
+        ReplaceCharacter();
+        local OldPos
+        if (Protected) then
+            local OldFallen = Services.Workspace.FallenPartsDestroyHeight
+            delay(Players.RespawnTime - .3, function()
+                Services.Workspace.FallenPartsDestroyHeight = -math.huge
+                OldPos = GetRoot().CFrame
+                GetRoot().CFrame = CFrameNew(0, 1e9, 0);
+                GetRoot().Anchored = true
+            end)
+        end
+        UnequipTools(Humanoid);
+        wait(Players.RespawnTime - .05);
+        OldPos = OldPos or GetRoot().CFrame
+        Humanoid = ReplaceHumanoid(Humanoid);
+        local Tools = filter(GetChildren(LocalPlayer.Backpack), function(i, v)
+            return IsA(v, "Tool");
+        end)
+
+        for i2, v in next, Tools do
+            v.Parent = LocalPlayer.Character
+            v.Parent = Services.Workspace
+            Duped[#Duped + 1] = v
+        end
+        local Char = CWait(LocalPlayer.CharacterAdded);
+        WaitForChild(Char, "HumanoidRootPart").CFrame = OldPos;
+
+        for i2, v in next, Duped do
+            if (v.Handle) then
+                firetouchinterest(v.Handle, GetRoot(), 0);
+                firetouchinterest(v.Handle, GetRoot(), 1);
+            end
+        end
+        repeat CWait(RenderStepped);
+            FindFirstChild(Char, "HumanoidRootPart").CFrame = OldPos
+        until GetRoot().CFrame == OldPos
+
+        repeat CWait(RenderStepped);
+            Humanoid = FindFirstChild(Char, "Humanoid")
+        until Humanoid
+        wait(.4);
+        UnequipTools(Humanoid);
+        AmountDuped = AmountDuped + 1
+    end
+    Disconnect(Connection);
+    return format("successfully duped %d tool (s)", #GetChildren(LocalPlayer.Backpack) - ToolAmount);
+end)
+
+AddCommand("dupetools2", {"rejoindupe", "dupe2"}, "sometimes a faster dupetools", {1,"1"}, function(Caller, Args)
+    local Amount = tonumber(Args[1])
+    if (not Amount) then
+        return "amount must be a number"
+    end
+    local queue_on_teleport = syn and syn.queue_on_teleport or queue_on_teleport
+    if (not queue_on_teleport) then
+        return "exploit not supported"
+    end
+    local Root, Humanoid = GetRoot(), GetHumanoid();
+    local OldPos = Root.CFrame
+    Root.CFrame = CFrameNew(0, 2e5, 0);
+    UnequipTools(Humanoid);
+
+    local Tools = filter(GetChildren(LocalPlayer.Backpack), function(i, v)
+        return IsA(v, "Tool");
+    end)
+
+    local Char, Workspace, ReplicatedStorage = GetCharacter(), Services.Workspace, Services.ReplicatedStorage
+    for i, v in next, Tools do
+        v.Parent = Char
+        v.Parent = Workspace
+    end
+    writefile("mafia-admin/tooldupe.txt", tostring(Amount - 1));
+    writefile("mafia-admin/tooldupe.lua", format([[
+        local OldPos = CFrame.new(%s);
+        local DupeAmount = tonumber(readfile("mafia-admin/tooldupe.txt"));
+        local game = game
+        local GetService = game.GetService
+        local Players = GetService(game, "Players");
+        local Workspace = GetService(game, "Workspace");
+        local ReplicatedFirst = GetService(game, "ReplicatedFirst");
+        local TeleportService = GetService(game, "TeleportService");
+        ReplicatedFirst.SetDefaultLoadingGuiRemoved(ReplicatedFirst);
+        local WaitForChild, GetChildren, IsA = game.WaitForChild, game.GetChildren, game.IsA
+        local LocalPlayer = Players.LocalPlayer
+        if (not LocalPlayer) then
+            repeat wait(); LocalPlayer = Players.LocalPlayer until LocalPlayer
+        end
+        local Char = LocalPlayer.CharacterAdded.Wait(LocalPlayer.CharacterAdded);
+        local RootPart = WaitForChild(Char, "HumanoidRootPart");
+        if (DupeAmount <= 1) then
+            for i, v in next, GetChildren(Workspace) do
+                if (IsA(v, "Tool")) then
+                    local Handle = WaitForChild(v, "Handle", .5);
+                    if (Handle) then
+                        firetouchinterest(Handle, RootPart, 0);
+                        firetouchinterest(Handle, RootPart, 1);
+                    end
+                end
+            end
+            delfile("mafia-admin/tooldupe.txt");
+            delfile("mafia-admin/tooldupe.lua");
+            loadstring(game.HttpGet(game, "https://raw.githubusercontent.com/fatesc/mafia-admin/main/main.lua"))();
+            RootPart.CFrame = OldPos
+            repeat wait() RootPart.CFrame = OldPos until RootPart.CFrame == OldPos
+            getgenv().F_A.PluginLibrary.ExecuteCommand("dp", {"1"}, LocalPlayer);
+        else
+            RootPart.CFrame = CFrame.new(0, 2e5, 0);
+            wait(.3);
+            for i, v in next, GetChildren(LocalPlayer.Backpack) do
+                v.Parent = Char
+                v.Parent = Workspace
+            end
+            writefile("mafia-admin/tooldupe.txt", tostring(DupeAmount - 1));
+            local queue_on_teleport = syn and syn.queue_on_teleport or queue_on_teleport
+            queue_on_teleport(readfile("mafia-admin/tooldupe.lua"));
+            TeleportService.TeleportToPlaceInstance(TeleportService, game.PlaceId, game.JobId);
+        end
+    ]], tostring(OldPos)));
+    local TeleportService = Services.TeleportService
+    queue_on_teleport(readfile("mafia-admin/tooldupe.lua"));
+    TeleportService.TeleportToPlaceInstance(TeleportService, game.PlaceId, game.JobId);
+end)
+
+
+
 
 AddCommand("view", {"v"}, "views a user", {3,"1"}, function(Caller, Args, CEnv)
         if (Caller ~= LocalPlayer) then
@@ -2760,6 +2945,7 @@ end)
 
 
 AddCommand("fling", {"stan"}, "flings a player", {}, function(Caller, Args)
+keypress(0x46)
     local Target = GetPlayer(Args[1]);
     local Root = GetRoot()
     local OldPos, OldVelocity = Root.CFrame, Root.Velocity
@@ -2792,7 +2978,10 @@ AddCommand("fling", {"stan"}, "flings a player", {}, function(Caller, Args)
     Root.CFrame = OldPos
 wait(1)
 	game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-return "you may have to reset"
+keyrelease(0x66)
+keypress(0x46)
+keyrelease(0x46)
+return "reset if glitchy"
 end)
 
 
@@ -3064,13 +3253,104 @@ a = true
 end
 end)
 
+AddCommand("stopattack", {"cancelattack"}, "cancels a attack on a user", {3, "1"}, function(Caller, Args, CEnv)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
+stopattack = true
+wait(3)
+stopattack = false
+end
+end)
+
+AddCommand("chatlogs", {"clogs"}, "enables chatlogs", {}, function(Caller)
+--This script reveals ALL hidden messages in the default chat
+
+enabled = true --chat "/spy" to toggle!
+spyOnMyself = true --if true will check your messages too
+public = false --if true will chat the logs publicly (fun, risky)
+publicItalics = true --if true will use /me to stand out
+privateProperties = { --customize private logs
+	Color = Color3.fromRGB(0,255,255); 
+	Font = Enum.Font.SourceSansBold;
+	TextSize = 18;
+}
+
+
+local StarterGui = game:GetService("StarterGui")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer or Players:GetPropertyChangedSignal("LocalPlayer"):Wait() or Players.LocalPlayer
+local saymsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest")
+local getmsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
+local instance = (_G.chatSpyInstance or 0) + 1
+_G.chatSpyInstance = instance
+
+local function onChatted(p,msg)
+	if _G.chatSpyInstance == instance then
+		if p==player and msg:lower():sub(1,4)=="/spy" then
+			enabled = not enabled
+			wait(0.3)
+			privateProperties.Text = "{SPY "..(enabled and "EN" or "DIS").."ABLED}"
+			StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+		elseif enabled and (spyOnMyself==true or p~=player) then
+			msg = msg:gsub("[\n\r]",''):gsub("\t",' '):gsub("[ ]+",' ')
+			local hidden = true
+			local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
+				if packet.SpeakerUserId==p.UserId and packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All" or (channel=="Team" and public==false and Players[packet.FromSpeaker].Team==player.Team)) then
+					hidden = false
+				end
+			end)
+			wait(1)
+			conn:Disconnect()
+			if hidden and enabled then
+				if public then
+					saymsg:FireServer((publicItalics and "/me " or '').."{SPY} [".. p.Name .."]: "..msg,"All")
+				else
+					privateProperties.Text = "{SPY} [".. p.Name .."]: "..msg
+					StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+				end
+			end
+		end
+	end
+end
+
+for _,p in ipairs(Players:GetPlayers()) do
+	p.Chatted:Connect(function(msg) onChatted(p,msg) end)
+end
+Players.PlayerAdded:Connect(function(p)
+	p.Chatted:Connect(function(msg) onChatted(p,msg) end)
+end)
+privateProperties.Text = "{SPY "..(enabled and "EN" or "DIS").."ABLED}"
+StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+if not player.PlayerGui:FindFirstChild("Chat") then wait(3) end
+local chatFrame = player.PlayerGui.Chat.Frame
+chatFrame.ChatChannelParentFrame.Visible = true
+chatFrame.ChatBarParentFrame.Position = chatFrame.ChatChannelParentFrame.Position+UDim2.new(UDim.new(),chatFrame.ChatChannelParentFrame.Size.Y)
+end)
+
+
+
+
 AddCommand("ununderground", {"ununder"}, "removes loop teleportation to the other character", {}, function(Caller)
         if (Caller ~= LocalPlayer) then
 a = true
         else
+            if attackunder == true then
+                attackunder = false
+                	local Looping = LoadCommand("underground").CmdEnv;
+	if (not next(Looping)) then
+	end
+	DisableAllCmdConnections("attack");
+		plr = game:GetService('Players').LocalPlayer
+	X9 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.X
+		Y9 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Y
+		Z9 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Z
+
+plr.Character.HumanoidRootPart.CFrame = CFrame.new(X99,Y99+6,Z99)
+plr.Character.HumanoidRootPart.CFrame = CFrame.new(X99,Y99+6,Z99)
+                else
 	local Looping = LoadCommand("underground").CmdEnv;
 	if (not next(Looping)) then
-		return "you aren't under anyone"
 	end
 	DisableAllCmdConnections("underground");
 	plr = game:GetService('Players').LocalPlayer
@@ -3079,7 +3359,7 @@ a = true
 		Z9 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Z
 
 plr.Character.HumanoidRootPart.CFrame = CFrame.new(X9,Y9+26,Z9)
-	return "underground disabled"
+end
 end
 end)
 
@@ -3605,28 +3885,28 @@ AddCommand("commands", {"cmds"}, "shows you all the commands listed in fates adm
         if (Caller ~= LocalPlayer) then
             a = true
         else
-	if (not CommandsLoaded) then
-		local CommandsList = Commands.Frame.List
-		Utils.SmoothScroll(CommandsList, .14);
-		for _, v in next, CommandsTable do
-			if (not FindFirstChild(CommandsList, v.Name)) then
-				local Clone = Clone(Command)
-				Utils.Hover(Clone, "BackgroundColor3");
-				Utils.ToolTip(Clone, v.Name .. "\n" .. v.Description);
-				Clone.CommandText.Text = v.Name .. (#v.Aliases > 0 and " (" ..concat(v.Aliases, ", ") .. ")" or "");
-				Clone.Name = v.Name
-				Clone.Visible = true
-				Clone.Parent = CommandsList
-			end
-		end
-		Commands.Frame.List.CanvasSize = UDim2.fromOffset(0, Commands.Frame.List.UIListLayout.AbsoluteContentSize.Y);
-		CommandsTransparencyClone = Clone(Commands);
-		Utils.SetAllTrans(Commands)
-		CommandsLoaded = true
-	end
-	Commands.Visible = true
-	Utils.TweenAllTransToObject(Commands, .25, CommandsTransparencyClone);
-	return "Commands Loaded"
+    if (not CommandsLoaded) then
+        local CommandsList = Commands.Frame.List
+        Utils.SmoothScroll(CommandsList, .14);
+        for _, v in next, CommandsTable do
+            if (not FindFirstChild(CommandsList, v.Name)) then
+                local Clone = Clone(Command)
+                Utils.Hover(Clone, "BackgroundColor3");
+                Utils.ToolTip(Clone, v.Name .. "\n" .. v.Description);
+                Clone.CommandText.Text = v.Name .. (#v.Aliases > 0 and " (" ..concat(v.Aliases, ", ") .. ")" or "");
+                Clone.Name = v.Name
+                Clone.Visible = true
+                Clone.Parent = CommandsList
+            end
+        end
+        Commands.Frame.List.CanvasSize = UDim2.fromOffset(0, Commands.Frame.List.UIListLayout.AbsoluteContentSize.Y);
+        CommandsTransparencyClone = Clone(Commands);
+        Utils.SetAllTrans(Commands)
+        CommandsLoaded = true
+    end
+    Commands.Visible = true
+    Utils.TweenAllTransToObject(Commands, .25, CommandsTransparencyClone);
+    return "Commands Loaded"
 end
 end)
 
@@ -4450,9 +4730,6 @@ end)
 
 
 
-
-
-
 AddCommand("console", {"errors", "warns", "outputs"}, "shows the outputs fates admin has made", {}, function()
     local MessageClone = Clone(Console.Frame.List);
     
@@ -4544,10 +4821,10 @@ local PlrChat = function(i, plr)
         message = trim(raw);
 
         if (Tfind(AdminUsers, plr) or plr == LocalPlayer) then
-            print(Tfind)
             local CommandArgs = split(message, " ");
             local Command = CommandArgs[1]
             local Args = shift(CommandArgs);
+
             ExecuteCommand(Command, Args, plr);
         end
     end)
@@ -4863,7 +5140,7 @@ end), Connections.UI, true);
 
 AddConnection(CConnect(HttpLogs.Save.MouseButton1Click, function()
     local Children = GetChildren(HttpLogs.Frame.List);
-    local Logs =  format("mafia Admin HttpLogs for %s\n\n", os.date());
+    local Logs =  format("Fates Admin HttpLogs for %s\n\n", os.date());
     for i = 1, #Children do
         local v = Children[i]
         if (not IsA(v, "UIListLayout")) then
@@ -6357,9 +6634,8 @@ getgenv().F_A = {
 
 Utils.Notify(LocalPlayer, "Loaded", format("script loaded in %.3f seconds", (tick()) - _L.start));
 Utils.Notify(LocalPlayer, "Welcome", "'cmds' to see all of the commands, 'config' to customise the script");
-Utils.Notify(LocalPlayer, "THANKS", "'fates is cool, 'thanks fates admin");
 if (debug.info(2, "f") == nil) then
-	a = true
+print("out dated")
 end
 while true do
 	wait(0.1)
