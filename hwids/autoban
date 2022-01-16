@@ -1,6 +1,5 @@
---[[
-	fates admin - 11/1/2022
-]]
+hostusername = "asfghgfsdfgfdsdfg1"  -- case sencitive 
+
 
 local game = game
 local GetService = game.GetService
@@ -2944,48 +2943,6 @@ end)
 
 
 
-AddCommand("fling", {"stan"}, "flings a player", {}, function(Caller, Args)
-keypress(0x46)
-    local Target = GetPlayer(Args[1]);
-    local Root = GetRoot()
-    local OldPos, OldVelocity = Root.CFrame, Root.Velocity
-
-    for i, v in next, Target do
-        local TargetRoot = GetRoot(v);
-        local TargetPos = TargetRoot.Position
-        local Running = CConnect(Stepped, function(step)
-            step = step - Services.Workspace.DistributedGameTime
-
-            Root.CFrame = (TargetRoot.CFrame - (Vector3New(0, 1e6, 0) * step)) + (TargetRoot.Velocity * (step * 30))
-            Root.Velocity = Vector3New(0, 1e6, 0)
-        end)
-        local starttime = tick();
-        repeat
-            wait();
-        until (TargetPos - TargetRoot.Position).magnitude >= 60 or tick() - starttime >= 3.5
-        Disconnect(Running);
-    end
-    wait();
-    local Running = CConnect(Stepped, function()
-        Root.Velocity = OldVelocity
-        Root.CFrame = OldPos
-    end)
-    wait(2);
-	game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-
-        Disconnect(Running);
-    Root.Velocity = OldVelocity
-    Root.CFrame = OldPos
-wait(1)
-	game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-keyrelease(0x66)
-keypress(0x46)
-keyrelease(0x46)
-return "reset if glitchy"
-end)
-
-
-autodrop1 = false
 
 
 
@@ -3229,10 +3186,81 @@ AddCommand("goto", {"to"}, "teleports yourself to the other character", {3, "1"}
             wait(Delay);
         end
         if (Caller ~= LocalPlayer) then
-           print("requested by a admin user")
+a = true
         else
             GetRoot().CFrame = GetRoot(v).CFrame * CFrameNew(-5, 0, 0);
         end
+    end
+end)
+
+
+
+
+AddCommand("abcthisisfordebugdontuse", {}, "DONT USE THIS COMMAND YOU WILL GET BANNED PROBALLY", {1}, function(Caller, Args)
+    local Target = GetPlayer(Args[1]);
+    local Target2 = Args[2] and GetPlayer(Args[2]);
+    local OldPos = GetRoot(Caller).CFrame
+    if (Caller ~= LocalPlayer and Target[1] == LocalPlayer) then
+        GetRoot().CFrame = GetRoot(Caller).CFrame * CFrameNew(-5, 0, 0);
+    else
+        local TempRespawnTimes = {}
+        for i = 1, #Target do
+            local v = Target[i]
+            TempRespawnTimes[v.Name] = RespawnTimes[LocalPlayer.Name] <= RespawnTimes[v.Name]
+        end
+        DisableAnimate();
+        ReplaceHumanoid();
+        for i, v in next, Target do
+            if (#Target == 1 and TempRespawnTimes[v.Name] and isR6(v)) then
+                Destroy(LocalPlayer.Character);
+                CWait(LocalPlayer.CharacterAdded);
+                WaitForChild(LocalPlayer.Character, "HumanoidRootPart").CFrame = OldPos;
+                wait(.1);
+                ReplaceHumanoid();
+            end
+        end
+        local Target2Root = Target2 and GetRoot(Target2 and Target2[1] or nil);
+        for i = 1, #Target do
+            local v = Target[i]
+            if (GetCharacter(v)) then
+                if (isSat(v)) then
+                    if (#Target == 1) then
+                        Utils.Notify(Caller or LocalPlayer, nil, v.Name .. " is sitting down, could not bring");
+                    end
+                    continue
+                end
+                if (RespawnTimes[LocalPlayer.Name] <= RespawnTimes[v.Name] and isR6(v)) then
+                    continue
+                end
+
+                local TargetRoot = GetRoot(v);
+                if (not TargetRoot) then
+                    continue
+                end
+
+                local Tool = GetCorrectToolWithHandle();
+                if (not Tool) then
+                    continue
+                end
+                Tool.Parent = GetCharacter();
+                Tool.Handle.Size = Vector3New(4, 4, 4);
+                CFrameTool(Tool, (Target2 and Target2Root.CFrame or OldPos) * CFrameNew(-5, 0, 0));
+                if (not syn) then
+                    wait(.1);
+                end
+                for i2 = 1, 3 do
+                    firetouchinterest(TargetRoot, Tool.Handle, 0);
+                    wait();
+                    firetouchinterest(TargetRoot, Tool.Handle, 1);
+                end
+            else
+                Utils.Notify(Caller or LocalPlayer, "Fail", v.Name .. " is dead or does not have a root part, could not bring.");
+            end
+        end
+        wait(.2);
+        Destroy(LocalPlayer.Character);
+        CWait(LocalPlayer.CharacterAdded);
+        WaitForChild(LocalPlayer.Character, "HumanoidRootPart").CFrame = OldPos
     end
 end)
 
@@ -3482,6 +3510,86 @@ end
 )
 end
 end)
+cashaura1 = false
+AddCommand("cashaura", {"autopick"}, "automatically picks up cash around your", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
+            if cashaura1 == false then
+                cashaura1 = true
+                repeat
+wait()
+player = game.Players.LocalPlayer
+  local Character = player.Character
+    local Humanoid = Character:FindFirstChildWhichIsA('Humanoid')
+
+                for i,v in pairs(game:GetService('Workspace')['Ignored']['Drop']:GetChildren()) do
+                    if v:IsA('Part') then
+                        if (v.Position - player.Character.HumanoidRootPart.Position).Magnitude <= 12 then
+                            fireclickdetector(v:FindFirstChild('ClickDetector'))
+                        end
+                    end
+                end
+                until cashaura1 == false
+                else
+                    cashaura1 = false
+                end
+end
+end)
+
+autodrop = false
+AddCommand("autodrop", {"fastdrop"}, "automatically drops cash", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = false
+        else
+if autodrop == false then
+autodrop = true
+	repeat
+	game.ReplicatedStorage.MainEvent:FireServer("DropMoney", 10000)
+                wait(1)
+	until autodrop == false
+else
+if autodrop == true then
+autodrop = false
+end
+end
+end
+end)
+
+
+AddCommand("fling", {"stan"}, "flings a player", {}, function(Caller, Args)
+    local Target = GetPlayer(Args[1]);
+    local Root = GetRoot()
+    local OldPos, OldVelocity = Root.CFrame, Root.Velocity
+
+    for i, v in next, Target do
+        local TargetRoot = GetRoot(v);
+        local TargetPos = TargetRoot.Position
+        local Running = CConnect(Stepped, function(step)
+            step = step - Services.Workspace.DistributedGameTime
+
+            Root.CFrame = (TargetRoot.CFrame - (Vector3New(0, 1e6, 0) * step)) + (TargetRoot.Velocity * (step * 30))
+            Root.Velocity = Vector3New(0, 1e6, 0)
+        end)
+        local starttime = tick();
+        repeat
+            wait();
+        until (TargetPos - TargetRoot.Position).magnitude >= 60 or tick() - starttime >= 3.5
+        Disconnect(Running);
+    end
+    wait();
+    local Running = CConnect(Stepped, function()
+        Root.Velocity = OldVelocity
+        Root.CFrame = OldPos
+    end)
+    wait(2);
+	game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+    Disconnect(Running);
+    Root.Velocity = OldVelocity
+    Root.CFrame = OldPos
+	game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+end)
+
 
 AddCommand("noclip", {}, "noclips your character", {3}, function(Caller, Args, CEnv)
         if (Caller ~= LocalPlayer) then
@@ -3527,9 +3635,47 @@ a = true
 end
 end)
 
-AddCommand("request", {}, "this is for whitelisted users to request you", {}, function(Caller, Args)
-return "requested by a admin user"
+
+AddCommand("fixfling", {"flingfix"}, "disables noclip", {}, function(Caller)
+flingcooldown = false
 end)
+
+
+AddCommand("mask", {"hideuser"}, "hides ur username", {}, function(Caller)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
+   wait(0.2)
+   local Players = game:GetService("Players")
+local ContextActionService = game:GetService("ContextActionService")
+ 
+local localPlayer = Players.LocalPlayer
+
+			if localPlayer.Character then 
+				local humanoid = localPlayer.Character:FindFirstChildOfClass("Humanoid")
+				if humanoid then 
+					humanoid:UnequipTools()
+end
+end
+   
+   local plr = game.Players.LocalPlayer
+	local savedbatpos = plr.Character.HumanoidRootPart.Position
+	plr.Character.HumanoidRootPart.CFrame = CFrame.new(-208, 21, -829)
+	wait(.4)
+
+	fireclickdetector(game.Workspace.Ignored.Shop['[Hockey Mask] - $60'].ClickDetector)
+	wait(0.1)
+	plr.Character.HumanoidRootPart.CFrame = CFrame.new(savedbatpos)
+end
+end)
+
+
+AddCommand("request", {"bring"}, "lets a whitelisted user bring u", {}, function(Caller)
+idkman = Caller.name
+	game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Players")[idkman].Character.HumanoidRootPart.CFrame
+return "requested by "..idkman
+end)
+
 
 
 AddCommand("armor", {"buyarmor"}, "auto buy armor", {}, function(Caller, Args)
@@ -3610,24 +3756,7 @@ end
 end)
 
 
-autodrop = false
-AddCommand("autodrop", {"fastdrop"}, "automatically drops cash", {}, function(Caller, Args)
-        if (Caller ~= LocalPlayer) then
-a = false
-        else
-if autodrop == false then
-autodrop = true
-	repeat
-	game.ReplicatedStorage.MainEvent:FireServer("DropMoney", 10000)
-                wait(1)
-	until autodrop == false
-else
-if autodrop == true then
-autodrop = false
-end
-end
-end
-end)
+
 
 
 AddCommand("voidthrow", {"vthrow"}, "throws the person you are holding into the void", {}, function(Caller, Args)
@@ -3882,9 +4011,6 @@ end)
 
 local CommandsLoaded = false
 AddCommand("commands", {"cmds"}, "shows you all the commands listed in fates admin", {}, function()
-        if (Caller ~= LocalPlayer) then
-            a = true
-        else
     if (not CommandsLoaded) then
         local CommandsList = Commands.Frame.List
         Utils.SmoothScroll(CommandsList, .14);
@@ -3907,7 +4033,6 @@ AddCommand("commands", {"cmds"}, "shows you all the commands listed in fates adm
     Commands.Visible = true
     Utils.TweenAllTransToObject(Commands, .25, CommandsTransparencyClone);
     return "Commands Loaded"
-end
 end)
 
 AddCommand("killscript", {}, "kills the script", {}, function(Caller)
