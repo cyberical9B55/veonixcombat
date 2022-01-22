@@ -1,6 +1,41 @@
 hostusername = "asfghgfsdfgfdsdfg1"  -- case sencitive 
 
 
+
+local AkaliNotif = loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/9d907e7d3935f96a95497abe4f3ed4f8/raw/0239bdbf9f3a058668f985da6f0af90f8da52d2c/notifications"))();
+local Notify = AkaliNotif.Notify;
+    local player = game.Players.LocalPlayer
+wait(1);
+Notify({ 
+Description = "hello "..player.Name.." please enjoy";
+Title = "welcome";
+Duration = 5;
+});
+
+joinleavelogs = false
+
+
+    game.Players.PlayerAdded:Connect(function(plr)
+if joinleavelogs == true then
+Notify({ 
+Description = "somone has joined the server";
+Title = "new player join";
+Duration = 2;
+});
+end
+    
+    game.Players.PlayerRemoved:Connect(function(plr)
+if joinleavelogs == true then
+Notify({ 
+Description = "player leave";
+Title = "somone has left the server";
+Duration = 2;
+});
+end
+end)
+end)
+
+
 local game = game
 local GetService = game.GetService
 if (not game.IsLoaded(game)) then
@@ -2558,7 +2593,11 @@ end
 AddCommand("view", {"v"}, "views a user", {3,"1"}, function(Caller, Args, CEnv)
     local Target = GetPlayer(Args[1]);
     if (#Target ~= 1) then
-        return "you can only view 1 person"
+        Notify({ 
+Description = "you can only view one person at a time";
+Title = "w";
+Duration = 2;
+});
     end
     Target = Target[1]
     Camera.CameraSubject = GetCharacter(Target) or GetCharacter();
@@ -2572,300 +2611,21 @@ AddCommand("view", {"v"}, "views a user", {3,"1"}, function(Caller, Args, CEnv)
         CWait(Heartbeat);
         Camera.CameraSubject = Target.Character
     end), CEnv);
-    return "viewing " .. Target.Name
+    	        Notify({ 
+Description = "viewing "..Target.Name;
+Title = "viewing";
+Duration = 2;
+});
 end)
 
 AddCommand("unview", {"unv"}, "unviews a user", {3}, function(Caller, Args)
     DisableAllCmdConnections("view");
     Camera.CameraSubject = GetCharacter();
-    return "unviewing"
-end)
-
-AddCommand("invisible", {"invis"}, "makes yourself invisible", {3}, function(Caller, Args, CEnv)
-    local Root = GetRoot();
-    local OldPos = Root.CFrame
-    local Seat = InstanceNew("Seat");
-    local Weld = InstanceNew("Weld");
-    Root.CFrame = CFrameNew(9e9, 9e9, 9e9);
-    wait(.2);
-    Root.Anchored = true
-    ProtectInstance(Seat);
-    Seat.Parent = Services.Workspace
-    Seat.CFrame = Root.CFrame
-    Seat.Anchored = false
-    Weld.Parent = Seat
-    Weld.Part0 = Seat
-    Weld.Part1 = Root
-    Root.Anchored = false
-    Seat.CFrame = OldPos
-    CEnv.Seat = Seat
-    CEnv.Weld = Weld
-    for i, v in next, GetChildren(Root.Parent) do
-        if (IsA(v, "BasePart") or IsA(v, "MeshPart") or IsA(v, "Part")) then
-            CEnv[v] = v.Transparency
-            v.Transparency = v.Transparency <= 0.3 and 0.4 or v.Transparency
-        elseif (IsA(v, "Accessory")) then
-            local Handle = FindFirstChildWhichIsA(v, "MeshPart") or FindFirstChildWhichIsA(v, "Part");
-            if (Handle) then
-                CEnv[Handle] = Handle.Transparency
-                Handle.Transparency = Handle.Transparency <= 0.3 and 0.4 or Handle.Transparency    
-            end
-        end
-    end
-    return "you are now invisible"
-end)
-
-AddCommand("uninvisible", {"uninvis", "noinvis", "visible", "vis"}, "gives you back visiblity", {3}, function(Caller, Args, CEnv)
-    local CmdEnv = LoadCommand("invisible").CmdEnv
-    local Seat = CmdEnv.Seat
-    local Weld = CmdEnv.Weld
-    if (Seat and Weld) then
-        Weld.Part0 = nil
-        Weld.Part1 = nil
-        Destroy(Seat);
-        Destroy(Weld);
-        CmdEnv.Seat = nil
-        CmdEnv.Weld = nil
-        for i, v in next, CmdEnv do
-            if (type(v) == 'number') then
-                i.Transparency = v
-            end
-        end
-        return "you are now visible"
-    end
-    return "you are already visible"
-end)
-
-AddCommand("dupetools", {"dp"}, "dupes your tools", {"1", 1, {"protect"}}, function(Caller, Args, CEnv)
-    local Amount = tonumber(Args[1])
-    local Protected = Args[2] == "protect"
-    if (not Amount) then
-        return "amount must be a number"
-    end
-
-    CEnv[1] = true
-    local AmountDuped = 0
-    local Timer = (Players.RespawnTime * Amount) + (Amount * .4) + 1
-    local Notification = Utils.Notify(Caller, "Duping Tools", format("%d/%d tools duped. %d seconds left", AmountDuped, Amount, Timer), Timer);
-    CThread(function()
-        for i = 1, Timer do
-            if (not LoadCommand("dupetools").CmdEnv[1]) then
-                do break end;
-            end
-            wait(1);
-            Timer = Timer - 1
-            Notification.Message.Text = format("%d/%d tools duped. %d seconds left", AmountDuped, Amount, Timer)
-        end
-    end)()
-
-
-    local ToolAmount = #filter(GetChildren(LocalPlayer.Backpack), function(i, v)
-        return IsA(v, "Tool");
-    end)
-    local Duped = {}
-    local Humanoid = GetHumanoid();
-    UnequipTools(Humanoid);
-    local Connection = AddConnection(CConnect(GetCharacter().ChildAdded, function(Added)
-        wait(.4);
-        if (IsA(Added, "Tool")) then
-            Added.Parent = LocalPlayer.Backpack
-        end
-    end), CEnv);
-    for i = 1, Amount do
-        if (not LoadCommand("dupetools").CmdEnv[1]) then
-            do break end;
-        end
-        ReplaceCharacter();
-        local OldPos
-        if (Protected) then
-            local OldFallen = Services.Workspace.FallenPartsDestroyHeight
-            delay(Players.RespawnTime - .3, function()
-                Services.Workspace.FallenPartsDestroyHeight = -math.huge
-                OldPos = GetRoot().CFrame
-                GetRoot().CFrame = CFrameNew(0, 1e9, 0);
-                GetRoot().Anchored = true
-            end)
-        end
-        UnequipTools(Humanoid);
-        wait(Players.RespawnTime - .05);
-        OldPos = OldPos or GetRoot().CFrame
-        Humanoid = ReplaceHumanoid(Humanoid);
-        local Tools = filter(GetChildren(LocalPlayer.Backpack), function(i, v)
-            return IsA(v, "Tool");
-        end)
-
-        for i2, v in next, Tools do
-            v.Parent = LocalPlayer.Character
-            v.Parent = Services.Workspace
-            Duped[#Duped + 1] = v
-        end
-        local Char = CWait(LocalPlayer.CharacterAdded);
-        WaitForChild(Char, "HumanoidRootPart").CFrame = OldPos;
-
-        for i2, v in next, Duped do
-            if (v.Handle) then
-                firetouchinterest(v.Handle, GetRoot(), 0);
-                firetouchinterest(v.Handle, GetRoot(), 1);
-            end
-        end
-        repeat CWait(RenderStepped);
-            FindFirstChild(Char, "HumanoidRootPart").CFrame = OldPos
-        until GetRoot().CFrame == OldPos
-
-        repeat CWait(RenderStepped);
-            Humanoid = FindFirstChild(Char, "Humanoid")
-        until Humanoid
-        wait(.4);
-        UnequipTools(Humanoid);
-        AmountDuped = AmountDuped + 1
-    end
-    Disconnect(Connection);
-    return format("successfully duped %d tool (s)", #GetChildren(LocalPlayer.Backpack) - ToolAmount);
-end)
-
-AddCommand("dupetools2", {"rejoindupe", "dupe2"}, "sometimes a faster dupetools", {1,"1"}, function(Caller, Args)
-    local Amount = tonumber(Args[1])
-    if (not Amount) then
-        return "amount must be a number"
-    end
-    local queue_on_teleport = syn and syn.queue_on_teleport or queue_on_teleport
-    if (not queue_on_teleport) then
-        return "exploit not supported"
-    end
-    local Root, Humanoid = GetRoot(), GetHumanoid();
-    local OldPos = Root.CFrame
-    Root.CFrame = CFrameNew(0, 2e5, 0);
-    UnequipTools(Humanoid);
-
-    local Tools = filter(GetChildren(LocalPlayer.Backpack), function(i, v)
-        return IsA(v, "Tool");
-    end)
-
-    local Char, Workspace, ReplicatedStorage = GetCharacter(), Services.Workspace, Services.ReplicatedStorage
-    for i, v in next, Tools do
-        v.Parent = Char
-        v.Parent = Workspace
-    end
-    writefile("mafia-admin/tooldupe.txt", tostring(Amount - 1));
-    writefile("mafia-admin/tooldupe.lua", format([[
-        local OldPos = CFrame.new(%s);
-        local DupeAmount = tonumber(readfile("mafia-admin/tooldupe.txt"));
-        local game = game
-        local GetService = game.GetService
-        local Players = GetService(game, "Players");
-        local Workspace = GetService(game, "Workspace");
-        local ReplicatedFirst = GetService(game, "ReplicatedFirst");
-        local TeleportService = GetService(game, "TeleportService");
-        ReplicatedFirst.SetDefaultLoadingGuiRemoved(ReplicatedFirst);
-        local WaitForChild, GetChildren, IsA = game.WaitForChild, game.GetChildren, game.IsA
-        local LocalPlayer = Players.LocalPlayer
-        if (not LocalPlayer) then
-            repeat wait(); LocalPlayer = Players.LocalPlayer until LocalPlayer
-        end
-        local Char = LocalPlayer.CharacterAdded.Wait(LocalPlayer.CharacterAdded);
-        local RootPart = WaitForChild(Char, "HumanoidRootPart");
-        if (DupeAmount <= 1) then
-            for i, v in next, GetChildren(Workspace) do
-                if (IsA(v, "Tool")) then
-                    local Handle = WaitForChild(v, "Handle", .5);
-                    if (Handle) then
-                        firetouchinterest(Handle, RootPart, 0);
-                        firetouchinterest(Handle, RootPart, 1);
-                    end
-                end
-            end
-            delfile("mafia-admin/tooldupe.txt");
-            delfile("mafia-admin/tooldupe.lua");
-            loadstring(game.HttpGet(game, "https://raw.githubusercontent.com/fatesc/mafia-admin/main/main.lua"))();
-            RootPart.CFrame = OldPos
-            repeat wait() RootPart.CFrame = OldPos until RootPart.CFrame == OldPos
-            getgenv().F_A.PluginLibrary.ExecuteCommand("dp", {"1"}, LocalPlayer);
-        else
-            RootPart.CFrame = CFrame.new(0, 2e5, 0);
-            wait(.3);
-            for i, v in next, GetChildren(LocalPlayer.Backpack) do
-                v.Parent = Char
-                v.Parent = Workspace
-            end
-            writefile("mafia-admin/tooldupe.txt", tostring(DupeAmount - 1));
-            local queue_on_teleport = syn and syn.queue_on_teleport or queue_on_teleport
-            queue_on_teleport(readfile("mafia-admin/tooldupe.lua"));
-            TeleportService.TeleportToPlaceInstance(TeleportService, game.PlaceId, game.JobId);
-        end
-    ]], tostring(OldPos)));
-    local TeleportService = Services.TeleportService
-    queue_on_teleport(readfile("mafia-admin/tooldupe.lua"));
-    TeleportService.TeleportToPlaceInstance(TeleportService, game.PlaceId, game.JobId);
-end)
-
-
-
-
-AddCommand("view", {"v"}, "views a user", {3,"1"}, function(Caller, Args, CEnv)
-        if (Caller ~= LocalPlayer) then
-a = true
-        else
-	local Target = GetPlayer(Args[1]);
-	if (#Target ~= 1) then
-		return "you can only view 1 person"
-	end
-	Target = Target[1]
-	Camera.CameraSubject = GetCharacter(Target) or GetCharacter();
-	AddConnection(CConnect(Target.CharacterAdded, function()
-		CWait(Heartbeat);
-		Camera.CameraSubject = Target.Character
-	end), CEnv);
-	AddConnection(CConnect(LocalPlayer.CharacterAdded, function()
-		WaitForChild(LocalPlayer.Character, "Humanoid");
-		CWait(Camera.CameraSubject.Changed);
-		CWait(Heartbeat);
-		Camera.CameraSubject = Target.Character
-	end), CEnv);
-	return "viewing " .. Target.Name
-end
-end)
-
-AddCommand("unview", {"unv"}, "unviews a user", {3}, function(Caller, Args)
-        if (Caller ~= LocalPlayer) then
-a = true
-        else
-	DisableAllCmdConnections("view");
-	Camera.CameraSubject = GetCharacter();
-	return "unviewing"
-end
-end)
-
-
-
-
-
-
-
-AddCommand("load", {"loadstring"}, "loads whatever you want", {"1"}, function(Caller, Args)
-        if (Caller ~= LocalPlayer) then
-a = true
-        else
-	local Code = concat(Args, " ");
-	local Success, Err = pcall(function()
-		local Func = loadstring(Code);
-		setfenv(Func, getrenv());
-		local Context;
-		local sett, gett = syn and syn_context_set or setidentity, syn and syn_context_get or getidentity
-		if (sett and gett) then
-			Context = gett();
-			sett(2);
-		end
-		Func();
-		if (Context and sett) then
-			sett(Context);
-		end
-	end)
-	if (not Success and Err) then
-		return Err
-	else
-		return Func ~= nil and tostring(Func) or "executed with no errors"
-	end
-end
+    	        Notify({ 
+Description = "showing ur character";
+Title = "unviewing";
+Duration = 2;
+});
 end)
 
 AddCommand("sit", {}, "makes you sit", {3}, function(Caller, Args, CEnv)
@@ -2875,7 +2635,11 @@ a = true
 	local Humanoid = GetHumanoid();
 	SpoofProperty(Humanoid, "Sit", false);
 	Humanoid.Sit = true
-	return "now sitting (obviously)"
+    	        Notify({ 
+Description = "omg no way";
+Title = "sitting";
+Duration = 2;
+});
 end
 end)
 
@@ -2899,46 +2663,6 @@ AddCommand("unheadstand", {"noheadstand"}, "unheadstands on the target", {3}, fu
 	for i, v in next, Looped do
 		Disconnect(v);
 	end
-	return "headstand disabled"
-end)
-
-
-AddCommand("ping", {}, "shows you your ping", {}, function()
-        if (Caller ~= LocalPlayer) then
-a = true
-        else
-	local Stats = Services.Stats
-	local DataPing = Stats.Network.ServerStatsItem["Data Ping"]
-	return split(DataPing.GetValueString(DataPing), " ")[1] .. " ms"
-end
-end)
-
-AddCommand("memory", {"mem"}, "shows you your memory usage", {}, function()
-        if (Caller ~= LocalPlayer) then
-a = true
-        else
-	local Stats = Services.Stats
-	return tostring(round(Stats.GetTotalMemoryUsageMb(Stats))) .. " mb";
-end
-end)
-
-AddCommand("fps", {"frames"}, "shows you your framerate", {}, function()
-        if (Caller ~= LocalPlayer) then
-a = true
-        else
-	local FPS = 1 / CWait(RenderStepped);
-	local Counter = Utils.Notify(LocalPlayer, "FPS", round(FPS));
-	local Running;
-	delay(4.5, function()
-		Disconnect(Running);
-	end);
-	Running = CConnect(Heartbeat, function()
-		if (not Counter or not Counter.Message) then
-			Disconnect(Running);
-		end
-		Counter.Message.Text = round(1 / CWait(RenderStepped));
-	end);
-end
 end)
 
 
@@ -2958,7 +2682,6 @@ a = true
 		SpoofProperty(v, "Anchored");
 		v.Anchored = true
 	end
-	return "freeze enabled (client)"
 end
 end)
 
@@ -2972,13 +2695,12 @@ a = true
 	for i, v in next, BaseParts do
 		v.Anchored = false
 	end
-	return "freeze disabled"
 end
 end)
 
 
 
-AddCommand("muteboombox", {}, "mutes a users boombox", {}, function(Caller, Args)
+AddCommand("semmemute", {}, "mutes a users boombox", {}, function(Caller, Args)
 	Services.SoundService.RespectFilteringEnabled = false
 	local Target = GetPlayer(Args[1]);
 	for i, v in next, Target do
@@ -2991,7 +2713,7 @@ AddCommand("muteboombox", {}, "mutes a users boombox", {}, function(Caller, Args
 	Services.SoundService.RespectFilteringEnabled = true
 end)
 
-AddCommand("loopmuteboombox", {"loopmute"}, "loop mutes a users boombox", {}, function(Caller, Args, CEnv)
+AddCommand("permmute", {"loopmute"}, "loop mutes a users boombox", {}, function(Caller, Args, CEnv)
 	local Target = GetPlayer(Args[1]);
 	local filterBoomboxes = function(i,v)
 		return FindFirstChild(v, "Handle") and FindFirstChildWhichIsA(v.Handle, "Sound");
@@ -3017,7 +2739,7 @@ AddCommand("loopmuteboombox", {"loopmute"}, "loop mutes a users boombox", {}, fu
 	CEnv[Target] = Con
 end)
 
-AddCommand("unloopmuteboombox", {}, "unloopmutes a persons boombox", {"1"}, function(Caller, Args)
+AddCommand("unpermmute", {}, "unloopmutes a persons boombox", {"1"}, function(Caller, Args)
 	local Target = GetPlayer(Args[1])
 	local Muting = LoadCommand("loopmuteboombox").CmdEnv
 	for i, v in next, Muting do
@@ -3039,7 +2761,6 @@ AddCommand("audiolog", {}, "audio logs someone", {"1"}, function(Caller, Args)
 			if (IsA(v2, "Sound") and IsA(v2.Parent.Parent, "Tool")) then
 				local AudioId = split(v2.SoundId, "=")[2]
 				setclipboard(AudioId);
-				Utils.Notify(Caller, "Command", format("Audio Id (%s) copied to clipboard", AudioId));
 			end
 		end
 	end
@@ -3072,7 +2793,11 @@ a = true
 			EspLib.Remove(v);
 		end
 	end), CEnv);
-	return format("now tracing %s", #Target == 1 and Target[1].Name or #Target .. " players");
+        Notify({ 
+Description = format("now tracing %s", #Target == 1 and Target[1].Name or #Target .. " players");
+Title = "tracing";
+Duration = 2;
+});
 end
 end)
 AddCommand("untrace", {"unlocate"}, "untraces a player", {"1"}, function(Caller, Args)
@@ -3087,49 +2812,16 @@ a = true
 	for i, v in next, Target do
 		Remove(v);
 	end
-	return format("now stopped tracing %s", #Target == 1 and Target[1].Name or #Target .. " players");
+	        Notify({ 
+Description = format("now stopped tracing %s", #Target == 1 and Target[1].Name or #Target .. " players");
+Title = "no longer tracing";
+Duration = 2;
+});
 end
 end)
 
 
 
-
-AddCommand("walkto", {}, "walks to a player", {"1", 3}, function(Caller, Args)
-        if (Caller ~= LocalPlayer) then
-a = true
-        else
-	local Target = GetPlayer(Args[1])[1];
-	local Humanoid = GetHumanoid();
-	Humanoid.MoveTo(Humanoid, GetRoot(Target).Position);
-	return "walking to " .. Target.Name
-end
-end)
-
-AddCommand("follow", {}, "follows a player", {"1", 3}, function(Caller, Args, CEnv)
-        if (Caller ~= LocalPlayer) then
-a = true
-        else
-	local Target = GetPlayer(Args[1])[1]
-	CEnv[Target.Name] = true
-	CThread(function()
-		repeat
-			local Humanoid = GetHumanoid();
-			Humanoid.MoveTo(Humanoid, GetRoot(Target).Position);
-			wait(.2);
-		until not LoadCommand("follow").CmdEnv[Target.Name]
-	end)()
-	return "now following " .. Target.Name
-end
-end)
-
-AddCommand("unfollow", {}, "unfollows a player", {}, function()
-	local Following = LoadCommand("follow").CmdEnv
-	if (not next(Following)) then
-		return "you are not following anyone"
-	end
-	LoadCommand("follow").CmdEnv = {}
-	return "stopped following"
-end)
 
 
 
@@ -3142,7 +2834,11 @@ a = true
 			L_171_forvar1:Destroy()
 		end
 	end
-	return "character refreshed"
+        Notify({ 
+Description = "refreshed inot a new man ; ]";
+Title = "refreshed";
+Duration = 2;
+});
 end
 end)
 
@@ -3161,7 +2857,11 @@ a = true
 	else
 		CEnv[1].AngularVelocity = Vector3New(0, Speed, 0);
 	end
-	return "started spinning"
+        Notify({ 
+Description = "started spinning (if u couldnt tell)";
+Title = "spin";
+Duration = 2;
+});
 end
 end)
 
@@ -3174,7 +2874,11 @@ a = true
 		Destroy(v);
 	end
 	LoadCommand("spin").CmdEnv = {}
-	return "stopped spinning"
+        Notify({ 
+Description = "if you could tell ofc";
+Title = "no longer spinning";
+Duration = 2;
+});
 end
 end)
 
@@ -3277,7 +2981,6 @@ a = true
 	CEnv[Target.Name] = Connection
 	AddPlayerConnection(LocalPlayer, Connection);
 	AddConnection(Connection);
-	return "now under" .. Target.name
 end
 end)
 
@@ -3451,7 +3154,6 @@ a = true
 				Root.CFrame = Root.CFrame * CFrameNew(0, 1.5, 0);
 			end
 		end), CEnv)
-		return "now floating"
 	end
 end
 end)
@@ -3465,9 +3167,7 @@ a = true
 		Disconnect(Floating[1]);
 		Destroy(Floating[2]);
 		LoadCommand("float").CmdEnv = {}
-		return "stopped floating"
 	end
-	return "floating not on"
 end
 end)
 
@@ -3517,8 +3217,13 @@ a = true
         else
             if cashaura1 == false then
                 cashaura1 = true
+                        Notify({ 
+Description = "toggled on";
+Title = "cashaura";
+Duration = 2;
+});
                 repeat
-wait()
+wait(0.2)
 player = game.Players.LocalPlayer
   local Character = player.Character
     local Humanoid = Character:FindFirstChildWhichIsA('Humanoid')
@@ -3533,6 +3238,11 @@ player = game.Players.LocalPlayer
                 until cashaura1 == false
                 else
                     cashaura1 = false
+                            Notify({ 
+Description = "toggled off";
+Title = "cashaura";
+Duration = 2;
+});
                 end
 end
 end)
@@ -3544,6 +3254,11 @@ a = false
         else
 if autodrop == false then
 autodrop = true
+        Notify({ 
+Description = "toggled on";
+Title = "autodrop";
+Duration = 2;
+});
 	repeat
 	game.ReplicatedStorage.MainEvent:FireServer("DropMoney", 10000)
                 wait(1)
@@ -3551,6 +3266,11 @@ autodrop = true
 else
 if autodrop == true then
 autodrop = false
+        Notify({ 
+Description = "toggled off";
+Title = "autodrop";
+Duration = 2;
+});
 end
 end
 end
@@ -3558,6 +3278,7 @@ end)
 
 
 AddCommand("fling", {"stan"}, "flings a player", {}, function(Caller, Args)
+    keypress(0x46)
     local Target = GetPlayer(Args[1]);
     local Root = GetRoot()
     local OldPos, OldVelocity = Root.CFrame, Root.Velocity
@@ -3581,13 +3302,19 @@ AddCommand("fling", {"stan"}, "flings a player", {}, function(Caller, Args)
     local Running = CConnect(Stepped, function()
         Root.Velocity = OldVelocity
         Root.CFrame = OldPos
+    Root.CFrame = OldPos
+    Root.CFrame = OldPos
     end)
     wait(2);
 	game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
     Disconnect(Running);
     Root.Velocity = OldVelocity
     Root.CFrame = OldPos
+    Root.CFrame = OldPos
 	game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+	keyrelease(0x66)
+keypress(0x46)
+keyrelease(0x46)
 end)
 
 
@@ -3618,7 +3345,6 @@ a = true
 	Utils.Notify(Caller, "Command", "noclip enabled");
 	CWait(GetHumanoid().Died);
 	DisableAllCmdConnections("noclip");
-	return "noclip disabled"
 end
 end)
 
@@ -3627,17 +3353,201 @@ AddCommand("clip", {"unnoclip"}, "disables noclip", {}, function(Caller, Args)
 a = true
         else
 	if (not next(LoadCommand("noclip").CmdEnv)) then
-		return "you aren't in noclip"
+        Notify({ 
+Description = "ur not in noclip, idiot";
+Title = "warning";
+Duration = 2;
+});
 	else
 		DisableAllCmdConnections("noclip");
-		return "noclip disabled"
 	end
 end
 end)
 
 
-AddCommand("fixfling", {"flingfix"}, "disables noclip", {}, function(Caller)
+AddCommand("fixfling", {"flingfix"}, "fixes fling cmd", {}, function(Caller)
 flingcooldown = false
+        Notify({ 
+Description = "if it doesnt work, try again in 10 seconds";
+Title = "fix";
+Duration = 2;
+});
+end)
+
+
+AddCommand("dash", {"whoosh"}, "dashes", {}, function(Caller)
+	local plr = game:GetService('Players').LocalPlayer
+	local char = plr.Character
+	char.HumanoidRootPart.Velocity = char.HumanoidRootPart.CFrame.lookVector * 300
+        Notify({ 
+Description = "weee";
+Title = "WHOOSHH";
+Duration = 2;
+});
+end)
+
+AddCommand("debugantistomp", {"das"}, "may not work", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
+while true do
+idkfakethingy = true
+	wait(0.1)
+	
+	local Player = game.Players.LocalPlayer
+	local Character = Player.Character
+	local Humanoid = Character.Humanoid
+
+
+
+	Humanoid.HealthChanged:connect(function()
+		if Humanoid.Health < 10 and test == true then
+			for L_170_forvar0, L_171_forvar1 in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+				if L_171_forvar1:IsA("BasePart") then
+					L_171_forvar1:Destroy()
+				end
+			end
+		end
+	end)
+repeat
+idkfakethingy = true
+	wait(0.1)
+	
+	local Player = game.Players.LocalPlayer
+	local Character = Player.Character
+	local Humanoid = Character.Humanoid
+
+
+
+	Humanoid.HealthChanged:connect(function()
+		if Humanoid.Health < 10 and test == true then
+			for L_170_forvar0, L_171_forvar1 in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+				if L_171_forvar1:IsA("BasePart") then
+					L_171_forvar1:Destroy()
+				end
+			end
+		end
+	end)
+
+until idkfakethingy == false
+end
+end
+end)
+
+AddCommand("joinleavelogs", {"jllogs"}, "ye", {}, function(Caller, Args)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
+if joinleavelogs == false then
+joinleavelogs = false
+else
+joinleavelogs = true
+
+end
+
+
+end
+end)
+
+
+AddCommand("fixsing", {"singfix"}, "fixes sing cmd", {}, function(Caller)
+flingcooldown = false
+        Notify({ 
+Description = "if this doesnt work try again in 20-30 seconds";
+Title = "fix";
+Duration = 2;
+});
+end)
+singcooldown = false
+AddCommand("sing", {"singsong"}, "disables noclip", {}, function(Caller)
+if singcooldown == false then
+singcooldown = true
+singsong = math.random(1, 4)
+
+print("chose song ".. singsong)
+        Notify({ 
+Description = "chose song "..singsong;
+Title = "sing";
+Duration = 2;
+});
+
+--sing song 1 start
+if singsong == 1 then
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Super Idol de xiaorong","All")
+wait(1.8)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Dou mei ni de tian","All")
+wait(1.8)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Ba yue zhengwu de yangguang","All")
+wait(1.8)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Dou mei ni yaoyan","All")
+wait(2)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Re'ai 105 °C de ni","All")
+wait(1.6)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Di di qingchun de zhengliushui","All")
+wait(1.8)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Zai zhe duyiwu'er","All")
+wait(2)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Shuyu wo de shidai","All")
+wait(1.7)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Mo wangle chuxin chang zai","All")
+wait(2)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Tongkuai qu re'ai","All")
+end
+-- sing song 1 end
+
+
+
+--sing song 2 start
+if singsong == 2 then
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("I'm a Barbie girl in a Barbie world","All")
+wait(1.5)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Life in plastic, it's fantastic","All")
+wait(1.3)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("You can brush my hair, u*ndr**s me everywhere","All")
+wait(1.7)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Imagination, life is your creation","All")
+wait(1.6)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Come on Barbie, let's go party","All")
+wait(1.5)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Ah ah ah yeah","All")
+wait(1.8)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Come on Barbie, let's go party","All")
+wait(1.6)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Ooh whoa, ooh whoa","All")
+end
+-- sing song 2 end
+
+
+--sing song 3 start
+if singsong == 3 then
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Material Girl","All")
+wait(1.7)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("I want Chanel 9 boots","All")
+wait(1.7)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("All these ****** steady jockin', 'cus they know I'm the truth","All")
+
+wait(1.7)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Material Girl","All")
+wait(1.7)
+
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("And I get it from my mammy","All")
+wait(1.6)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Balmain bustdowns, these **** can't stand me (Material Girl)","All")
+wait(1.7)
+end
+-- sing song 3 end
+
+
+--sing song 4 start
+if singsong == 4 then
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("*sings most beautiful song you have ever heard*  ","All")
+end
+-- sing song 4 end
+
+
+wait(25)
+singcooldown = false
+end
 end)
 
 
@@ -3669,11 +3579,45 @@ end
 end
 end)
 
+AddCommand("declinerequest", {"declinebring"}, "doesnt allow a whitelisted user bring u", {}, function(Caller)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
+requestingye = false
+        Notify({ 
+Description = "declining bring/request requests";
+Title = "permission";
+Duration = 2;
+});
+end
+end)
 
+
+AddCommand("allowrequest", {"allowbring"}, "allows a whitelisted user bring u", {}, function(Caller)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
+requestingye = true
+        Notify({ 
+Description = "allowing request/bring requests";
+Title = "permission";
+Duration = 2;
+});
+end
+end)
+requestingye = true
 AddCommand("request", {"bring"}, "lets a whitelisted user bring u", {}, function(Caller)
+if requestingye == true then
+flying=false
+wait(0.2)
+    keypress(0x46)
 idkman = Caller.name
 	game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Players")[idkman].Character.HumanoidRootPart.CFrame
-return "requested by "..idkman
+wait(0.3)
+keyrelease(0x66)
+keypress(0x46)
+keyrelease(0x46)
+end
 end)
 
 
@@ -3695,11 +3639,12 @@ end)
 
 
 
-AddCommand("tobank", {"tpbank"}, "tp to bank", {}, function(Caller, Args)
+AddCommand("+", {"tpbank"}, "tp to bank", {}, function(Caller, Args)
         if (Caller ~= LocalPlayer) then
 a = true
         else
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-318.891174, 80.2145309, -257.177429, 0.0479469746, -5.14644114e-08, 0.998850107, -3.12971538e-09, 1, 5.16738901e-08, -0.998850107, -5.60372015e-09, 0.0479469746)
+
 end
 end)
 
@@ -3824,7 +3769,11 @@ Aiming.ShowFOV = false  -- show fov
 notification = true  -- toggle notifications
 Aiming.FOV = 30  -- FOV size
 silentran = true
-return "executed silent aim"
+    	        Notify({ 
+Description = "beam dem kids";
+Title = "silent aim enabled";
+Duration = 2;
+});
 end
 end)
 
@@ -3838,13 +3787,25 @@ a = true
 if silentran == true then
 if Aiming.ShowFOV == false then
 Aiming.ShowFOV = true
-return "now showing fov"
+    	        Notify({ 
+Description = "Showing FOV";
+Title = "silent aim";
+Duration = 2;
+});
 else
 if Aiming.ShowFOV == true then
 Aiming.ShowFOV = false
-return "no longer showing fov"
+    	        Notify({ 
+Description = "no longer showing FOV";
+Title = "silent aim";
+Duration = 2;
+});
 else
-return "please execute silent aim first"
+    	        Notify({ 
+Description = "please execute silent aim first+";
+Title = "warning";
+Duration = 2;
+});
 end
 end
 end
@@ -3859,49 +3820,6 @@ a = true
 Aiming.FOV = fovAmount
 end
 end)
-
-
-AddCommand("lastcommand", {"lastcmd"}, "executes the last command", {}, function(Caller)
-        if (Caller ~= LocalPlayer) then
-a = true
-        else
-	local Command = LastCommand[#LastCommand]
-	ExecuteCommand(Command[1], Command[2], Command[3]);
-	return format("command %s executed", Command[1]);
-end
-end)
-
-
-
-
-AddCommand("spam", {"spamchat", "spamc"}, "spams the chat with a message", {"1"}, function(Caller, Args, CEnv)
-	local WaitTime = CEnv.WaitTime or tonumber(Args[#Args]);
-	if (tonumber(Args[#Args])) then
-		Args = pack(unpack(Args, 1, #Args - 1));
-		Args.n = nil
-	end
-	local Message = concat(Args, " ");
-	CEnv.Spamming = true
-	CEnv.WaitTime = WaitTime or 1
-	local ChatRemote = Services.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest
-	CThread(function()
-		while (CEnv.Spamming) do
-			ChatRemote.FireServer(ChatRemote, Message, "All");
-			wait(CEnv.WaitTime);
-		end
-	end)()
-	return format("spamming %s with a delay of %d", Message, CEnv.WaitTime);
-end)
-
-AddCommand("spamspeed", {"sspeed"}, "sets your spam speed", {"1"}, function(Caller, Args)
-	local Speed = tonumber(Args[1]);
-	if (not Speed) then
-		return "number expected"
-	end
-	LoadCommand("spam").CmdEnv.WaitTime = Speed
-	return "spamspeed set at " .. Speed
-end)
-
 
 
 AddCommand("joinserver", {"discord"}, "joins the fates admin discord server", {}, function()
@@ -3940,13 +3858,16 @@ AddCommand("rejoin", {"rj"}, "rejoins the game you're currently in", {}, functio
 		else
 			TeleportService.TeleportToPlaceInstance(TeleportService, game.PlaceId, game.JobId)
 		end
-		return "Rejoining..."
+    	        Notify({ 
+Description = "rejoining server";
+Title = "please wait...";
+Duration = 2;
+});
 	end
 end)
 
 AddCommand("serverhop", {"sh"}, "switches servers (optional: min, max or mid)", {{"min", "max", "mid"}}, function(Caller, Args)
 	if (Caller == LocalPlayer) then
-		Utils.Notify(Caller or LocalPlayer, "Command", "Looking for servers...");
 		local TeleportService = Services.TeleportService
 		local Servers = JSONDecode(Services.HttpService, game.HttpGetAsync(game, format("https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=Asc&limit=100", game.PlaceId))).data
 		if (#Servers > 1) then
@@ -3967,9 +3888,17 @@ AddCommand("serverhop", {"sh"}, "switches servers (optional: min, max or mid)", 
 				queue_on_teleport("loadstring(game.HttpGet(game, \"https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/hwids/autoban\"))()");
 			end
 			TeleportService.TeleportToPlaceInstance(TeleportService, game.PlaceId, Server.id);
-			return format("joining server (%d/%d players)", Server.playing, Server.maxPlayers);
+    	        Notify({ 
+Description = "joining shortly";
+Title = "foind a server";
+Duration = 2;
+});
 		else
-			return "no servers found"
+    	        Notify({ 
+Description = "try again later";
+Title = "cant find a server : (";
+Duration = 2;
+});
 		end
 	end
 end)
@@ -3983,7 +3912,11 @@ AddCommand("flingwhitelist", {"flingwl"}, "whitelists a user so they can use com
 	local Target = GetPlayer(Args[1]);
 	for i, v in next, Target do
 		AdminUsers[#AdminUsers + 1] = v
-		Utils.Notify(v, "Whitelisted", format("hi (%s) , you are whitelisted to use commands", v.Name));
+    	        Notify({ 
+Description = "whitelisted "..v.name;
+Title = "whitelisted a player";
+Duration = 2;
+});
 	end
 end
 end)
@@ -3992,7 +3925,11 @@ AddCommand("whitelisted", {"whitelistedusers"}, "shows all the users whitelisted
         if (Caller ~= LocalPlayer) then
            a = true
         else
-	return next(AdminUsers) and concat(map(AdminUsers, function(i,v) return v.Name end), ", ") or "no users whitelisted"
+    	        Notify({ 
+Description = next(AdminUsers) and concat(map(AdminUsers, function(i,v) return v.Name end), ", ") or "no users whitelisted";
+Title = "whitelisted...";
+Duration = 2;
+});
 end
 end)
 
@@ -4084,20 +4021,18 @@ AddCommand("setprefix", {}, "changes your prefix", {"1"}, function(Caller, Args)
 	local PrefixToSet = Args[1]
 	if (match(PrefixToSet, "%A")) then
 		Prefix = PrefixToSet
-		Utils.Notify(Caller, "Command", format("your new prefix is now '%s'", PrefixToSet));
-		return "use command saveprefix to save your prefix"
+    	        Notify({ 
+Description = "prefix set to "..PrefixToSet;
+Title = "execute the cmd 'saveprefix' to save this";
+Duration = 2;
+});
 	else
-		return "prefix must be a symbol"
+    	        Notify({ 
+Description = "prefix has to be a symbol";
+Title = "your doing illegal things";
+Duration = 2;
+});
 	end
-end
-end)
-
-AddCommand("setcommandbarprefix", {"setcprefix"}, "sets your command bar prefix to whatever you input", {}, function()
-        if (Caller ~= LocalPlayer) then
-            a = true
-        else
-	ChooseNewPrefix = true
-	local CloseNotif = Utils.Notify(LocalPlayer, "New Prefix", "Input the new prefix you would like to have", 7);
 end
 end)
 
@@ -4149,42 +4084,13 @@ AddCommand("speed", {"cframespeed"}, "cframe speed", {}, function(Caller, Args, 
 	end
  
 	onSelected(game.Players.LocalPlayer:GetMouse())
-return "hold V to speed"
+        Notify({ 
+Description = "hold 'v' to speed";
+Title = "speed";
+Duration = 2;
+});
 end
 end)
-
-AddCommand("orbit", {}, "orbits a yourself around another player", {3, "1"}, function(Caller, Args, CEnv)
-        if (Caller ~= LocalPlayer) then
-            a = true
-        else
-	local Target = GetPlayer(Args[1])[1];
-	if (Target == LocalPlayer) then
-		return "You cannot orbit yourself."
-	end
-	local Radius = tonumber(Args[3]) or 7
-	local Speed = tonumber(Args[2]) or 1
-	local random = random(tick() / 2, tick());
-	local Root, TRoot = GetRoot(), GetRoot(Target);
-	AddConnection(CConnect(Heartbeat, function()
-		Root.CFrame = CFrameNew(TRoot.Position + Vector3New(sin(tick() * Speed) * Radius, 0, cos(tick() * Speed) * Radius), TRoot.Position);
-	end), CEnv);
-	return "now orbiting around " .. Target.Name
-end
-end)
-
-AddCommand("unorbit", {"noorbit"}, "unorbits yourself from the other player", {}, function()
-        if (Caller ~= LocalPlayer) then
-            a = true
-        else
-	if (not next(LoadCommand("orbit").CmdEnv)) then
-		return "you are not orbiting around someone"
-	end
-	DisableAllCmdConnections("orbit");
-	return "orbit stopped"
-end
-end)
-
-
 
 
 
@@ -4227,7 +4133,11 @@ notool = true
 		
 		if notool == true then
 		notool = false
-				return "please hold a tool"
+        Notify({ 
+Description = "hold a toooollllll";
+Title = "if this doesnt work, ur prob not holding a tool";
+Duration = 2;
+});
 		end
 end
 end)
@@ -4239,10 +4149,18 @@ AddCommand("antistomp", {"antistom["}, "prevents dying", {}, function(Caller, Ar
         else
 	if test == false then
 		test = true
-		return "antistomp toggled on"
+        Notify({ 
+Description = "toggled on";
+Title = "antistomp";
+Duration = 2;
+});
 	else
 		test = false
-		return "antistomp toggled off"
+        Notify({ 
+Description = "toggled off";
+Title = "antistomp";
+Duration = 2;
+});
 	end
 	antislow1 = true
 	if 	antistompranonce == false then
@@ -4272,351 +4190,7 @@ end)
 
 
 
-AddCommand("freecam", {"fc"}, "enables/disables freecam", {}, function(Caller, Args, CEnv)
-        if (Caller ~= LocalPlayer) then
-            a = true
-        else
-	if (not CEnv.Activated) then
-		-- roblox freecam modifed by fate
-		local Spring = {}
-		Spring.__index = Spring
-		function Spring:Update(dt)
-			local t, k, d, x0, v0 = self.t, self.k, self.d, self.x, self.v
-			local a0 = k * (t - x0) + v0 * d
-			local v1 = v0 + a0 * (dt / 2);
-			local a1 = k * (t - (x0 + v0 * (dt / 2))) + v1 * d
-			local v2 = v0 + a1 * (dt / 2);
-			local a2 = k * (t - (x0 + v1 * (dt / 2))) + v2 * d
-			local v3 = v0 + a2 * dt
-			local x4 = x0 + (v0 + 2 * (v1 + v2) + v3) * (dt / 6);
-			self.x, self.v = x4, v0 + (a0 + 2 * (a1 + a2) + k * (t - (x0 + v2 * dt)) + v3 * d) * (dt / 6);
-			return x4
-		end
-		function Spring.new(stiffness, dampingCoeff, dampingRatio, initialPos)
-			local self = setmetatable({}, Spring);
 
-			dampingRatio = dampingRatio or 1
-			local m = dampingCoeff * dampingCoeff / (4 * stiffness * dampingRatio * dampingRatio);
-			self.k = stiffness / m
-			self.d = -dampingCoeff / m
-			self.x = initialPos
-			self.t = initialPos
-			self.v = initialPos * 0
-
-			return self
-		end
-		local StarterGui = Services.StarterGui
-		local UserInputService = Services.UserInputService
-		local RunService = Services.RunService
-
-		local WasGuiVisible = {}
-		local GetCore, GetCoreGuiEnabled, SetCore, SetCoreGuiEnabled = StarterGui.GetCore, StarterGui.GetCoreGuiEnabled, StarterGui.SetCore, StarterGui.SetCoreGuiEnabled
-		local CoreGuiType = Enum.CoreGuiType
-		function ToggleGui(on)
-			if not on then
-				WasGuiVisible["PointsNotificationsActive"] = GetCore(StarterGui, "PointsNotificationsActive");
-				WasGuiVisible["BadgesNotificationsActive"] = GetCore(StarterGui, "BadgesNotificationsActive");
-				WasGuiVisible["Health"] = GetCoreGuiEnabled(StarterGui, CoreGuiType.Health);
-				WasGuiVisible["Backpack"] = GetCoreGuiEnabled(StarterGui, CoreGuiType.Backpack);
-				WasGuiVisible["PlayerList"] = GetCoreGuiEnabled(StarterGui, CoreGuiType.PlayerList);
-				WasGuiVisible["Chat"] = GetCoreGuiEnabled(StarterGui, CoreGuiType.Chat);
-			end
-
-			local function GuiOn(name)
-				if on == false then
-					return false
-				end
-				if WasGuiVisible[name] ~= nil then
-					return WasGuiVisible[name]
-				end
-				return true
-			end
-
-			SetCore(StarterGui, "PointsNotificationsActive", GuiOn("PointsNotificationsActive"));
-			SetCore(StarterGui, "BadgesNotificationsActive", GuiOn("BadgesNotificationsActive"));
-
-			SetCoreGuiEnabled(StarterGui, CoreGuiType.Health, GuiOn("Health"));
-			SetCoreGuiEnabled(StarterGui, CoreGuiType.Backpack, GuiOn("Backpack"));
-			SetCoreGuiEnabled(StarterGui, CoreGuiType.PlayerList, GuiOn("PlayerList"));
-			SetCoreGuiEnabled(StarterGui, CoreGuiType.Chat, GuiOn("Chat"));
-		end
-
-		local Vector2New = Vector2.new
-
-		local DEF_FOV = 70
-		local NM_ZOOM = math.tan(DEF_FOV * math.pi/360);
-		local LVEL_GAIN = Vector3New(1, 0.75, 1);
-		local RVEL_GAIN = Vector2New(0.85, 1) / 128
-		local FVEL_GAIN = -330
-		local DEADZONE = 0.125
-		local FOCUS_OFFSET = CFrameNew(0, 0, -16);
-
-		local DIRECTION_LEFT = 1
-		local DIRECTION_RIGHT = 2
-		local DIRECTION_FORWARD = 3
-		local DIRECTION_BACKWARD = 4
-		local DIRECTION_UP = 5
-		local DIRECTION_DOWN = 6
-
-		local KEY_MAPPINGS = {
-			[DIRECTION_LEFT] = {Enum.KeyCode.A, Enum.KeyCode.H},
-			[DIRECTION_RIGHT] = {Enum.KeyCode.D, Enum.KeyCode.K},
-			[DIRECTION_FORWARD] = {Enum.KeyCode.W, Enum.KeyCode.U},
-			[DIRECTION_BACKWARD] = {Enum.KeyCode.S, Enum.KeyCode.J},
-			[DIRECTION_UP] = {Enum.KeyCode.E, Enum.KeyCode.I},
-			[DIRECTION_DOWN] = {Enum.KeyCode.Q, Enum.KeyCode.Y},
-		}
-
-		local screenGuis = {}
-		local freeCamEnabled = false
-
-		local V3, V2 = Vector3New(), Vector2New();
-
-		local stateRot = V2
-		local panDeltaGamepad = V2
-		local panDeltaMouse = V2
-
-		local velSpring = Spring.new(7 / 9, 1 / 3, 1, V3);
-		local rotSpring = Spring.new(7 / 9, 1 / 3, 1, V2);
-		local fovSpring = Spring.new(2, 1 / 3, 1, 0);
-
-		local gp_x  = 0
-		local gp_z  = 0
-		local gp_l1 = 0
-		local gp_r1 = 0
-		local rate_fov = 0
-
-		local SpeedModifier = 1
-
-		local function Clamp(x, min, max)
-			return x < min and min or x > max and max or x
-		end
-
-		local function GetChar()
-			local Char = GetCharacter();
-			if Char then
-				return FindFirstChildOfClass(Char, "Humanoid"), FindFirstChild(Char, "HumanoidRootPart");
-			end
-		end
-
-		local function InputCurve(x)
-			local s = abs(x);
-			if s > DEADZONE then
-				s = 0.255000975 * (2 ^ (2.299113817 * s) - 1);
-				return x > 0 and (s > 1 and 1 or s) or (s > 1 and -1 or -s);
-			end
-			return 0
-		end
-
-		local function ProcessInput(input, processed)
-			local userInputType = input.UserInputType
-			Processed = processed
-			if userInputType == Enum.UserInputType.Gamepad1 then
-				local keycode = input.KeyCode
-				if keycode == Enum.KeyCode.Thumbstick2 then
-					local pos = input.Position
-					panDeltaGamepad = Vector2.new(InputCurve(pos.y), InputCurve(-pos.x)) * 7
-				elseif keycode == Enum.KeyCode.Thumbstick1 then
-					local pos = input.Position
-					gp_x = InputCurve(pos.x)
-					gp_z = InputCurve(-pos.y)
-				elseif keycode == Enum.KeyCode.ButtonL2 then
-					gp_l1 = input.Position.z
-				elseif keycode == Enum.KeyCode.ButtonR2 then
-					gp_r1 = input.Position.z
-				end
-
-				rate_fov = input.Position.Z
-			end
-		end
-		CEnv.Connections = {}
-		AddConnection(CConnect(UserInputService.InputChanged, ProcessInput));
-		AddConnection(CConnect(UserInputService.InputEnded, ProcessInput));
-		AddConnection(CConnect(UserInputService.InputBegan, ProcessInput));
-		local IsKeyDown = UserInputService.IsKeyDown
-		local function IsDirectionDown(direction)
-			for i = 1, #KEY_MAPPINGS[direction] do
-				if (IsKeyDown(UserInputService, KEY_MAPPINGS[direction][i]) and not Processed) then
-					return true
-				end
-			end
-			return false
-		end
-
-		local UpdateFreecam do
-			local dt = 1/60
-			AddConnection(CConnect(RenderStepped, function(_dt)
-				dt = _dt
-			end));
-
-			function UpdateFreecam()
-				local camCFrame = Camera.CFrame
-
-				local kx = (IsDirectionDown(DIRECTION_RIGHT) and 1 or 0) - (IsDirectionDown(DIRECTION_LEFT) and 1 or 0);
-				local ky = (IsDirectionDown(DIRECTION_UP) and 1 or 0) - (IsDirectionDown(DIRECTION_DOWN) and 1 or 0);
-				local kz = (IsDirectionDown(DIRECTION_BACKWARD) and 1 or 0) - (IsDirectionDown(DIRECTION_FORWARD) and 1 or 0);
-				local km = (kx * kx) + (ky * ky) + (kz * kz)
-				if km > 1e-15 then
-					km = ((IsKeyDown(UserInputService, Enum.KeyCode.LeftShift) or IsKeyDown(UserInputService, Enum.KeyCode.RightShift)) and 1 / 4 or 1) / math.sqrt(km);
-					kx = kx * km
-					ky = ky * km
-					kz = kz * km
-				end
-
-				local dx = kx + gp_x
-				local dy = ky + gp_r1 - gp_l1
-				local dz = kz + gp_z
-
-				velSpring.t = Vector3New(dx, dy, dz) * SpeedModifier
-				rotSpring.t = panDeltaMouse + panDeltaGamepad
-				fovSpring.t = Clamp(fovSpring.t + dt * rate_fov*FVEL_GAIN, 5, 120);
-
-				local fov  = fovSpring:Update(dt);
-				local dPos = velSpring:Update(dt) * LVEL_GAIN
-				local dRot = rotSpring:Update(dt) * (RVEL_GAIN * math.tan(fov * math.pi / 360) * NM_ZOOM);
-
-				rate_fov = 0
-				panDeltaMouse = V2
-
-				stateRot = stateRot + dRot
-				stateRot = Vector2New(Clamp(stateRot.x, -3 / 2, 3 / 2), stateRot.y);
-
-				local c = CFrameNew(camCFrame.p) * CFrame.Angles(0, stateRot.y, 0) * CFrame.Angles(stateRot.x, 0, 0) * CFrameNew(dPos);
-
-				Camera.CFrame = c
-				Camera.Focus = c * FOCUS_OFFSET
-				Camera.FieldOfView = fov
-			end
-		end
-
-		local function Panned(input, processed)
-			if not processed and input.UserInputType == Enum.UserInputType.MouseMovement then
-				local delta = input.Delta
-				panDeltaMouse = Vector2New(-delta.y, -delta.x);
-			end
-		end
-
-		local function EnterFreecam()
-			ToggleGui(false);
-			UserInputService.MouseIconEnabled = false
-			AddConnection(CConnect(UserInputService.InputBegan, function(input, processed)
-				if input.UserInputType == Enum.UserInputType.MouseButton2 then
-					UserInputService.MouseBehavior = Enum.MouseBehavior.LockCurrentPosition
-					local conn = CConnect(UserInputService.InputChanged, Panned)
-					repeat
-						input = CWait(UserInputService.InputEnded);
-					until input.UserInputType == Enum.UserInputType.MouseButton2 or not freeCamEnabled
-					panDeltaMouse = V2
-					panDeltaGamepad = V2
-					Disconnect(conn);
-					if freeCamEnabled then
-						UserInputService.MouseBehavior = Enum.MouseBehavior.Default
-					end
-				elseif input.KeyCode == Enum.KeyCode.LeftShift or input.KeyCode == Enum.KeyCode.RightShift then
-					SpeedModifier = 0.5
-				end
-			end), CEnv.Connections);
-
-			AddConnection(CConnect(UserInputService.InputEnded, function(input, processed)
-				if input.KeyCode == Enum.KeyCode.LeftShift or input.KeyCode == Enum.KeyCode.RightShift then
-					SpeedModifier = 1
-				end
-			end), CEnv.Connections);
-
-			Camera.CameraType = Enum.CameraType.Scriptable
-
-			local hum, hrp = GetChar()
-			if hrp then
-				hrp.Anchored = true
-			end
-			if hum then
-				hum.WalkSpeed = 0
-				AddConnection(CConnect(hum.Jumping, function(active)
-					if active then
-						hum.Jumping = false
-					end
-				end), CEnv.Connections);
-			end
-
-			velSpring.t, velSpring.v, velSpring.x = V3, V3, V3
-			rotSpring.t, rotSpring.v, rotSpring.x = V2, V2, V2
-			fovSpring.t, fovSpring.v, fovSpring.x = Camera.FieldOfView, 0, Camera.FieldOfView
-
-			local camCFrame = Camera.CFrame
-			local lookVector = camCFrame.lookVector.unit
-
-			stateRot = Vector2.new(
-				math.asin(lookVector.y),
-				math.atan2(-lookVector.z, lookVector.x) - math.pi/2
-			)
-			panDeltaMouse = Vector2New();
-			for _, obj in next, GetChildren(PlayerGui) do
-				if IsA(obj, "ScreenGui") and obj.Enabled then
-					obj.Enabled = false
-					screenGuis[obj] = true
-				end
-			end
-
-			AddConnection(CConnect(LocalPlayer.CharacterAdded, function()
-				local Hrp = WaitForChild(LocalPlayer.Character, "HumanoidRootPart");
-				Hrp.Anchored = true
-			end), CEnv.Connections);
-			RunService.BindToRenderStep(RunService, "Freecam", Enum.RenderPriority.Camera.Value, UpdateFreecam);
-			CEnv.Enabled = true
-		end
-
-		local function ExitFreecam()
-			CEnv.Enabled = false
-			UserInputService.MouseIconEnabled = true
-			UserInputService.MouseBehavior = Enum.MouseBehavior.Default
-
-			RunService.UnbindFromRenderStep(RunService, "Freecam")
-			local hum, hrp = GetChar()
-			if hum then
-				hum.WalkSpeed = 16
-			end
-			if hrp then
-				hrp.Anchored = false
-			end
-			Camera.FieldOfView = DEF_FOV
-			Camera.CameraType = Enum.CameraType.Custom
-			for i, Connection in next, CEnv.Connections do
-				Disconnect(Connection);
-			end
-			for obj in next, screenGuis do
-				obj.Enabled = true
-			end
-			screenGuis = {}
-			ToggleGui(true)
-		end
-
-		EnterFreecam()
-		CEnv.Activated = true
-		CEnv.Enabled = true
-		CEnv.EnterFreecam = EnterFreecam
-		CEnv.ExitFreecam = ExitFreecam
-		return "freecam enabled"
-	end
-	if (CEnv.Enabled) then
-		CEnv.ExitFreecam();
-		return "freecam disabled"
-	else
-		CEnv.EnterFreecam();
-		return "freecam enabled"
-	end
-end
-end)
-
-AddCommand("freecamgoto", {"fcgoto"}, "takes your freecam to t hem", {"1"}, function(Caller, Args)
-	local Target = GetPlayer(Args[1]);
-	local Delay = tonumber(Args[2]);
-	for i, v in next, Target do
-		if (Delay) then
-			wait(Delay);
-		end
-		Camera.CFrame = GetRoot(v).CFrame * CFrameNew(0, 10, 10);
-	end
-end)
 
 AddCommand("antilag", {"fpsboost"}, "changes everything to a plastic material", {}, function(Caller, Args, CEnv)
         if (Caller ~= LocalPlayer) then
@@ -4646,7 +4220,6 @@ AddCommand("unantilag", {"unfpsboost"}, "changes everything back from a plastic 
 		i.Material = v
 		Amount = Amount + 1
 	end
-	return format("removed %d plastic in %.3f (s)", Amount, (tick()) - time);
 end
 end)
 
@@ -4661,7 +4234,6 @@ AddCommand("antiafk", {"antiidle"}, "prevents kicks from when you're afk", {}, f
 			CEnv[1] = true
 		end
 	end
-	return "antiafk " .. (IsEnabled and " disabled" or "enabled");
 end)
 
 AddCommand("qtp", {}, "tps you to where your mouse is when you click", {}, function(Caller, Args, CEnv)
@@ -4678,43 +4250,14 @@ AddCommand("qtp", {}, "tps you to where your mouse is when you click", {}, funct
 			end
 		end
 	end)
-	return "click q to teleport"
+        Notify({ 
+Description = "press q to tp";
+Title = "press q";
+Duration = 2;
+});
 end
 end)
 
-AddCommand("help", {"info"}, "gives you the description of the command", {"1"}, function(Caller, Args)
-	local Command = Args[1]
-	local Loaded = LoadCommand(Command);
-	if (Loaded) then
-		Utils.Notify(Caller, Loaded.Name, Loaded.Description, 8);
-	end
-end)
-
-AddCommand("friend", {"fr"}, "sends a friend request to the player", {"1"}, function(Caller, Args)
-        if (Caller ~= LocalPlayer) then
-            a = true
-        else
-	local Target = GetPlayer(Args[1]);
-	local RequestFriendship = LocalPlayer.RequestFriendship
-	for i, v in next, Target do
-		RequestFriendship(LocalPlayer, v);
-	end
-	return #Target == 1 and "sent a friend request to " .. Target[1].Name or format("sent a friend request to %d players", #Target);
-end
-end)
-
-AddCommand("unfriend", {"unfr"}, "unfriends a player that you're friends with", {"1"}, function(Caller, Args)
-        if (Caller ~= LocalPlayer) then
-            a = true
-        else
-	local Target = GetPlayer(Args[1]);
-	local RevokeFriendship = LocalPlayer.RevokeFriendship
-	for i, v in next, Target do
-		RevokeFriendship(LocalPlayer, v);
-	end
-	return #Target == 1 and "unfriended " .. Target[1].Name or format("unfriended %d players", #Target);
-end
-end)
 
 AddCommand("setzoomdistance", {"szd", "maxzoom"}, "sets your cameras zoom distance so you can zoom out", {}, function(Caller, Args)
         if (Caller ~= LocalPlayer) then
@@ -4745,7 +4288,6 @@ AddCommand("config", {"conf"}, "shows fates admin config", {}, function(Caller, 
 		Utils.TweenAllTransToObject(ConfigUI, .25, ConfigUIClone);
 		ConfigLoaded = true
 		CEnv[1] = true
-		return "config loaded"
 	end
 end
 end)
@@ -4766,24 +4308,6 @@ end
 end)
 
 
-AddCommand("toggle", {"togglecommand", "togglecmd"}, "toggles a command with an 'un' command", {"1"}, function(Caller, Args, CEnv)
-        if (Caller ~= LocalPlayer) then
-            a = true
-        else
-	local Command = Args[1]
-	if (LoadCommand(Command)) then
-		CEnv.Command = (CEnv.Command and CEnv.Command ~= true) and true or not CEnv.Command
-		local NewArgs = shift(Args);
-		if (CEnv.Command) then
-			ExecuteCommand(Command, NewArgs, Caller);
-		else
-			ExecuteCommand("un" .. Command, NewArgs, Caller);
-		end
-	else
-		return Command .. " is not a valid command"
-	end
-end
-end)
 
 AddCommand("inviscam", {"inviscamera"}, "makes you see through walls more better", {}, function(Caller, Args, CEnv)
         if (Caller ~= LocalPlayer) then
@@ -4793,7 +4317,6 @@ AddCommand("inviscam", {"inviscamera"}, "makes you see through walls more better
 	CEnv.OldDevCameraOcclusionMode = LocalPlayer.DevCameraOcclusionMode
 	LocalPlayer.CameraMaxZoomDistance = 600
 	LocalPlayer.DevCameraOcclusionMode = "Invisicam"
-	return "inviscam enabled"
 end
 end)
 
@@ -4804,7 +4327,6 @@ AddCommand("uninviscam", {"uninviscamera"}, "disables inviscam", {}, function()
 	local CmdEnv = LoadCommand("inviscam").CmdEnv
 	LocalPlayer.CameraMaxZoomDistance = CmdEnv.OldCameraMaxZoomDistance
 	LocalPlayer.DevCameraOcclusionMode = CmdEnv.OldDevCameraOcclusionMode
-	return "inviscam disabled"
 end
 end)
 
@@ -4828,7 +4350,11 @@ AddCommand("loop", {"loopcommand"}, "loops a command", {"1"}, function(Caller, A
 			wait(tonumber(Args[#Args]) or 1);
 		end
 	end)();
-	return format("now looping the %s command", Command);
+        Notify({ 
+Description = format("now looping the %s command", Command);
+Title = "loop";
+Duration = 2;
+});
 end
 end)
 
@@ -4840,12 +4366,12 @@ AddCommand("unloop", {"unloopcommand"}, "unloops a command", {}, function(Caller
 	if (Args[1]) then
 		if (Looped.LoopedCommands[Args[1]]) then
 			Looped.LoopedCommands[Args[1]] = nil
-			return format("unlooped command %s", Args[1]);
+a = true
 		end
-		return "command isn't looped"
+a = true
 	else
 		Looped.Looping = false
-		return "unlooped all commands looped"
+a = true
 	end
 end
 end)
@@ -6757,12 +6283,16 @@ getgenv().F_A = {
     GetConfig = GetConfig
 }
 
-Utils.Notify(LocalPlayer, "Loaded", format("script loaded in %.3f seconds", (tick()) - _L.start));
-Utils.Notify(LocalPlayer, "Welcome", "'cmds' to see all of the commands, 'config' to customise the script");
 if (debug.info(2, "f") == nil) then
-print("out dated")
+        Notify({ 
+Description = "use the loadstring or the cmd 'reloadscript' to get the newest version";
+Title = "this script is potentially outdated";
+Duration = 2;
+});
 end
+idkfakethingy = true
 while true do
+idkfakethingy = true
 	wait(0.1)
 	
 	local Player = game.Players.LocalPlayer
@@ -6781,7 +6311,8 @@ while true do
 		end
 	end)
 repeat
-	wait(3)
+idkfakethingy = true
+	wait(0.1)
 	
 	local Player = game.Players.LocalPlayer
 	local Character = Player.Character
