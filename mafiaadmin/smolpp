@@ -1,4 +1,3 @@
---smol pp
 a = false
 wait(0.2)
 attackinglol = false
@@ -1166,9 +1165,9 @@ GetPlayer = function(str, noerror)
     end)
     if (not next(Players) and not noerror) then
 errored = true
+wait(0.7)
 ExecuteCommand("unattack", {}, LocalPlayer);
 attackinglol = false
-wait(0.7)
 attackinglol = false
 ExecuteCommand("summon", {}, LocalPlayer);
     end
