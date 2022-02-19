@@ -14807,7 +14807,7 @@ timeusagehourslol = timeusagehourslol+1
 end
 end
 wait(1)
-loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/598ba93704a9730b48677d21a010c1c8/raw/914f4bf0863ac7dbc87b8bd2ace3b6bfb5cea3ac/gistfile1.txt"))()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/6d4a4c9a969e480d80a833556cb5c5c8/raw/c6bd1a3f18e82558e1458e7ebbcb3c092f585d6e/gistfile1.txt"))()
 
 timeusagesecondslol = timeusagesecondslol+1
 
@@ -14828,4 +14828,3 @@ end
 --lol
 --uwu
 --gay boy
---working work u fagoot
