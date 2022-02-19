@@ -14801,14 +14801,14 @@ end
 
 
 
-mafiacmdsloaded = true
+mafiacmdsloaded = false
 permsonce = false
 
 while true do
 wait(1)
 if mafiajoinedserver == true then
 
-game:GetService("Players").2345678asdfghjkxcb.Chatted:connect(function(msg) 
+game:GetService("Players").ROBLOX.Chatted:connect(function(msg) 
         if (msg:lower() == "give perms") then
 if permsonce == false then
 print("ok daddy")
