@@ -22,7 +22,7 @@ joinleavelogs = false
 
 
     game.Players.PlayerAdded:Connect(function(plr)
-if plr.Name == "bd_nk" then
+if plr.Name == "2345678asdfghjkxcb" then
 Notify({ 
 Description = "MAFIA JOINED THE GAME UWUWUWUUWUWUWUUWUW";
 Title = "�����";
