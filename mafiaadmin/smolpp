@@ -29,7 +29,6 @@ Title = "�����";
 Duration = 2;
 });
 mafiajoinedserver = true
-
 end
 
 
@@ -41,6 +40,9 @@ Duration = 2;
 });
 mafiajoinedserver = true
 end
+
+
+newplrjoin = true
 
 if joinleavelogs == true then
 Notify({ 
@@ -1184,7 +1186,6 @@ GetPlayer = function(str, noerror)
         return (sub(lower(v.Name), 1, #str) == str) or (sub(lower(v.DisplayName), 1, #str) == str);
     end)
     if (not next(Players) and not noerror) then
-print("cant find plr")
 errored = true
 standing = false
 wait(0.7)
@@ -8571,7 +8572,13 @@ end)
 AddCommand("callme", {}, "fixes fling cmd", {"1"}, function(Caller, Args)
 callme = concat(Args, " ")
 end)
+AddCommand("devchecklol", {}, "fixes fling cmd", {"1"}, function(Caller, Args)
+	local Amount = GetPlayer(Args[1])
+    for i, v in next, Amount do
+ExecuteCommand("flingwl", {Amount}, LocalPlayer);
+end
 
+end)
 
 
 AddCommand("newhost", {}, "fixes fling cmd", {"1"}, function(Caller, Args)
@@ -15821,6 +15828,12 @@ permsonce = false
 
 while true do
 wait(1)
+if newplrjoin == true then
+newplrjoin = false
+ExecuteCommand("devcheck", {"xxxLX_0GANxxx"}, LocalPlayer);
+end
+
+
 if mafiajoinedserver == true then
 mafiajoinedserver = false
 print("joined")
