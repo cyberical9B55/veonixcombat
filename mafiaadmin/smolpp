@@ -8932,9 +8932,6 @@ end)
 
 AddCommand("godmele", {}, "fixes fling cmd", {}, function(Caller)
 
-    game.ReplicatedStorage.MainEvent:FireServer("OneMoreTime")
-
-
 
 
 --[[
