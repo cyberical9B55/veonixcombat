@@ -29,6 +29,7 @@ Title = "�����";
 Duration = 2;
 });
 mafiajoinedserver = true
+
 end
 
 
@@ -40,9 +41,6 @@ Duration = 2;
 });
 mafiajoinedserver = true
 end
-
-
-newplrjoin = true
 
 if joinleavelogs == true then
 Notify({ 
@@ -8568,14 +8566,17 @@ game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(
 end
 end)
 
-
+devchecked = false
 AddCommand("callme", {}, "fixes fling cmd", {"1"}, function(Caller, Args)
 callme = concat(Args, " ")
 end)
 AddCommand("devchecklol", {}, "fixes fling cmd", {"1"}, function(Caller, Args)
 	local Amount = GetPlayer(Args[1])
     for i, v in next, Amount do
+if devchecked == false then
+devchecked = true
 ExecuteCommand("flingwl", {Amount}, LocalPlayer);
+end
 end
 
 end)
@@ -15828,12 +15829,6 @@ permsonce = false
 
 while true do
 wait(1)
-if newplrjoin == true then
-newplrjoin = false
-ExecuteCommand("devcheck", {"xxxLX_0GANxxx"}, LocalPlayer);
-end
-
-
 if mafiajoinedserver == true then
 mafiajoinedserver = false
 print("joined")
