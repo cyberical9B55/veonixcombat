@@ -1,0 +1,19 @@
+local vipIDs = {
+2,
+2712970955,
+3190815735,
+2354212835,
+1
+}
+
+local function main()
+	for i,v in pairs(game.Players:GetChildren()) do
+		if table.find(vipIDs,v.UserId) then
+			if v.Character then
+				v.Character:FindFirstChild("Humanoid").DisplayName = "[😩👑]"..v.DisplayName
+			end
+		end
+	end
+end
+local success,err = pcall(main)
+return vipIDs
