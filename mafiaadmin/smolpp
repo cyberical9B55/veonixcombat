@@ -1,3 +1,5 @@
+-- i have smoll pp :(
+
 a = false
 wait(0.2)
 attackinglol = false
@@ -2924,6 +2926,27 @@ Description = "if you could tell ofc";
 Title = "no longer spinning";
 Duration = 2;
 });
+end
+end)
+
+
+
+AddCommand("tweengoto2", {"tweento2"}, "teleports yourself to the other character", {"1"}, function(Caller, Args)
+    local Target = GetPlayer(Args[1]);
+    for i, v in next, Target do
+tweenlol3 = Target.Name
+local tweentargetlol = tweenlol3
+	plr = game:GetService('Players').tweentargetlol
+	X1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.X
+		Y1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Y
+		Z1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Z
+
+
+
+tweenService, tweenInfo = game:GetService("TweenService"), TweenInfo.new(1, Enum.EasingStyle.Linear)
+
+tween = tweenService:Create(game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart, tweenInfo, {CFrame = CFrame.new(X1, Y1, Z1)})
+tween:Play()
 end
 end)
 
@@ -11858,7 +11881,36 @@ Duration = 2;
 });
 end)
 
+automuscle = false
 
+
+AddCommand("autoweight", {"weightfarm"}, "fixes sing cmd", {}, function(Caller)
+automuscle = not automuscle
+if automuscle == true then
+repeat
+wait()
+		if not game.Players.LocalPlayer.Character:FindFirstChild("[HeavyWeights]") then
+			wait()
+			local k = game.Workspace.Ignored.Shop["[HeavyWeights] - $250"]
+			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = k.Head.CFrame + Vector3.new(0, 3, 0)
+			if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - k.Head.Position).Magnitude <= 50 then
+				wait(.2)
+				fireclickdetector(k:FindFirstChild("ClickDetector"), 4)
+			end
+		end
+		if not game.Players.LocalPlayer.Character:FindFirstChild("[HeavyWeights]") then
+			tool = game.Players.LocalPlayer.Backpack:WaitForChild("[HeavyWeights]")
+			tool.Parent = game.Players.LocalPlayer.Character
+		end
+		game:GetService("VirtualUser"):ClickButton1(Vector2.new())
+		local d = Vector3.new(-1006.99, -51.1542, -1014.33)
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(d)
+		local d = Vector3.new(-1006.99, -56.1542, -1014.33)
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(d)
+
+until automuscle == false
+end
+end)
 
 
 
@@ -12520,6 +12572,7 @@ ExecuteCommand("bank", {}, LocalPlayer);
 	local Amount = GetPlayer(Args[1])
     for i, v in next, Amount do
 target = v.Name
+tweenlol3 = target.Name
 allreadytplol = false
 local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
 local p2 = target
@@ -12621,35 +12674,27 @@ ExecuteCommand("bank", {}, LocalPlayer);
 wait(0.3)
 end
 
+local tweentargetlol = tweenlol3
 
-if game.Players[v.Name].Character.BodyEffects['K.O'].Value == true then
-saveme()
-wait(0.1)
-saveme()
-wait(0.1)
-saveme()
-wait(0.1)
-saveme()
-wait(0.1)
-saveme()
-wait(0.1)
-end
-if game.Players[v.Name].Character.BodyEffects['K.O'].Value == true then
-saveme()
-wait(0.1)
-saveme()
-wait(0.1)
-saveme()
-wait(0.1)
-saveme()
-wait(0.1)
-saveme()
-wait(0.1)
-saveme()
-wait(0.1)
-saveme()
-saveme()
-end
+	plr = game:GetService('Players').tweentargetlol
+	X1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.X
+		Y1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Y
+		Z1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Z
+
+
+
+tweenService, tweenInfo = game:GetService("TweenService"), TweenInfo.new(1, Enum.EasingStyle.Linear)
+
+tween = tweenService:Create(game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart, tweenInfo, {CFrame = CFrame.new(X1, Y1, Z1)})
+tween:Play()
+wait(0.9)
+			game.ReplicatedStorage.MainEvent:FireServer("Grabbing")
+wait(0.2)
+tweenService, tweenInfo = game:GetService("TweenService"), TweenInfo.new(1, Enum.EasingStyle.Linear)
+
+tween = tweenService:Create(game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart, tweenInfo, {CFrame = CFrame.new(-318.891174, 80.2145309, -257.177429, 0.0479469746, -5.14644114e-08, 0.998850107, -3.12971538e-09, 1, 5.16738901e-08, -0.998850107, -5.60372015e-09, 0.0479469746)})
+tween:Play()
+wait(0.91)
 if game.Players[v.Name].Character.BodyEffects['K.O'].Value == true then
 wait(0.8)
 saveme()
@@ -15838,3 +15883,4 @@ end
 end
 --bum bum1
 --YAY PENIS
+--lol
