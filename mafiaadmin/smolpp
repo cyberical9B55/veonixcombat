@@ -2937,7 +2937,16 @@ AddCommand("goto", {"to"}, "teleports yourself to the other character", {3, "1"}
         if (Caller ~= LocalPlayer) then
 a = true
         else
+if auraing2 == true then
+if game.Players[v.Name].Character.BodyEffects['K.O'].Value == true then
+ExecuteCommand("nokill", {v.Name}, LocalPlayer);
+else
             GetRoot().CFrame = GetRoot(v).CFrame * CFrameNew(-5, 0, 0);
+end
+else
+
+            GetRoot().CFrame = GetRoot(v).CFrame * CFrameNew(-5, 0, 0);
+end
         end
     end
 end)
@@ -6926,6 +6935,7 @@ ExecuteCommand("goto", {hostusername}, LocalPlayer);
 until auraing2 == false
 
 
+
 end)
 
 
@@ -10609,9 +10619,128 @@ Title = "BTW";
 Duration = 2;
 });
 
+ExecuteCommand("antilag", {}, LocalPlayer);
+wait(0.4)
+local decalsyeeted = true -- Leaving this on makes games look shitty but the fps goes up by at least 20.
+local g = game
+local w = g.Workspace
+local l = g.Lighting
+local t = w.Terrain
+sethiddenproperty(l,"Technology",2)
+sethiddenproperty(t,"Decoration",false)
+t.WaterWaveSize = 0
+t.WaterWaveSpeed = 0
+t.WaterReflectance = 0
+t.WaterTransparency = 0
+l.GlobalShadows = 0
+l.FogEnd = 9e9
+l.Brightness = 0
+settings().Rendering.QualityLevel = "Level01"
+for i, v in pairs(w:GetDescendants()) do
+    if v:IsA("BasePart") and not v:IsA("MeshPart") then
+        v.Material = "Plastic"
+        v.Reflectance = 0
+    elseif (v:IsA("Decal") or v:IsA("Texture")) and decalsyeeted then
+        v.Transparency = 1
+    elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+        v.Lifetime = NumberRange.new(0)
+    elseif v:IsA("Explosion") then
+        v.BlastPressure = 1
+        v.BlastRadius = 1
+    elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
+        v.Enabled = false
+    elseif v:IsA("MeshPart") and decalsyeeted then
+        v.Material = "Plastic"
+        v.Reflectance = 0
+        v.TextureID = 10385902758728957
+    elseif v:IsA("SpecialMesh") and decalsyeeted  then
+        v.TextureId=0
+    elseif v:IsA("ShirtGraphic") and decalsyeeted then
+        v.Graphic=0
+    elseif (v:IsA("Shirt") or v:IsA("Pants")) and decalsyeeted then
+        v[v.ClassName.."Template"]=0
+    end
+end
+for i = 1,#l:GetChildren() do
+    e=l:GetChildren()[i]
+    if e:IsA("BlurEffect") or e:IsA("SunRaysEffect") or e:IsA("ColorCorrectionEffect") or e:IsA("BloomEffect") or e:IsA("DepthOfFieldEffect") then
+        e.Enabled = false
+    end
+end
+w.DescendantAdded:Connect(function(v)
+    wait()--prevent errors and shit
+   if v:IsA("BasePart") and not v:IsA("MeshPart") then
+        v.Material = "Plastic"
+        v.Reflectance = 0
+    elseif v:IsA("Decal") or v:IsA("Texture") and decalsyeeted then
+        v.Transparency = 1
+    elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+        v.Lifetime = NumberRange.new(0)
+    elseif v:IsA("Explosion") then
+        v.BlastPressure = 1
+        v.BlastRadius = 1
+    elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
+        v.Enabled = false
+    elseif v:IsA("MeshPart") and decalsyeeted then
+        v.Material = "Plastic"
+        v.Reflectance = 0
+        v.TextureID = 10385902758728957
+    elseif v:IsA("SpecialMesh") and decalsyeeted then
+        v.TextureId=0
+    elseif v:IsA("ShirtGraphic") and decalsyeeted then
+        v.ShirtGraphic=0
+    elseif (v:IsA("Shirt") or v:IsA("Pants")) and decalsyeeted then
+        v[v.ClassName.."Template"]=0
+    end
+end)
+
+
+
+wait(0.3)
+
+
 loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/7ed204647c293c619226f22b2da6cbc2/raw/7f8438a4e8c92f8532662331fe933503421d5feb/crads"))()
 
 end)
+
+
+AddCommand("chatlogs2", {"clogs2"}, "enables chatlogs", {}, function()
+    local MessageClone = Clone(ChatLogs.Frame.List);
+
+    Utils.ClearAllObjects(ChatLogs.Frame.List)
+    ChatLogs.Visible = true
+
+    local Tween = Utils.TweenAllTransToObject(ChatLogs, .25, ChatLogsTransparencyClone)
+
+    Destroy(ChatLogs.Frame.List)
+    MessageClone.Parent = ChatLogs.Frame
+
+    for i, v in next, GetChildren(ChatLogs.Frame.List) do
+        if (not IsA(v, "UIListLayout")) then
+            Utils.Tween(v, "Sine", "Out", .25, {
+                TextTransparency = 0
+            })
+        end
+    end
+
+    local ChatLogsListLayout = ChatLogs.Frame.List.UIListLayout
+
+    CConnect(GetPropertyChangedSignal(ChatLogsListLayout, "AbsoluteContentSize"), function()
+        local CanvasPosition = ChatLogs.Frame.List.CanvasPosition
+        local CanvasSize = ChatLogs.Frame.List.CanvasSize
+        local AbsoluteSize = ChatLogs.Frame.List.AbsoluteSize
+
+        if (CanvasSize.Y.Offset - AbsoluteSize.Y - CanvasPosition.Y < 20) then
+           wait() -- chatlogs updates absolutecontentsize before sizing frame
+           ChatLogs.Frame.List.CanvasPosition = Vector2.new(0, CanvasSize.Y.Offset + 1000) --ChatLogsListLayout.AbsoluteContentSize.Y + 100)
+        end
+    end)
+
+    Utils.Tween(ChatLogs.Frame.List, "Sine", "Out", .25, {
+        ScrollBarImageTransparency = 0
+    })
+end)
+
 
 
 AddCommand("fixfling", {"flingfix"}, "fixes fling cmd", {}, function(Caller)
@@ -12678,6 +12807,16 @@ until bountyfarm == false
 
 end)
 
+
+AddCommand("getnearest", {}, "teleports yourself to the other character", {"1"}, function(Caller, Args)
+	local Amount = GetPlayer("nearest")
+    for i, v in next, Amount do
+nearestplrlol = v.Name
+
+end
+
+end)
+
 AddCommand("bag", {"bagplr"}, "teleports yourself to the other character", {"1"}, function(Caller, Args)
 	plr = game:GetService('Players').LocalPlayer
 	X1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.X
@@ -12944,7 +13083,7 @@ a = true
 else
 
 
-			game.ReplicatedStorage.MainEvent:FireServer("Grabbing")
+			game.ReplicatedStorage.MainEvent:FireServer("Grabbing", false)
 end
 
 
@@ -12952,31 +13091,7 @@ until game.Players[target].Character:FindFirstChild("GRABBING_CONSTRAINT") or ga
 
 
 wait(0.2)
-ExecuteCommand("bank", {}, LocalPlayer);
-ExecuteCommand("bank", {}, LocalPlayer);
-wait(0.2)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1-5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1-5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1-5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1-5,Z1)
-ExecuteCommand("bank", {}, LocalPlayer);
-ExecuteCommand("bank", {}, LocalPlayer);
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1-5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1-5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1-5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1-5,Z1)
-ExecuteCommand("bank", {}, LocalPlayer);
-ExecuteCommand("bank", {}, LocalPlayer);
+
 
 
 allreadytplol = false
@@ -12985,10 +13100,7 @@ local p2 = target
 p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
 
 
-
-repeat
-wait(1.5)
-
+function saveme()
 local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
 local p2 = target
 p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
@@ -13007,51 +13119,56 @@ p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
 local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
 local p2 = target
 p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
+wait(0.1)
+local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
+local p2 = target
+p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
+			game.ReplicatedStorage.MainEvent:FireServer("Grabbing")
 
-if allreadytplol == true then
-
-a = true
-else
-
-
+wait(0.1)
+ExecuteCommand("bank", {}, LocalPlayer);
+wait(0.3)
 end
 
 
-until game.Players[target].Character:FindFirstChild("GRABBING_CONSTRAINT") or game.Players[target].Character.BodyEffects['K.O'].Value ~= true
-
-
-wait(0.2)
-ExecuteCommand("bank", {}, LocalPlayer);
-ExecuteCommand("bank", {}, LocalPlayer);
-wait(0.2)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1-5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1-5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1-5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1-5,Z1)
-ExecuteCommand("bank", {}, LocalPlayer);
-ExecuteCommand("bank", {}, LocalPlayer);
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1-5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1-5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1-5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1+5,Z1)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X1,Y1-5,Z1)
-ExecuteCommand("bank", {}, LocalPlayer);
-ExecuteCommand("bank", {}, LocalPlayer);
-
-
-
-
-
-
+if game.Players[v.Name].Character.BodyEffects['K.O'].Value == true then
+saveme()
+wait(0.1)
+saveme()
+wait(0.1)
+saveme()
+wait(0.1)
+saveme()
+wait(0.1)
+saveme()
+wait(0.1)
+end
+if game.Players[v.Name].Character.BodyEffects['K.O'].Value == true then
+saveme()
+wait(0.1)
+saveme()
+wait(0.1)
+saveme()
+wait(0.1)
+saveme()
+wait(0.1)
+saveme()
+wait(0.1)
+saveme()
+wait(0.1)
+saveme()
+saveme()
+end
+if game.Players[v.Name].Character.BodyEffects['K.O'].Value == true then
+wait(0.8)
+saveme()
+wait(0.8)
+saveme()
+wait(0.8)
+saveme()
+wait(0.8)
+saveme()
+end
 
 if standing2 == true then
 standing2 = false
@@ -16227,3 +16344,5 @@ timeusageminuteslol = 0
 timeusagehourslol = timeusagehourslol+1
 end
 end
+--bum bum1
+--YAY PENIS
