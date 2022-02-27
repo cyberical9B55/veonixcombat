@@ -1,3 +1,7 @@
+--my dick is small
+
+
+
 a = false
 wait(0.2)
 attackinglol = false
@@ -11880,10 +11884,47 @@ Duration = 2;
 end)
 
 automuscle = false
-
+automuscleoncelol = false
 
 AddCommand("autoweight", {"weightfarm"}, "fixes sing cmd", {}, function(Caller)
 automuscle = not automuscle
+
+if automuscleoncelol == false then
+automuscleoncelol = true
+
+
+ _G.Skidhub = "u"
+
+Notify({ 
+Description = "press 'u' to toggle off btw";
+Title = "farm";
+Duration = 5;
+});
+
+
+gv = false
+plr = game.Players.LocalPlayer
+mouse = plr:GetMouse()
+mouse.KeyDown:connect(function(key)
+    if key == _G.Skidhub and  gv == false then
+        gv = true
+
+ 
+automuscle = false
+
+
+    elseif key == _G.Skidhub and gv == true then
+        gv = false
+automuscle = false
+
+    end
+end)
+
+
+end
+
+
+
 if automuscle == true then
 repeat
 wait()
