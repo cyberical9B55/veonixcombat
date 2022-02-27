@@ -3,7 +3,7 @@ wait(0.2)
 attackinglol = false
 standing = false
 
-hostusername = "a"  -- case sencitive 
+hostusername = ""  -- case sencitive 
 
 
 
@@ -7848,697 +7848,188 @@ end)
 
 AddCommand("guiscript", {"gui"}, "disables noclip", {}, function(Caller)
 
+print("a")
 
 
-local guiversion = Instance.new("ScreenGui")
-local topframe = Instance.new("Frame")
-local mainholder = Instance.new("Frame")
-local maintab2 = Instance.new("ScrollingFrame")
-local fly = Instance.new("TextButton")
-local flyspeed = Instance.new("TextButton")
-local flyspeed_2 = Instance.new("TextButton")
-local flyspeedshower = Instance.new("TextButton")
-local walkspeed = Instance.new("TextButton")
-local speed = Instance.new("TextButton")
-local speed_2 = Instance.new("TextButton")
-local speedshower = Instance.new("TextButton")
-local qtp = Instance.new("TextButton")
-local sit = Instance.new("TextButton")
-local re = Instance.new("TextButton")
-local cashaura = Instance.new("TextButton")
-local autodrop = Instance.new("TextButton")
-local combattab2 = Instance.new("ScrollingFrame")
-local antistomp = Instance.new("TextButton")
-local standtab2 = Instance.new("ScrollingFrame")
-local fly_2 = Instance.new("TextButton")
-local flyspeed_3 = Instance.new("TextButton")
-local flyspeed_4 = Instance.new("TextButton")
-local flyspeedshower_2 = Instance.new("TextButton")
-local walkspeed_2 = Instance.new("TextButton")
-local speed_3 = Instance.new("TextButton")
-local speed_4 = Instance.new("TextButton")
-local speedshower_2 = Instance.new("TextButton")
-local qtp_2 = Instance.new("TextButton")
-local sit_2 = Instance.new("TextButton")
-local re_2 = Instance.new("TextButton")
-local title = Instance.new("TextLabel")
-local maintab = Instance.new("TextButton")
-local combattab = Instance.new("TextButton")
-local standtab = Instance.new("TextButton")
-local close = Instance.new("TextButton")
-local minimise = Instance.new("TextButton")
-
---Properties:
-
-guiversion.Name = "guiversion"
-guiversion.Parent = game.CoreGui
-guiversion.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
-topframe.Name = "topframe"
-topframe.Parent = guiversion
-topframe.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-topframe.BorderColor3 = Color3.fromRGB(30, 30, 30)
-topframe.Position = UDim2.new(0.234999999, 0, 0.210752681, 0)
-topframe.Size = UDim2.new(0.437999994, 0, 0.0989247337, 0)
-
-mainholder.Name = "mainholder"
-mainholder.Parent = topframe
-mainholder.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
-mainholder.BorderColor3 = Color3.fromRGB(255, 255, 255)
-mainholder.Position = UDim2.new(-0.000536203384, 0, 0.984532833, 0)
-mainholder.Size = UDim2.new(1, 0, 4.173913, 0)
-
-maintab2.Name = "maintab2"
-maintab2.Parent = mainholder
-maintab2.Active = true
-maintab2.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
-maintab2.BorderColor3 = Color3.fromRGB(70, 70, 70)
-maintab2.Position = UDim2.new(0.000536217529, 0, 0, 0)
-maintab2.Size = UDim2.new(0, 437, 0, 192)
-maintab2.ScrollBarThickness = 4
-
-fly.Name = "fly"
-fly.Parent = maintab2
-fly.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-fly.BorderColor3 = Color3.fromRGB(255, 255, 255)
-fly.Position = UDim2.new(-5.97462058e-05, 0, 0.00701014278, 0)
-fly.Size = UDim2.new(0, 115, 0, 55)
-fly.Font = Enum.Font.SourceSans
-fly.Text = "flight"
-fly.TextColor3 = Color3.fromRGB(22, 43, 139)
-fly.TextSize = 35.000
-
-flyspeed.Name = "flyspeed+"
-flyspeed.Parent = maintab2
-flyspeed.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-flyspeed.BorderColor3 = Color3.fromRGB(255, 255, 255)
-flyspeed.Position = UDim2.new(0.268164724, 0, -0.00410683919, 0)
-flyspeed.Size = UDim2.new(0, 126, 0, 31)
-flyspeed.Font = Enum.Font.SourceSans
-flyspeed.Text = "speed+"
-flyspeed.TextColor3 = Color3.fromRGB(22, 43, 139)
-flyspeed.TextSize = 25.000
-
-flyspeed_2.Name = "flyspeed-"
-flyspeed_2.Parent = maintab2
-flyspeed_2.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-flyspeed_2.BorderColor3 = Color3.fromRGB(255, 255, 255)
-flyspeed_2.Position = UDim2.new(0.268164724, 0, 0.0807291716, 0)
-flyspeed_2.Size = UDim2.new(0, 126, 0, 26)
-flyspeed_2.Font = Enum.Font.SourceSans
-flyspeed_2.Text = "speed-"
-flyspeed_2.TextColor3 = Color3.fromRGB(22, 43, 139)
-flyspeed_2.TextSize = 25.000
-
-flyspeedshower.Name = "flyspeedshower"
-flyspeedshower.Parent = maintab2
-flyspeedshower.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-flyspeedshower.BorderColor3 = Color3.fromRGB(255, 255, 255)
-flyspeedshower.Position = UDim2.new(0.574263215, 0, 0.0018018093, 0)
-flyspeedshower.Size = UDim2.new(0, 115, 0, 55)
-flyspeedshower.Font = Enum.Font.SourceSans
-flyspeedshower.Text = "speed: 20"
-flyspeedshower.TextColor3 = Color3.fromRGB(22, 43, 139)
-flyspeedshower.TextSize = 30.000
-
-walkspeed.Name = "walkspeed"
-walkspeed.Parent = maintab2
-walkspeed.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-walkspeed.BorderColor3 = Color3.fromRGB(255, 255, 255)
-walkspeed.Position = UDim2.new(-0.00234807562, 0, 0.160655975, 0)
-walkspeed.Size = UDim2.new(0, 115, 0, 55)
-walkspeed.Font = Enum.Font.SourceSans
-walkspeed.Text = "walkspeed(v)"
-walkspeed.TextColor3 = Color3.fromRGB(22, 43, 139)
-walkspeed.TextSize = 23.000
-
-speed.Name = "speed-"
-speed.Parent = maintab2
-speed.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-speed.BorderColor3 = Color3.fromRGB(255, 255, 255)
-speed.Position = UDim2.new(0.268164724, 0, 0.234375, 0)
-speed.Size = UDim2.new(0, 126, 0, 26)
-speed.Font = Enum.Font.SourceSans
-speed.Text = "speed-"
-speed.TextColor3 = Color3.fromRGB(22, 43, 139)
-speed.TextSize = 25.000
-
-speed_2.Name = "speed+"
-speed_2.Parent = maintab2
-speed_2.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-speed_2.BorderColor3 = Color3.fromRGB(255, 255, 255)
-speed_2.Position = UDim2.new(0.268164694, 0, 0.144330665, 0)
-speed_2.Size = UDim2.new(0, 126, 0, 31)
-speed_2.Font = Enum.Font.SourceSans
-speed_2.Text = "speed+"
-speed_2.TextColor3 = Color3.fromRGB(22, 43, 139)
-speed_2.TextSize = 25.000
-
-speedshower.Name = "speedshower"
-speedshower.Parent = maintab2
-speedshower.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-speedshower.BorderColor3 = Color3.fromRGB(255, 255, 255)
-speedshower.Position = UDim2.new(0.574263215, 0, 0.160655975, 0)
-speedshower.Size = UDim2.new(0, 115, 0, 55)
-speedshower.Font = Enum.Font.SourceSans
-speedshower.Text = "speed: 100"
-speedshower.TextColor3 = Color3.fromRGB(22, 43, 139)
-speedshower.TextSize = 26.000
-
-qtp.Name = "qtp"
-qtp.Parent = maintab2
-qtp.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-qtp.BorderColor3 = Color3.fromRGB(255, 255, 255)
-qtp.Position = UDim2.new(-0.00157320499, 0, 0.300478607, 0)
-qtp.Size = UDim2.new(0, 74, 0, 55)
-qtp.Font = Enum.Font.SourceSans
-qtp.Text = "qtp"
-qtp.TextColor3 = Color3.fromRGB(22, 43, 139)
-qtp.TextSize = 35.000
-
-sit.Name = "sit"
-sit.Parent = maintab2
-sit.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-sit.BorderColor3 = Color3.fromRGB(255, 255, 255)
-sit.Position = UDim2.new(0.167763188, 0, 0.300478607, 0)
-sit.Size = UDim2.new(0, 74, 0, 55)
-sit.Font = Enum.Font.SourceSans
-sit.Text = "sit"
-sit.TextColor3 = Color3.fromRGB(22, 43, 139)
-sit.TextSize = 35.000
-
-re.Name = "re"
-re.Parent = maintab2
-re.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-re.BorderColor3 = Color3.fromRGB(255, 255, 255)
-re.Position = UDim2.new(0.332522899, 0, 0.301478028, 0)
-re.Size = UDim2.new(0, 106, 0, 55)
-re.Font = Enum.Font.SourceSans
-re.Text = "force reset"
-re.TextColor3 = Color3.fromRGB(22, 43, 139)
-re.TextSize = 25.000
-
-cashaura.Name = "cashaura"
-cashaura.Parent = maintab2
-cashaura.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-cashaura.BorderColor3 = Color3.fromRGB(255, 255, 255)
-cashaura.Position = UDim2.new(0.575085819, 0, 0.303476959, 0)
-cashaura.Size = UDim2.new(0, 87, 0, 55)
-cashaura.Font = Enum.Font.SourceSans
-cashaura.Text = "cashaura"
-cashaura.TextColor3 = Color3.fromRGB(22, 43, 139)
-cashaura.TextSize = 25.000
-
-autodrop.Name = "autodrop"
-autodrop.Parent = maintab2
-autodrop.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-autodrop.BorderColor3 = Color3.fromRGB(255, 255, 255)
-autodrop.Position = UDim2.new(0.778747141, 0, 0.303476959, 0)
-autodrop.Size = UDim2.new(0, 87, 0, 55)
-autodrop.Font = Enum.Font.SourceSans
-autodrop.Text = "autodrop"
-autodrop.TextColor3 = Color3.fromRGB(22, 43, 139)
-autodrop.TextSize = 25.000
-
-combattab2.Name = "combattab2"
-combattab2.Parent = mainholder
-combattab2.Active = true
-combattab2.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
-combattab2.BorderColor3 = Color3.fromRGB(70, 70, 70)
-combattab2.Position = UDim2.new(0.000536217529, 0, 0, 0)
-combattab2.Size = UDim2.new(0, 437, 0, 192)
-combattab2.Visible = false
-combattab2.ScrollBarThickness = 4
-
-antistomp.Name = "antistomp"
-antistomp.Parent = combattab2
-antistomp.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-antistomp.BorderColor3 = Color3.fromRGB(255, 255, 255)
-antistomp.Position = UDim2.new(-5.97462058e-05, 0, 0.00701014278, 0)
-antistomp.Size = UDim2.new(0, 115, 0, 55)
-antistomp.Font = Enum.Font.SourceSans
-antistomp.Text = "antistimp"
-antistomp.TextColor3 = Color3.fromRGB(22, 43, 139)
-antistomp.TextSize = 35.000
-
-standtab2.Name = "standtab2"
-standtab2.Parent = mainholder
-standtab2.Active = true
-standtab2.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
-standtab2.BorderColor3 = Color3.fromRGB(70, 70, 70)
-standtab2.Position = UDim2.new(0.000536217529, 0, 0, 0)
-standtab2.Size = UDim2.new(0, 437, 0, 192)
-standtab2.Visible = false
-standtab2.ScrollBarThickness = 4
-
-fly_2.Name = "fly"
-fly_2.Parent = standtab2
-fly_2.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-fly_2.BorderColor3 = Color3.fromRGB(255, 255, 255)
-fly_2.Position = UDim2.new(-5.97462058e-05, 0, 0.00701014278, 0)
-fly_2.Size = UDim2.new(0, 115, 0, 55)
-fly_2.Font = Enum.Font.SourceSans
-fly_2.Text = "flight"
-fly_2.TextColor3 = Color3.fromRGB(22, 43, 139)
-fly_2.TextSize = 35.000
-
-flyspeed_3.Name = "flyspeed+"
-flyspeed_3.Parent = standtab2
-flyspeed_3.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-flyspeed_3.BorderColor3 = Color3.fromRGB(255, 255, 255)
-flyspeed_3.Position = UDim2.new(0.268164724, 0, -0.00410683919, 0)
-flyspeed_3.Size = UDim2.new(0, 126, 0, 31)
-flyspeed_3.Font = Enum.Font.SourceSans
-flyspeed_3.Text = "speed+"
-flyspeed_3.TextColor3 = Color3.fromRGB(22, 43, 139)
-flyspeed_3.TextSize = 25.000
-
-flyspeed_4.Name = "flyspeed-"
-flyspeed_4.Parent = standtab2
-flyspeed_4.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-flyspeed_4.BorderColor3 = Color3.fromRGB(255, 255, 255)
-flyspeed_4.Position = UDim2.new(0.268164724, 0, 0.0807291716, 0)
-flyspeed_4.Size = UDim2.new(0, 126, 0, 26)
-flyspeed_4.Font = Enum.Font.SourceSans
-flyspeed_4.Text = "speed-"
-flyspeed_4.TextColor3 = Color3.fromRGB(22, 43, 139)
-flyspeed_4.TextSize = 25.000
-
-flyspeedshower_2.Name = "flyspeedshower"
-flyspeedshower_2.Parent = standtab2
-flyspeedshower_2.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-flyspeedshower_2.BorderColor3 = Color3.fromRGB(255, 255, 255)
-flyspeedshower_2.Position = UDim2.new(0.574263215, 0, 0.0018018093, 0)
-flyspeedshower_2.Size = UDim2.new(0, 115, 0, 55)
-flyspeedshower_2.Font = Enum.Font.SourceSans
-flyspeedshower_2.Text = "speed: 20"
-flyspeedshower_2.TextColor3 = Color3.fromRGB(22, 43, 139)
-flyspeedshower_2.TextSize = 30.000
-
-walkspeed_2.Name = "walkspeed"
-walkspeed_2.Parent = standtab2
-walkspeed_2.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-walkspeed_2.BorderColor3 = Color3.fromRGB(255, 255, 255)
-walkspeed_2.Position = UDim2.new(-0.00234807562, 0, 0.160655975, 0)
-walkspeed_2.Size = UDim2.new(0, 115, 0, 55)
-walkspeed_2.Font = Enum.Font.SourceSans
-walkspeed_2.Text = "walkspeed(v)"
-walkspeed_2.TextColor3 = Color3.fromRGB(22, 43, 139)
-walkspeed_2.TextSize = 23.000
-
-speed_3.Name = "speed-"
-speed_3.Parent = standtab2
-speed_3.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-speed_3.BorderColor3 = Color3.fromRGB(255, 255, 255)
-speed_3.Position = UDim2.new(0.268164724, 0, 0.234375, 0)
-speed_3.Size = UDim2.new(0, 126, 0, 26)
-speed_3.Font = Enum.Font.SourceSans
-speed_3.Text = "speed-"
-speed_3.TextColor3 = Color3.fromRGB(22, 43, 139)
-speed_3.TextSize = 25.000
-
-speed_4.Name = "speed+"
-speed_4.Parent = standtab2
-speed_4.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-speed_4.BorderColor3 = Color3.fromRGB(255, 255, 255)
-speed_4.Position = UDim2.new(0.268164694, 0, 0.144330665, 0)
-speed_4.Size = UDim2.new(0, 126, 0, 31)
-speed_4.Font = Enum.Font.SourceSans
-speed_4.Text = "speed+"
-speed_4.TextColor3 = Color3.fromRGB(22, 43, 139)
-speed_4.TextSize = 25.000
-
-speedshower_2.Name = "speedshower"
-speedshower_2.Parent = standtab2
-speedshower_2.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-speedshower_2.BorderColor3 = Color3.fromRGB(255, 255, 255)
-speedshower_2.Position = UDim2.new(0.574263215, 0, 0.160655975, 0)
-speedshower_2.Size = UDim2.new(0, 115, 0, 55)
-speedshower_2.Font = Enum.Font.SourceSans
-speedshower_2.Text = "speed: 100"
-speedshower_2.TextColor3 = Color3.fromRGB(22, 43, 139)
-speedshower_2.TextSize = 26.000
-
-qtp_2.Name = "qtp"
-qtp_2.Parent = standtab2
-qtp_2.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-qtp_2.BorderColor3 = Color3.fromRGB(255, 255, 255)
-qtp_2.Position = UDim2.new(-0.00157320499, 0, 0.300478607, 0)
-qtp_2.Size = UDim2.new(0, 74, 0, 55)
-qtp_2.Font = Enum.Font.SourceSans
-qtp_2.Text = "qtp"
-qtp_2.TextColor3 = Color3.fromRGB(22, 43, 139)
-qtp_2.TextSize = 35.000
-
-sit_2.Name = "sit"
-sit_2.Parent = standtab2
-sit_2.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-sit_2.BorderColor3 = Color3.fromRGB(255, 255, 255)
-sit_2.Position = UDim2.new(0.167763188, 0, 0.300478607, 0)
-sit_2.Size = UDim2.new(0, 74, 0, 55)
-sit_2.Font = Enum.Font.SourceSans
-sit_2.Text = "sit"
-sit_2.TextColor3 = Color3.fromRGB(22, 43, 139)
-sit_2.TextSize = 35.000
-
-re_2.Name = "re"
-re_2.Parent = standtab2
-re_2.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-re_2.BorderColor3 = Color3.fromRGB(255, 255, 255)
-re_2.Position = UDim2.new(0.332522899, 0, 0.301478028, 0)
-re_2.Size = UDim2.new(0, 106, 0, 55)
-re_2.Font = Enum.Font.SourceSans
-re_2.Text = "force reset"
-re_2.TextColor3 = Color3.fromRGB(22, 43, 139)
-re_2.TextSize = 25.000
-
-title.Name = "title"
-title.Parent = topframe
-title.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-title.BorderColor3 = Color3.fromRGB(255, 255, 255)
-title.Position = UDim2.new(0.105022833, 0, 0, 0)
-title.Size = UDim2.new(0, 101, 0, 45)
-title.Font = Enum.Font.SourceSans
-title.Text = "project dominate"
-title.TextColor3 = Color3.fromRGB(22, 43, 139)
-title.TextSize = 17.000
-
-maintab.Name = "maintab"
-maintab.Parent = topframe
-maintab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-maintab.BorderColor3 = Color3.fromRGB(255, 255, 255)
-maintab.Position = UDim2.new(0.333797097, 0, -0.0169836935, 0)
-maintab.Size = UDim2.new(0, 69, 0, 45)
-maintab.Font = Enum.Font.SourceSans
-maintab.Text = "main"
-maintab.TextColor3 = Color3.fromRGB(22, 43, 139)
-maintab.TextSize = 20.000
-
-combattab.Name = "combattab"
-combattab.Parent = topframe
-combattab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-combattab.BorderColor3 = Color3.fromRGB(255, 255, 255)
-combattab.Position = UDim2.new(0.490653574, 0, -0.0169836935, 0)
-combattab.Size = UDim2.new(0, 69, 0, 45)
-combattab.Font = Enum.Font.SourceSans
-combattab.Text = "combat"
-combattab.TextColor3 = Color3.fromRGB(22, 43, 139)
-combattab.TextSize = 20.000
-
-standtab.Name = "standtab"
-standtab.Parent = topframe
-standtab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-standtab.BorderColor3 = Color3.fromRGB(255, 255, 255)
-standtab.Position = UDim2.new(0.647510052, 0, 0.00475543737, 0)
-standtab.Size = UDim2.new(0, 69, 0, 45)
-standtab.Font = Enum.Font.SourceSans
-standtab.Text = "stand"
-standtab.TextColor3 = Color3.fromRGB(22, 43, 139)
-standtab.TextSize = 20.000
-
-close.Name = "close"
-close.Parent = topframe
-close.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-close.BorderColor3 = Color3.fromRGB(60, 60, 60)
-close.Position = UDim2.new(0.827197492, 0, 0.00475543458, 0)
-close.Size = UDim2.new(0, 65, 0, 16)
-close.Font = Enum.Font.SourceSans
-close.Text = "x"
-close.TextColor3 = Color3.fromRGB(255, 1, 1)
-close.TextSize = 30.000
-
-minimise.Name = "minimise"
-minimise.Parent = topframe
-minimise.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-minimise.BorderColor3 = Color3.fromRGB(60, 60, 60)
-minimise.Position = UDim2.new(0.824914396, 0, 0.352581531, 0)
-minimise.Size = UDim2.new(0, 66, 0, 18)
-minimise.Font = Enum.Font.SourceSans
-minimise.Text = "-"
-minimise.TextColor3 = Color3.fromRGB(22, 43, 139)
-minimise.TextSize = 45.000
-
-topframe.Active = true
-topframe.Draggable = true
-
-local function PKPRO_fake_script() -- fly.LocalScript 
-	local script = Instance.new('LocalScript', fly)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		ExecuteCommand("fly", {}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(PKPRO_fake_script)()
-local function KQAPLL_fake_script() -- flyspeed.LocalScript 
-	local script = Instance.new('LocalScript', flyspeed)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		currentspeed = FLYSPEED
-		newspeed = currentspeed+5
-		flyspeedshower.Text = newspeed
-		ExecuteCommand("flyspeed", {newspeed}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(KQAPLL_fake_script)()
-local function CDUQJP_fake_script() -- flyspeed_2.LocalScript 
-	local script = Instance.new('LocalScript', flyspeed_2)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		currentspeed = FLYSPEED
-		newspeed = currentspeed-5
-		flyspeedshower.Text = newspeed
-		ExecuteCommand("flyspeed", {newspeed}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(CDUQJP_fake_script)()
-local function WUKUY_fake_script() -- walkspeed.LocalScript 
-	local script = Instance.new('LocalScript', walkspeed)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		ExecuteCommand("fly", {}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(WUKUY_fake_script)()
-local function IDNOH_fake_script() -- speed.LocalScript 
-	local script = Instance.new('LocalScript', speed)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		currentspeed = getgenv().speedspeedspeed
-		newspeed = currentspeed-5
-		speedshower.Text = newspeed
-		ExecuteCommand("speedspeed", {newspeed}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(IDNOH_fake_script)()
-local function IOIXIAQ_fake_script() -- speed_2.LocalScript 
-	local script = Instance.new('LocalScript', speed_2)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		currentspeed = getgenv().speedspeedspeed
-		newspeed = currentspeed+5
-		speedshower.Text = newspeed
-		ExecuteCommand("speedspeed", {newspeed}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(IOIXIAQ_fake_script)()
-local function XVOJVVQ_fake_script() -- qtp.LocalScript 
-	local script = Instance.new('LocalScript', qtp)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		ExecuteCommand("qtp", {}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(XVOJVVQ_fake_script)()
-local function JBATP_fake_script() -- sit.LocalScript 
-	local script = Instance.new('LocalScript', sit)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		ExecuteCommand("sit", {}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(JBATP_fake_script)()
-local function ICRFV_fake_script() -- re.LocalScript 
-	local script = Instance.new('LocalScript', re)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		ExecuteCommand("respawn", {}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(ICRFV_fake_script)()
-local function VYLKSW_fake_script() -- cashaura.LocalScript 
-	local script = Instance.new('LocalScript', cashaura)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		ExecuteCommand("cashaura", {}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(VYLKSW_fake_script)()
-local function JMMIFZ_fake_script() -- autodrop.LocalScript 
-	local script = Instance.new('LocalScript', autodrop)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		ExecuteCommand("autodrop", {}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(JMMIFZ_fake_script)()
-local function KYDGZF_fake_script() -- antistomp.LocalScript 
-	local script = Instance.new('LocalScript', antistomp)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		ExecuteCommand("antistomp", {}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(KYDGZF_fake_script)()
-local function VWJP_fake_script() -- fly_2.LocalScript 
-	local script = Instance.new('LocalScript', fly_2)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		ExecuteCommand("fly", {}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(VWJP_fake_script)()
-local function WHDW_fake_script() -- flyspeed_3.LocalScript 
-	local script = Instance.new('LocalScript', flyspeed_3)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		currentspeed = FLYSPEED
-		newspeed = currentspeed+5
-		flyspeedshower.Text = newspeed
-		ExecuteCommand("flyspeed", {newspeed}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(WHDW_fake_script)()
-local function GWCOZED_fake_script() -- flyspeed_4.LocalScript 
-	local script = Instance.new('LocalScript', flyspeed_4)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		currentspeed = FLYSPEED
-		newspeed = currentspeed-5
-		flyspeedshower.Text = newspeed
-		ExecuteCommand("flyspeed", {newspeed}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(GWCOZED_fake_script)()
-local function BRTZRZ_fake_script() -- walkspeed_2.LocalScript 
-	local script = Instance.new('LocalScript', walkspeed_2)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		ExecuteCommand("fly", {}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(BRTZRZ_fake_script)()
-local function XPTB_fake_script() -- speed_3.LocalScript 
-	local script = Instance.new('LocalScript', speed_3)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		currentspeed = getgenv().speedspeedspeed
-		newspeed = currentspeed-5
-		speedshower.Text = newspeed
-		ExecuteCommand("speedspeed", {newspeed}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(XPTB_fake_script)()
-local function BAFSRJU_fake_script() -- speed_4.LocalScript 
-	local script = Instance.new('LocalScript', speed_4)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		currentspeed = getgenv().speedspeedspeed
-		newspeed = currentspeed+5
-		speedshower.Text = newspeed
-		ExecuteCommand("speedspeed", {newspeed}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(BAFSRJU_fake_script)()
-local function QSWMLL_fake_script() -- qtp_2.LocalScript 
-	local script = Instance.new('LocalScript', qtp_2)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		ExecuteCommand("qtp", {}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(QSWMLL_fake_script)()
-local function NWDDS_fake_script() -- sit_2.LocalScript 
-	local script = Instance.new('LocalScript', sit_2)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		ExecuteCommand("sit", {}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(NWDDS_fake_script)()
-local function PHJZBDN_fake_script() -- re_2.LocalScript 
-	local script = Instance.new('LocalScript', re_2)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		ExecuteCommand("respawn", {}, LocalPlayer);	
-	end)
-end
-coroutine.wrap(PHJZBDN_fake_script)()
-local function HQYZVV_fake_script() -- maintab.LocalScript 
-	local script = Instance.new('LocalScript', maintab)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		maintab2.Visible = true
-		combattab2.Visible = false
-		standtab2.Visible = false
-		
-		maintab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-		combattab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-		standtab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-	end)
-end
-coroutine.wrap(HQYZVV_fake_script)()
-local function XMOZGZM_fake_script() -- combattab.LocalScript 
-	local script = Instance.new('LocalScript', combattab)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		maintab2.Visible = false
-		combattab2.Visible = true
-		standtab2.Visible = false
-		maintab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-		combattab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-		standtab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-	end)
-end
-coroutine.wrap(XMOZGZM_fake_script)()
-local function UAHSRP_fake_script() -- standtab.LocalScript 
-	local script = Instance.new('LocalScript', standtab)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		maintab2.Visible = false
-		combattab2.Visible = false
-		standtab2.Visible = true
-		
-		maintab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-		combattab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-		standtab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-	end)
-end
-coroutine.wrap(UAHSRP_fake_script)()
-local function TQIFC_fake_script() -- close.LocalScript 
-	local script = Instance.new('LocalScript', close)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		local guiversion = game:GetService("CoreGui"):FindFirstChild("guiversion")
-		if guiversion then
-			guiversion:Destroy()
-		end
-	end)
-end
-coroutine.wrap(TQIFC_fake_script)()
-local function RUUF_fake_script() -- minimise.LocalScript 
-	local script = Instance.new('LocalScript', minimise)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		if mainholder.Visible == true then
-			mainholder.Visible = false
-			minimise.Text = "+"
-		else
-			minimise.Text = "-"
-			mainholder.Visible = true		
-		end
-	end)
-end
-coroutine.wrap(RUUF_fake_script)()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/rodus", true))() -- put this first above everything (important!)
+
+CreateMain("project dominate") -- example main
+
+CreateTab("player") -- example tab
+
+
+CreateButton(tabs['player'], "fly", "toggle with x",function()
+ExecuteCommand("fly", {}, LocalPlayer);
+
+end)
+
+CreateButton(tabs['player'], "shazam", "toggle with x",function()
+ExecuteCommand("shazam", {}, LocalPlayer);
+
+end)
+
+CreateTextBox(tabs['player'], "speed", "speed here",function(arg) -- example text box
+ExecuteCommand("flyspeed", {arg}, LocalPlayer);
+end)
+
+CreateButton(tabs['player'], "antislow", "u can walk without getting slowed down",function()
+ExecuteCommand("antislow", {}, LocalPlayer);
+
+end)
+
+
+CreateButton(tabs['player'], "antibag", "self explanatory kinda...",function()
+ExecuteCommand("antibag", {}, LocalPlayer);
+
+end)
+
+
+CreateButton(tabs['player'], "buy mask", "auto buys mask",function()
+ExecuteCommand("mask", {}, LocalPlayer);
+
+end)
+
+
+CreateButton(tabs['player'], "hide mask", "makes your mask invisible",function()
+ExecuteCommand("hidemask", {}, LocalPlayer);
+
+end)
+
+
+CreateButton(tabs['player'], "speed", "walkspeed hold v",function()
+ExecuteCommand("speed", {}, LocalPlayer);
+
+end)
+
+
+CreateTextBox(tabs['player'], "speed", "speed here",function(arg) -- example text box
+ExecuteCommand("speedspeed", {arg}, LocalPlayer);
+end)
+
+
+CreateButton(tabs['player'], "sit", "makes u sit",function()
+ExecuteCommand("sit", {}, LocalPlayer);
+
+end)
+
+
+CreateButton(tabs['player'], "qtp", "press q to tp",function()
+ExecuteCommand("qtp", {}, LocalPlayer);
+
+end)
+
+
+CreateTab("combat") -- example tab
+
+
+
+CreateButton(tabs['combat'], "antistomp", "prevents you from being stomped",function()
+ExecuteCommand("antistomp", {}, LocalPlayer);
+
+end)
+
+CreateButton(tabs['combat'], "fist reach", "let you hit from further away",function()
+ExecuteCommand("fistreach", {}, LocalPlayer);
+
+end)
+
+CreateButton(tabs['combat'], "toolreach", "reach, but tools only",function()
+ExecuteCommand("reach", {}, LocalPlayer);
+
+end)
+
+
+
+CreateTab("aiming") -- example tab
+
+
+CreateButton(tabs['aiming'], "start silent aim", "can be streamable",function()
+ExecuteCommand("saim", {}, LocalPlayer);
+
+end)
+
+
+
+CreateButton(tabs['aiming'], "toggle FOV", "allows you to see the silent aim fov",function()
+ExecuteCommand("togglefov", {}, LocalPlayer);
+
+end)
+
+
+
+CreateTextBox(tabs['aiming'], "fov size", "size here",function(arg) -- example text box
+ExecuteCommand("silentsize", {arg}, LocalPlayer);
+end)
+
+
+
+CreateTab("target") -- example tab
+
+CreateTextBox(tabs['target'], "the target", "target",function(arg) -- example text box
+targetlol = arg
+guiscripttarget = targetlol
+print(targetlol)
+
+Notify({ 
+Description = "new target btw";
+Title = "target";
+Duration = 5;
+});
+
+end)
+
+
+
+CreateButton(tabs['target'], "attack", "kills the player",function()
+ExecuteCommand("attack", {guiscripttarget}, LocalPlayer);
+
+end)
+
+CreateButton(tabs['target'], "bag", "bags the player",function()
+ExecuteCommand("bag", {guiscripttarget}, LocalPlayer);
+
+end)
+
+
+CreateButton(tabs['target'], "goto", "teleports to the player",function()
+ExecuteCommand("goto", {guiscripttarget}, LocalPlayer);
+
+end)
+
+
+CreateButton(tabs['target'], "view", "allows you to see the player",function()
+ExecuteCommand("v", {guiscripttarget}, LocalPlayer);
+
+end)
+
+
+CreateButton(tabs['target'], "unview", "stops viewing",function()
+ExecuteCommand("unv", {guiscripttarget}, LocalPlayer);
+
+end)
+
+
+CreateButton(tabs['target'], "cmd whitelist", "allows player to use ur cmds",function()
+ExecuteCommand("flingwl", {guiscripttarget}, LocalPlayer);
+
+end)
+
+
+CreateTab("god stuff") -- example tab
+
+
+CreateButton(tabs['target'], "full", "CANNOT DIE WHAT SO EVER can use guns",function()
+ExecuteCommand("godbullet", {}, LocalPlayer);
+
+end)
+
+
+
+CreateButton(tabs['target'], "godmele", "godmode, but u can use mele",function()
+ExecuteCommand("godmele", {}, LocalPlayer);
+
+end)
+
 
 end)
 
@@ -9787,7 +9278,7 @@ end)
 
 
 
-AddCommand("godbullet", {}, "fixes fling cmd", {}, function(Caller)
+AddCommand("godbullet", {"fullgod"}, "fixes fling cmd", {}, function(Caller)
 
 
 
@@ -13681,24 +13172,25 @@ getgenv().speedspeedspeed = Amount
 end
 end)
 
-
+antislow = false
 test = false
 AddCommand("antislow", {"noslow"}, "ye", {}, function(Caller, Args)
         if (Caller ~= LocalPlayer) then
             a = true
         else
-	antislow = true
-	repeat
-		wait(0.1)
-		local L_176_ = game.Players.LocalPlayer
-		local L_177_ = L_176_.Character.BodyEffects.Movement:FindFirstChild('NoJumping') or L_176_.Character.BodyEffects.Movement:FindFirstChild('ReduceWalk') or L_176_.Character.BodyEffects.Movement:FindFirstChild('NoWalkSpeed')
-		if L_177_ then
-			L_177_:Destroy()
-		end
-		if L_176_.Character.BodyEffects.Reload.Value == true then
-			L_176_.Character.BodyEffects.Reload.Value = false
-		end
-	until antislow == false
+antislow = not antislow
+if antislow == true then
+repeat
+wait()
+player = game.Players.LocalPlayer;
+    local localCharacter = player.Character;
+
+
+            local DeletePart = player.Character.BodyEffects.Movement:FindFirstChild('NoJumping') or player.Character.BodyEffects.Movement:FindFirstChild('ReduceWalk') or player.Character.BodyEffects.Movement:FindFirstChild('NoWalkSpeed')
+            if DeletePart then DeletePart:Destroy() end
+            if player.Character.BodyEffects.Reload.Value == true then player.Character.BodyEffects.Reload.Value = false end
+until antislow == false
+end
 end
 end)
 
