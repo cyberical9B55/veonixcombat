@@ -1,4 +1,4 @@
---we both gay
+--donate to poor
 
 
 a = false
@@ -1000,9 +1000,8 @@ end)
 local GetRoot = function(Plr, Char)
     local LCharacter = GetCharacter();
     local Character = Char or GetCharacter(Plr);
-    return Plr and Character and (FindFirstChild(Character, "HumanoidRootPart") or FindFirstChild(Character, "Torso") or FindFirstChild(Character, "UpperTorso")) or LCharacter and (FindFirstChild(LCharacter, "HumanoidRootPart") or FindFirstChild(LCharacter, "Torso") or FindFirstChild(LCharacter, "UpperTorso"));
+    return Plr and Character and (FindFirstChild(Character, "Torso") or FindFirstChild(Character, "UpperTorso")) or LCharacter and (FindFirstChild(LCharacter, "HumanoidRootPart") or FindFirstChild(LCharacter, "Torso") or FindFirstChild(LCharacter, "UpperTorso"));
 end
-
 local GetHumanoid = function(Plr, Char)
     local LCharacter = GetCharacter();
     local Character = Char or GetCharacter(Plr);
@@ -2932,24 +2931,7 @@ end)
 
 
 
-AddCommand("tweengoto2", {"tweento2"}, "teleports yourself to the other character", {"1"}, function(Caller, Args)
-    local Target = GetPlayer(Args[1]);
-    for i, v in next, Target do
-tweenlol3 = Target.Name
-local tweentargetlol = tweenlol3
-	plr = game:GetService('Players').tweentargetlol
-	X1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.X
-		Y1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Y
-		Z1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Z
 
-
-
-tweenService, tweenInfo = game:GetService("TweenService"), TweenInfo.new(1, Enum.EasingStyle.Linear)
-
-tween = tweenService:Create(game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart, tweenInfo, {CFrame = CFrame.new(X1, Y1, Z1)})
-tween:Play()
-end
-end)
 
 AddCommand("goto", {"to"}, "teleports yourself to the other character", {3, "1"}, function(Caller, Args)
     local Target = GetPlayer(Args[1]);
@@ -7419,7 +7401,7 @@ AddCommand("tweento", {"tweengoto"}, "tweens yourself to the other person", {3, 
 	local TweenService = Services.TweenService
 	local Create = TweenService.Create
 	for i, v in next, Target do
-		local Tween = Create(TweenService, GetRoot(), TweenInfo.new(-1000), {CFrame = GetRoot(v).CFrame})
+		local Tween = Create(TweenService, GetRoot(), TweenInfo.new(2), {CFrame = GetRoot(v).CFrame})
 		Tween.Play(Tween);
 	end
 end)
@@ -10421,6 +10403,50 @@ game.Players.LocalPlayer.Character.Humanoid.Jump = true
 
 end)
 
+autohigharmor = false
+
+AddCommand("autohigharmor", {}, "fixes fling cmd", {}, function(Caller)
+repeat
+wait()
+                if game.Players.LocalPlayer.Character.BodyEffects.Armor.Value < 10 then
+                    _G.savedhumanoidpos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+                    game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-606.316345, 10.3496914, -788.285034)
+                    wait(.2)
+                    fireclickdetector(game.Workspace.Ignored.Shop['[High-Medium Armor] - $2300'].ClickDetector)
+                    wait()
+                    fireclickdetector(game.Workspace.Ignored.Shop['[High-Medium Armor] - $2300'].ClickDetector)
+                    wait(.2)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(_G.savedhumanoidpos)
+                end
+until autohigharmor == false
+end)
+AddCommand("unautohigharmor", {}, "fixes fling cmd", {}, function(Caller)
+autohigharmor = false
+end)
+
+
+
+autohigharmor2 = false
+
+AddCommand("automediumarmor", {"automedarmor"}, "fixes fling cmd", {}, function(Caller)
+repeat
+wait()
+                if game.Players.LocalPlayer.Character.BodyEffects.Armor.Value < 10 then
+                    _G.savedhumanoidpos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+                    game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-606.316345, 10.3496914, -788.285034)
+                    wait(.5)
+                    fireclickdetector(game.Workspace.Ignored.Shop['[Medium Armor] - $1000'].ClickDetector)
+                    wait()
+                    fireclickdetector(game.Workspace.Ignored.Shop['[Medium Armor] - $1000'].ClickDetector)
+                    wait(.5)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(_G.savedhumanoidpos)
+                end
+until autohigharmor2 == false
+end)
+AddCommand("unautomediumarmor", {"unautomedarmor"}, "fixes fling cmd", {}, function(Caller)
+autohigharmor2 = false
+end)
+
 
 AddCommand("fixfling", {"flingfix"}, "fixes fling cmd", {}, function(Caller)
 flingcooldown = false
@@ -12105,9 +12131,8 @@ wait()
 			tool.Parent = game.Players.LocalPlayer.Character
 		end
 		game:GetService("VirtualUser"):ClickButton1(Vector2.new())
-		local d = Vector3.new(-1006.99, -51.1542, -1014.33)
+		local d = Vector3.new(-318.891174, 50.2145309, -257.177429, 0.0479469746, -5.14644114e-08, 0.998850107, -3.12971538e-09, 1, 5.16738901e-08, -0.998850107, -5.60372015e-09, 0.0479469746)
 		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(d)
-ExecuteCommand("away", {}, LocalPlayer);
 
 
 
