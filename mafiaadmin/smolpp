@@ -1,4 +1,5 @@
---lol
+--abc
+
 
 a = false
 wait(0.2)
@@ -1020,8 +1021,10 @@ end)
 local GetRoot = function(Plr, Char)
     local LCharacter = GetCharacter();
     local Character = Char or GetCharacter(Plr);
-    return Plr and Character and (FindFirstChild(Character, "Torso") or FindFirstChild(Character, "UpperTorso")) or LCharacter and (FindFirstChild(LCharacter, "HumanoidRootPart") or FindFirstChild(LCharacter, "Torso") or FindFirstChild(LCharacter, "UpperTorso"));
+    return Plr and Character and (FindFirstChild(Character, "HumanoidRootPart") or FindFirstChild(Character, "Torso") or FindFirstChild(Character, "UpperTorso")) or LCharacter and (FindFirstChild(LCharacter, "HumanoidRootPart") or FindFirstChild(LCharacter, "Torso") or FindFirstChild(LCharacter, "UpperTorso"));
 end
+
+
 local GetHumanoid = function(Plr, Char)
     local LCharacter = GetCharacter();
     local Character = Char or GetCharacter(Plr);
@@ -8083,6 +8086,186 @@ game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(
 end)
 
 
+_G.InvisFarm = false
+AddCommand("autofarm", {}, "fixes fling cmd", {}, function(Caller)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
+
+	if _G.InvisFarm == true then
+		_G.InvisFarm = false
+		for i, v3 in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
+			if v3:IsA("Part") or v3:IsA("MeshPart") or v3:IsA("Accessory") then
+				v3:Destroy() 
+			end
+		end
+	else
+		_G.InvisFarm = true
+	end
+
+	spawn(function()
+		while _G.InvisFarm == true and game:GetService("RunService").Heartbeat:Wait() do
+			game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid"):ChangeState(11) 
+		end
+	end)
+
+	while _G.InvisFarm == true and game:GetService("RunService").Stepped:Wait() do
+		for i, v in pairs(game:GetService("Workspace").Cashiers:GetChildren()) do
+			if v:FindFirstChild("Humanoid").Health >= 50 then
+				BreakATM = v 
+			end
+		end
+
+		repeat
+			if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Combat") then
+				game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Combat"))
+			end
+			if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Combat") then
+				game:GetService("Players").LocalPlayer.Character:FindFirstChild("Combat"):Activate() 
+			end
+			game:GetService("Workspace").CurrentCamera.CameraSubject = BreakATM.Head
+			pcall(function()
+				game:GetService("Players").LocalPlayer.Character.RightHand.RightWrist:Destroy()
+				game:GetService("Players").LocalPlayer.Character.LeftHand.LeftWrist:Destroy()
+				game:GetService("Players").LocalPlayer.Character.Humanoid.TrailEffects:Destroy()
+			end)
+			game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = BreakATM.Open.CFrame * CFrame.new(0, -13, 0)
+			game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid"):ChangeState(11)
+			game:GetService("Players").LocalPlayer.Character.RightHand.CFrame = BreakATM.Open.CFrame * CFrame.new(0, 0, -1)
+			game:GetService("Players").LocalPlayer.Character.LeftHand.CFrame = BreakATM.Open.CFrame * CFrame.new(0, 0, -1)
+			game:GetService("RunService").Heartbeat:Wait()
+		until BreakATM:FindFirstChild("Humanoid").Health <= 0
+		game:GetService("Players").LocalPlayer.Character.RightHand.CFrame = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame
+		game:GetService("Players").LocalPlayer.Character.LeftHand.CFrame = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame
+		for i, v2 in pairs(game:GetService("Workspace").Ignored.Drop:GetChildren()) do
+			if v2.Name == "MoneyDrop" and (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v2.Position).Magnitude <= 25 then
+				game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v2.Position - Vector3.new(0, 13, 0)) 
+				wait(.1)
+				fireclickdetector(v2.ClickDetector)
+				wait(0.6)
+			end
+		end
+	end
+end
+end)
+
+_G.AutoBox = false
+
+AddCommand("autobox", {}, "fixes fling cmd", {}, function(Caller)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
+	if _G.AutoBox == true then
+		_G.AutoBox = false
+	else
+		_G.AutoBox = true
+	end
+
+	while _G.AutoBox == true and game:GetService("RunService").Heartbeat:Wait() do
+		if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Combat") then
+			game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid"):EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Combat"))
+		end
+		if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Combat") then
+			game:GetService("Players").LocalPlayer.Character:FindFirstChild("Combat"):Activate()
+			game:GetService("Players").LocalPlayer.Character:FindFirstChild("Combat"):Deactivate()
+		end
+		game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = game:GetService("Workspace").MAP.Map.ArenaBOX.PunchingBagInGame["pretty ransom"].CFrame * CFrame.new(0, 0, 1)
+	end
+
+end
+
+end)
+
+_G.Hospital = false
+AddCommand("autofarmv2", {"hospital farm"}, "fixes fling cmd", {}, function(Caller)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
+
+	if _G.Hospital == true then
+		_G.Hospital = false
+	else
+		_G.Hospital = true
+	end
+
+	while _G.Hospital == true and game:GetService("RunService").Heartbeat:Wait() do
+		for i, v in pairs(game:GetService("Workspace").Ignored.HospitalJob:GetChildren()) do
+			pcall(function()
+				if v.Name == "Can I get the Red bottle" then
+					game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Ignored.HospitalJob.Red.CFrame
+					wait(.1)
+					fireclickdetector(game:GetService("Workspace").Ignored.HospitalJob.Red.ClickDetector)
+					wait(.1)
+					game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Head.CFrame
+					wait(.1)
+					fireclickdetector(v.ClickDetector)
+					wait(.1)
+				elseif v.Name == "Can I get the Blue bottle" then
+					game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Ignored.HospitalJob.Blue.CFrame
+					wait(.1)
+					fireclickdetector(game:GetService("Workspace").Ignored.HospitalJob.Blue.ClickDetector)
+					wait(.1)
+					game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Head.CFrame
+					wait(.1)
+					fireclickdetector(v.ClickDetector)
+					wait(.1)
+				elseif v.Name == "Can I get the Green bottle" then
+					game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Ignored.HospitalJob.Green.CFrame
+					wait(.1)
+					fireclickdetector(game:GetService("Workspace").Ignored.HospitalJob.Green.ClickDetector)
+					wait(.1)
+					game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Head.CFrame
+					wait(.1)
+					fireclickdetector(v.ClickDetector)
+					wait(.1)
+				end
+			end)
+		end
+	end
+
+
+end
+
+end)
+
+
+
+
+_G.ShoeJob = false
+AddCommand("autofarmv3", {"shoefarm"}, "fixes fling cmd", {}, function(Caller)
+        if (Caller ~= LocalPlayer) then
+a = true
+        else
+
+	if _G.ShoeJob == true then
+		_G.ShoeJob = false
+	else
+		_G.ShoeJob = true
+	end
+
+	while _G.ShoeJob == true and game:GetService("RunService").Heartbeat:Wait() do
+		for i, v in pairs(game:GetService("Workspace").Ignored.Drop:GetChildren()) do
+			pcall(function()
+				if v:IsA("MeshPart") then
+					game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
+					wait(.1)
+					fireclickdetector(v.ClickDetector)
+					wait(.1)
+					game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Ignored["Clean the shoes on the floor and come to me for cash"].Head.CFrame
+					wait(.1)
+					fireclickdetector(game:GetService("Workspace").Ignored["Clean the shoes on the floor and come to me for cash"].ClickDetector)
+					wait(.1)
+				end
+			end)
+		end
+	end
+
+end
+end)
+
+
+
+
 AddCommand("summon", {}, "fixes fling cmd", {}, function(Caller)
 if standing == false then
 standing = true
@@ -8106,6 +8289,84 @@ ExecuteCommand("flingwl", {Amount}, LocalPlayer);
 end
 end
 
+end)
+
+lol69420 = false
+AddCommand("flingv2", {}, "fixes fling cmd", {"1"}, function(Caller, Args)
+	local Amount = GetPlayer(Args[1])
+    for i, v in next, Amount do
+Amount = v.Name
+
+
+if standing == true then
+ExecuteCommand("unstand", {}, LocalPlayer);
+standing2 = true
+standing = false
+end
+
+if lol69420 == true then
+lol69420 = false
+else
+lol69420 = true
+end
+if lol69420 == true then
+player = game.Players.LocalPlayer
+
+        local Loop
+        local OldFlingPos = player.Character.HumanoidRootPart.Position
+        local loopFunction = function()
+            local success,err = pcall(function()
+                local FlingEnemy = Players:FindFirstChild(Amount).Character
+                if FlingEnemy and player.Character then
+                    FlingTorso = FlingEnemy.UpperTorso
+                    local dis = 3.85
+                    local increase = 6
+                    if FlingEnemy.Humanoid.MoveDirection.X < 0 then
+                        xchange = -increase
+                    elseif FlingEnemy.Humanoid.MoveDirection.X > 0  then
+                        xchange = increase
+                    else
+                        xchange = 0
+                    end
+                    if FlingEnemy.Humanoid.MoveDirection.Z < 0 then
+                        zchange = -increase
+                    elseif FlingEnemy.Humanoid.MoveDirection.Z > 0 then
+                        zchange = increase
+                    else
+                        zchange = 0
+                    end          
+                    if player.Character then
+                        player.Character:FindFirstChildWhichIsA('Humanoid'):ChangeState(11)
+                        player.Character.HumanoidRootPart.CFrame = CFrame.new(FlingTorso.Position.X + math.random(-dis,dis) + xchange, FlingTorso.Position.Y, FlingTorso.Position.Z + math.random(-dis,dis) + zchange) * CFrame.Angles(math.rad(player.Character.HumanoidRootPart.Orientation.X + 350),math.rad(player.Character.HumanoidRootPart.Orientation.Y + 200),math.rad(player.Character.HumanoidRootPart.Orientation.Z + 240))
+                        player.Character.HumanoidRootPart.Velocity = Vector3.new(500000,500000,500000)
+                    end
+                end
+            end)
+            if err then
+a = true
+            end
+        end;
+        local Start = function()    
+            OldFlingPos = player.Character.HumanoidRootPart.Position
+            Loop = game:GetService("RunService").Heartbeat:Connect(loopFunction);
+        end;
+        local Pause = function()
+            Loop:Disconnect()
+            local vectorZero = Vector3.new(0, 0, 0)
+            player.Character.PrimaryPart.Velocity = vectorZero
+            player.Character.PrimaryPart.RotVelocity = vectorZero
+            player.Character.HumanoidRootPart.CFrame = CFrame.new(OldFlingPos) * CFrame.Angles(math.rad(0),math.rad(137.92),math.rad(0))
+        end;
+        Start()	
+        repeat wait() until lol69420 == false
+        Pause()
+if standing2 == true then
+standing2 = false 
+ExecuteCommand("summon", {}, LocalPlayer);
+end
+end
+
+end
 end)
 
 
@@ -12634,11 +12895,14 @@ AddCommand("bringplr", {"targetuser"}, "teleports yourself to the other characte
     for i, v in next, Amount do
 Amount = v.Name
 allreadytplol = false
+	local LS = game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame
+
 	plr = game:GetService('Players').LocalPlayer
 	X2 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.X
 		Y2 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Y
 		Z2 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Z
 plr.Character.HumanoidRootPart.CFrame = CFrame.new(X2,Y2+7,Z2)
+	local LS = game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame
 
 	plr = game:GetService('Players').LocalPlayer
 	X2 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.X
@@ -12665,7 +12929,6 @@ wait(0.5)
 
 InputtedText = Amount
 
-	local LS = game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame
 print("step 1")
 v = Amount
 		repeat
@@ -12680,9 +12943,6 @@ v = Amount
 		repeat
 			wait()
 		until game:GetService("Players")[v].Character.BodyEffects:FindFirstChild("K.O").Value == false and not game:GetService("Players")[v].Character:FindFirstChild("GRABBING_CONSTRAINT") or game:GetService("Players")[v].Character.Parent == nil
-
-
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X2,Y2+7,Z2)
 
 if standing2 == true then
 standing2 = false
