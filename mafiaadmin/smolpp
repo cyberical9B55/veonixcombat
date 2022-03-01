@@ -1,4 +1,4 @@
---what version is thiss
+--lol
 
 a = false
 wait(0.2)
@@ -12,6 +12,27 @@ hostusername = "a"  -- case sencitive
 
 local AkaliNotif = loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/9d907e7d3935f96a95497abe4f3ed4f8/raw/0239bdbf9f3a058668f985da6f0af90f8da52d2c/notifications"))();
 local Notify = AkaliNotif.Notify;
+
+
+
+
+
+
+function sendnoti(a, b, c)
+
+Notify({ 
+Description = b;
+Title = a;
+Duration = c;
+});
+
+end
+
+
+
+
+
+
     local player = game.Players.LocalPlayer
 wait(1);
 Notify({ 
@@ -13003,7 +13024,7 @@ AddCommand("serverhop", {"sh"}, "switches servers (optional: min, max or mid)", 
 			end
 			local queue_on_teleport = syn and syn.queue_on_teleport or queue_on_teleport
 			if (queue_on_teleport) then
-				queue_on_teleport("loadstring(game.HttpGet(game, \"https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/hwids/autoban\"))()");
+				queue_on_teleport("loadstring(game.HttpGet(game, \"https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/mafiaadmin/smolpp\"))()");
 			end
 			TeleportService.TeleportToPlaceInstance(TeleportService, game.PlaceId, Server.id);
     	        Notify({ 
@@ -13126,7 +13147,7 @@ end)
 AddCommand("reloadscript", {}, "kills the script and reloads it", {}, function(Caller)
 	if (Caller == LocalPlayer) then
 		ExecuteCommand("killscript", {}, LocalPlayer);
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/hwids/autoban"))();
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/mafiaadmin/smolpp"))();
 	end
 end)
 
@@ -13386,7 +13407,7 @@ rjeing = true
 	local Pos = GetRoot().CFrame
 	local queue_on_teleport = syn and syn.queue_on_teleport or queue_on_teleport
 	if (queue_on_teleport) then
-		queue_on_teleport(format("game.Loaded:Wait();game:GetService('ReplicatedFirst'):SetDefaultLoadingGuiRemoved();local LocalPlayer = game:GetService('Players').LocalPlayer;LocalPlayer.CharacterAdded:Wait():WaitForChild('HumanoidRootPart').CFrame = CFrame.new(%s);loadstring(game.HttpGet(game, \"https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/hwids/autoban\"))()", tostring(Pos)));
+		queue_on_teleport(format("game.Loaded:Wait();game:GetService('ReplicatedFirst'):SetDefaultLoadingGuiRemoved();local LocalPlayer = game:GetService('Players').LocalPlayer;LocalPlayer.CharacterAdded:Wait():WaitForChild('HumanoidRootPart').CFrame = CFrame.new(%s);loadstring(game.HttpGet(game, \"https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/mafiaadmin/smolpp\"))()", tostring(Pos)));
 	end
 	if (Caller == LocalPlayer) then
 		local TeleportService = Services.TeleportService
