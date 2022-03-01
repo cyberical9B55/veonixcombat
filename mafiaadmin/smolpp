@@ -1,5 +1,4 @@
---donate to poor
-
+--what version is thiss
 
 a = false
 wait(0.2)
@@ -12075,69 +12074,42 @@ end)
 automuscle = false
 automuscleoncelol = false
 
+
+
+
+_G.WeightFarm = false
 AddCommand("autoweight", {"weightfarm"}, "fixes sing cmd", {}, function(Caller)
-automuscle = not automuscle
+	if _G.WeightFarm == true then
+		_G.WeightFarm = false
+		wait(.5)
+		game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Ignored.Shop["[HeavyWeights] - $250"].Head.CFrame * CFrame.new(0, 3, 0)
+	else
+		_G.WeightFarm = true
+	end
 
-if automuscleoncelol == false then
-automuscleoncelol = true
+	if _G.WeightFarm == true then
+		game:GetService("Players").LocalPlayer.Character.Humanoid:UnequipTools() 
+	end
 
+	if _G.WeightFarm == true and not game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("[HeavyWeights]") then
+		repeat
+			game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = game:GetService("Workspace").Ignored.Shop["[HeavyWeights] - $250"].Head.CFrame * CFrame.new(0, -5, 0)
+			fireclickdetector(game:GetService("Workspace").Ignored.Shop["[HeavyWeights] - $250"].ClickDetector)
+			game:GetService("Players").LocalPlayer.Character.Humanoid:ChangeState(11)
+			game:GetService("RunService").Heartbeat:Wait()
+		until game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("[HeavyWeights]")
+	end
 
- _G.Skidhub = "u"
-
-Notify({ 
-Description = "press 'u' to toggle off btw";
-Title = "farm";
-Duration = 5;
-});
-
-
-gv = false
-plr = game.Players.LocalPlayer
-mouse = plr:GetMouse()
-mouse.KeyDown:connect(function(key)
-    if key == _G.Skidhub and  gv == false then
-        gv = true
-
- 
-automuscle = false
-
-
-    elseif key == _G.Skidhub and gv == true then
-        gv = false
-automuscle = false
-
-    end
-end)
-
-
-end
-
-
-
-if automuscle == true then
-repeat
-wait()
-		if not game.Players.LocalPlayer.Character:FindFirstChild("[HeavyWeights]") then
-			wait()
-			local k = game.Workspace.Ignored.Shop["[HeavyWeights] - $250"]
-			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = k.Head.CFrame + Vector3.new(0, 3, 0)
-			if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - k.Head.Position).Magnitude <= 50 then
-				wait(.2)
-				fireclickdetector(k:FindFirstChild("ClickDetector"), 4)
-			end
+	while _G.WeightFarm == true and game:GetService("RunService").Heartbeat:Wait() do
+		if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("[HeavyWeights]") then
+			game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid"):EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("[HeavyWeights]")) 
 		end
-		if not game.Players.LocalPlayer.Character:FindFirstChild("[HeavyWeights]") then
-			tool = game.Players.LocalPlayer.Backpack:WaitForChild("[HeavyWeights]")
-			tool.Parent = game.Players.LocalPlayer.Character
+		if game:GetService("Players").LocalPlayer.Character:FindFirstChild("[HeavyWeights]") then
+			game:GetService("Players").LocalPlayer.Character:FindFirstChild("[HeavyWeights]"):Activate() 
 		end
-		game:GetService("VirtualUser"):ClickButton1(Vector2.new())
-		local d = Vector3.new(-318.891174, 50.2145309, -257.177429, 0.0479469746, -5.14644114e-08, 0.998850107, -3.12971538e-09, 1, 5.16738901e-08, -0.998850107, -5.60372015e-09, 0.0479469746)
-		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(d)
-
-
-
-until automuscle == false
-end
+		game:GetService("Players").LocalPlayer.Character.Humanoid:ChangeState(11)
+		game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Ignored.Shop["[HeavyWeights] - $250"].Head.CFrame * CFrame.new(0, -5, 0)
+	end
 end)
 
 
@@ -12670,108 +12642,26 @@ ExecuteCommand("attack", {Amount}, LocalPlayer);
 end
 wait(0.5)
 
-local function gotolol()
-if game.Players[Amount].Character.BodyEffects['K.O'].Value ~= true then
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = Amount
-p1.CFrame = game.Players[p2].Character.UpperTorso.CFrame
-end
-end
-gotolol()
-gotolol()
-gotolol()
-gotolol()
-gotolol()
-ExecuteCommand("antifling", {Amount}, LocalPlayer);
-wait(0.3)
-ExecuteCommand("unantifling", {Amount}, LocalPlayer);
-gotolol()
-gotolol()
-gotolol()
-gotolol()
-gotolol()
-gotolol()
-gotolol()
-gotolol()
-gotolol()
-gotolol()
-gotolol()
-gotolol()
-gotolol()
-wait(0.2)
+InputtedText = Amount
 
-allreadytplol = false
-repeat
-wait(1)
-gotolol()
-if allreadytplol == false then
-game.ReplicatedStorage.MainEvent:FireServer("Grabbing")
-end
-until game.Players[Amount].Character:FindFirstChild("GRABBING_CONSTRAINT") or game.Players[Amount].Character.BodyEffects['K.O'].Value ~= true
+	local LS = game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame
+print("step 1")
+v = Amount
+		repeat
+			if not game:GetService("Players")[v].Character:FindFirstChild("GRABBING_CONSTRAINT") then
+				game:GetService("ReplicatedStorage").MainEvent:FireServer("Grabbing", false)  
+			end
+			game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Players")[v].Character.UpperTorso.Position + Vector3.new(0, 3, 0))
+			wait(.2)
+		until game:GetService("Players")[v].Character:FindFirstChild("GRABBING_CONSTRAINT") or game:GetService("Players")[v].Character:FindFirstChild("BodyEffects"):FindFirstChild("K.O").Value == false
+		wait()
+		game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = LS
+		repeat
+			wait()
+		until game:GetService("Players")[v].Character.BodyEffects:FindFirstChild("K.O").Value == false and not game:GetService("Players")[v].Character:FindFirstChild("GRABBING_CONSTRAINT") or game:GetService("Players")[v].Character.Parent == nil
+
 
 plr.Character.HumanoidRootPart.CFrame = CFrame.new(X2,Y2+7,Z2)
-
-local function bringplrlol()
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = Amount
-p1.CFrame = game.Players[p2].Character.UpperTorso.CFrame
-wait(0.1)
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = Amount
-p1.CFrame = game.Players[p2].Character.UpperTorso.CFrame
-wait(0.1)
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = Amount
-p1.CFrame = game.Players[p2].Character.UpperTorso.CFrame
-wait(0.1)
-wait(0.1)
-game.ReplicatedStorage.MainEvent:FireServer("Grabbing")
-wait(0.3)
-plr.Character.HumanoidRootPart.CFrame = CFrame.new(X2,Y2+7,Z2)
-end
-
-bringplrlol()
-wait(0.2)
-ExecuteCommand("antifling", {}, LocalPlayer);
-bringplrlol()
-ExecuteCommand("unantifling", {}, LocalPlayer);
-bringplrlol()
-ExecuteCommand("antifling", {}, LocalPlayer);
-bringplrlol()
-ExecuteCommand("unantifling", {}, LocalPlayer);
-
-bringplrlol()
-wait(0.2)
-bringplrlol()
-wait(0.2)
-bringplrlol()
-wait(0.2)
-bringplrlol()
-wait(0.2)
-bringplrlol()
-wait(0.2)
-bringplrlol()
-wait(0.2)
-bringplrlol()
-wait(0.2)
-bringplrlol()
-wait(0.2)
-bringplrlol()
-wait(0.2)
-bringplrlol()
-wait(0.2)
-bringplrlol()
-wait(0.2)
-bringplrlol()
-wait(0.2)
-bringplrlol()
-wait(0.2)
-bringplrlol()
-wait(0.2)
-bringplrlol()
-wait(0.2)
-bringplrlol()
-wait(0.2)
 
 if standing2 == true then
 standing2 = false
@@ -12781,10 +12671,14 @@ end
 end
 end)
 
+AddCommand("drop", {}, "lets a whitelisted user bring u", {}, function(Caller, Args)
+				game:GetService("ReplicatedStorage").MainEvent:FireServer("Grabbing", false)  
+end)
+
 AddCommand("save", {"saveme"}, "lets a whitelisted user bring u", {}, function(Caller, Args)
 standing2 = false
 if standing == true then
-ExecuteCommand("unstand", {}, LocalPlayer);
+ExecuteCommand("unsummon", {}, LocalPlayer);
 standing2 = true
 end
 ExecuteCommand("bank", {}, LocalPlayer);
@@ -12795,149 +12689,30 @@ ExecuteCommand("bank", {}, LocalPlayer);
 		Y1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Y
 		Z1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Z
 
+
+
+
+v = Caller.Name
+		repeat
+			if not game:GetService("Players")[v].Character:FindFirstChild("GRABBING_CONSTRAINT") then
+				game:GetService("ReplicatedStorage").MainEvent:FireServer("Grabbing", false)  
+			end
+			game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Players")[v].Character.UpperTorso.Position + Vector3.new(0, 3, 0))
+			wait(.2)
+		until game:GetService("Players")[v].Character:FindFirstChild("GRABBING_CONSTRAINT") or game:GetService("Players")[v].Character:FindFirstChild("BodyEffects"):FindFirstChild("K.O").Value == false
+		wait()
+		game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = LS
+		repeat
+			wait()
+		until game:GetService("Players")[v].Character.BodyEffects:FindFirstChild("K.O").Value == false and not game:GetService("Players")[v].Character:FindFirstChild("GRABBING_CONSTRAINT") or game:GetService("Players")[v].Character.Parent == nil
+
+
 ExecuteCommand("bank", {}, LocalPlayer);
-ExecuteCommand("bank", {}, LocalPlayer);
-	local Amount = GetPlayer(Args[1])
-    for i, v in next, Amount do
-target = v.Name
-tweenlol3 = target.Name
-allreadytplol = false
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-wait(0.1)
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
 
-
-
-repeat
-wait(0.5)
-
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-
-if allreadytplol == true then
-
-a = true
-else
-
-
-			game.ReplicatedStorage.MainEvent:FireServer("Grabbing", false)
-end
-
-
-until game.Players[target].Character:FindFirstChild("GRABBING_CONSTRAINT") or game.Players[target].Character.BodyEffects['K.O'].Value ~= true
-
-
-wait(0.2)
-
-
-
-allreadytplol = false
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-
-
-function saveme()
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-wait(0.1)
-local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-local p2 = target
-p1.CFrame = game.Players[p2].Character.LowerTorso.CFrame
-			game.ReplicatedStorage.MainEvent:FireServer("Grabbing")
-
-wait(0.1)
-ExecuteCommand("bank", {}, LocalPlayer);
-wait(0.3)
-end
-
-local tweentargetlol = tweenlol3
-
-	plr = game:GetService('Players').tweentargetlol
-	X1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.X
-		Y1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Y
-		Z1 = plr.Character:FindFirstChild('HumanoidRootPart').CFrame.Z
-
-
-
-tweenService, tweenInfo = game:GetService("TweenService"), TweenInfo.new(1, Enum.EasingStyle.Linear)
-
-tween = tweenService:Create(game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart, tweenInfo, {CFrame = CFrame.new(X1, Y1, Z1)})
-tween:Play()
-wait(0.9)
-			game.ReplicatedStorage.MainEvent:FireServer("Grabbing")
-wait(0.2)
-tweenService, tweenInfo = game:GetService("TweenService"), TweenInfo.new(1, Enum.EasingStyle.Linear)
-
-tween = tweenService:Create(game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart, tweenInfo, {CFrame = CFrame.new(-318.891174, 80.2145309, -257.177429, 0.0479469746, -5.14644114e-08, 0.998850107, -3.12971538e-09, 1, 5.16738901e-08, -0.998850107, -5.60372015e-09, 0.0479469746)})
-tween:Play()
-wait(0.91)
-if game.Players[v.Name].Character.BodyEffects['K.O'].Value == true then
-wait(0.8)
-saveme()
-wait(0.8)
-saveme()
-wait(0.8)
-saveme()
-wait(0.8)
-saveme()
-end
 
 if standing2 == true then
 standing2 = false
 ExecuteCommand("summon", {}, LocalPlayer);
-end
 end
 end)
 
@@ -16109,6 +15884,3 @@ timeusageminuteslol = 0
 timeusagehourslol = timeusagehourslol+1
 end
 end
---bum bum1
---YAY PENIS
---lol
