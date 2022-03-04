@@ -1,0 +1,14 @@
+URLSCRIPT = "https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/goofyhublo"
+
+
+--dahood
+if game.PlaceId == 2788229376 then
+loadstring(game:HttpGet(URLSCRIPT.."dahood1"))()
+end
+
+
+--pls donate
+if game.PlaceId == 2788229376 then
+loadstring(game:HttpGet(URLSCRIPT.."plsdonate"))()
+end
+
