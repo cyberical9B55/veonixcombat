@@ -1,4 +1,4 @@
-URLSCRIPT = "https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/goofyhublo"
+URLSCRIPT = "https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/goofyhublo/"
 
 
 --dahood
@@ -8,7 +8,6 @@ end
 
 
 --pls donate
-if game.PlaceId == 2788229376 then
+if game.PlaceId == 8737602449 then
 loadstring(game:HttpGet(URLSCRIPT.."plsdonate"))()
 end
-
