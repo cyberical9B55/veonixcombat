@@ -2,14 +2,17 @@ URLSCRIPT = "https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/g
 
 loadstring(game:HttpGet(URLSCRIPT.."dahood1"))()
 
-Notify({ 
-Description = "our admin script is currently oflinefeel,";
-Title = "sorry";
-Duration = 5;
-});
 
-Notify({ 
-Description = "if you feel like we should REALLY REALLY change this let us know";
-Title = "sorry";
-Duration = 5;
-});
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "sorry";
+        Text = "our admin script is currently offline";
+        Duration = 5;
+    })
+
+
+
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "sorry";
+        Text = "if you feel like we should REALLY REALLY change this let us know";
+        Duration = 5;
+    })
