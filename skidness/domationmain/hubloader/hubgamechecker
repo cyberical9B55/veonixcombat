@@ -1,0 +1,7 @@
+URLSCRIPT = "https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/skidness/domationmain/hubloader/"
+
+
+--dahood
+if game.PlaceId == 2788229376 then
+loadstring(game:HttpGet(URLSCRIPT.."dahoodhub"))()
+end
