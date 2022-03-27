@@ -1,7 +1,7 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/mafiaadmin/dominationdahood2"))()
+
 
 if not game:IsLoaded() then
 	game.Loaded:Wait()
 end
 wait(1)
-loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/30a5703f0ccdb4fd3d3bde1f7157826c/raw/2fea70d01af25c84be1c4f7c697bb7ec26738105/gistfile1.txt"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Linux6699/DaHubRevival/main/godv3.lua"))()
