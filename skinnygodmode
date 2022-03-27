@@ -3,5 +3,5 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/cyberical9B55/veonixc
 if not game:IsLoaded() then
 	game.Loaded:Wait()
 end
-
+wait(1.3)
 loadstring(game:HttpGet("https://gist.githubusercontent.com/cyberical9B55/03db33b03063d4b3dca0f7a5a47bd9d6/raw/6da81960fe806d15f8524f91eba7b8472b6b20f5/gistfile1.txt"))()
