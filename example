@@ -2,5 +2,5 @@ local queue_on_teleport = syn and syn.queue_on_teleport or queue_on_teleport
 if (queue_on_teleport) then
   queue_on_teleport("loadstring(game.HttpGet(game, \"https://raw.githubusercontent.com/cyberical9B55/veonixcombat/main/example\"))()");
 end
-wait()
+wait(0.1)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/anisnouacer1/My-Roblox-Scripts/main/%5BOP%5D%20Mad%20City%20Auto%20Rob.lua"))()
